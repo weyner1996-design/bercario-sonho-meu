@@ -144,7 +144,7 @@ img { max-width: 100%; display: block; }
 /* ============================================================
    LAYOUT
    ============================================================ */
-.app { display: none; min-height: 100vh; }
+.app { display: flex; min-height: 100vh; visibility: hidden; }
 
 /* ── Sidebar collapse (desktop) ─────────────────────────── */
 :root { --sb-collapsed: 56px; }
@@ -2084,7 +2084,7 @@ tbody td { padding: 9px 13px; font-size: var(--fs-base); vertical-align: middle;
 }
 </style>
 </head>
-<body style="background:#e8f4f8;margin:0;padding:0;">
+<body>
 
 <!-- ============================================================
      TOAST CONTAINER
@@ -9888,229 +9888,124 @@ th.sorted.desc::after { content:' ▼'; }
 
 body.login-active { overflow: hidden !important; }
 
-/* ═══════════════════════════════════════════════════════════
-   TELA DE LOGIN — Berçário Sonho Meu · Tema Espacial
-   ═══════════════════════════════════════════════════════════ */
-
-/* Container raiz */
+/* ═══ LOGIN — Tema Espacial ══════════════════════════════════ */
 #bsmLogin {
-  position: fixed !important;
-  top: 0 !important; left: 0 !important;
-  right: 0 !important; bottom: 0 !important;
-  z-index: 999999 !important;
-  display: none;
-  align-items: center !important;
-  justify-content: center !important;
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 999999; display: none;
+  align-items: center; justify-content: center;
 }
 #bsmLogin[style*="flex"] { display: flex !important; }
 
-/* Fundo espacial — imagem real cobrindo tudo */
 .blg-bg {
-  position: fixed;
-  inset: 0;
-  background: url('https://raw.githubusercontent.com/weyner1996-design/bercario-sonho-meu/main/templates/bg-espacial.jpg') center center / cover no-repeat;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+  position: absolute; inset: 0;
+  background: url('https://raw.githubusercontent.com/weyner1996-design/bercario-sonho-meu/main/templates/bg-espacial.jpg') center/cover no-repeat;
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
 }
-
-/* Card central creme — exatamente como no mockup */
+.blg-bg::before {
+  content: ''; position: absolute; inset: 0;
+  background: rgba(5,8,30,.28); pointer-events: none;
+}
 .blg-card {
-  position: relative;
-  z-index: 1;
-  background: rgb(255, 252, 230);
-  border-radius: 32px;
-  border: 2px solid rgba(245, 200, 66, 0.7);
+  position: relative; z-index: 1;
+  background: rgba(255,253,238,.97);
+  border-radius: 28px;
+  border: 2.5px solid rgba(245,200,66,.65);
   padding: 0 28px 24px;
-  width: 420px;
-  max-width: 90vw;
-  max-height: 92vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  box-shadow:
-    0 24px 80px rgba(0, 0, 0, 0.55),
-    0 8px 24px rgba(0, 0, 0, 0.30),
-    0 0 0 1px rgba(255,255,255,0.15) inset;
-  animation: blgIn .5s cubic-bezier(.16,1,.3,1) both;
+  width: 420px; max-width: 92vw; max-height: 92vh;
+  overflow-y: auto; overflow-x: hidden;
+  box-shadow: 0 24px 64px rgba(0,0,0,.50), 0 4px 16px rgba(0,0,0,.25);
+  animation: blgCardIn .5s cubic-bezier(.16,1,.3,1) both;
   text-align: center;
   scrollbar-width: none;
 }
 .blg-card::-webkit-scrollbar { display: none; }
-@keyframes blgIn {
-  from { opacity:0; transform:translateY(32px) scale(.94); }
+@keyframes blgCardIn {
+  from { opacity:0; transform:translateY(30px) scale(.95); }
   to   { opacity:1; transform:translateY(0) scale(1); }
 }
-
-/* ── Logo flutuando acima do card ── */
+/* Logo flutuando acima do card */
 .blg-logo-wrap {
-  margin-top: -90px;
-  margin-bottom: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  pointer-events: none;
+  margin-top: -90px; margin-bottom: 8px;
+  display: flex; justify-content: center;
 }
 .blg-logo-img {
-  width: 180px;
-  height: auto;
-  display: block;
-  /* sombra suave sob a lua */
+  width: 180px; height: auto; display: block;
   filter: drop-shadow(0 8px 24px rgba(0,0,0,.40));
-  animation: blgLogoFloat 4s ease-in-out infinite alternate;
+  animation: blgFloat 4s ease-in-out infinite alternate;
 }
-@keyframes blgLogoFloat {
+@keyframes blgFloat {
   from { transform: translateY(0px); }
   to   { transform: translateY(-8px); }
 }
-
-/* ── Textos ── */
 .blg-welcome-title {
-  font-family: 'Baloo 2', 'Arial Rounded MT Bold', sans-serif;
-  font-size: 30px;
-  font-weight: 900;
-  color: #1a1a2e;
-  margin: 0 0 4px;
-  line-height: 1.1;
+  font-size: 28px; font-weight: 900; color: #1a1a2e;
+  margin: 0 0 4px; line-height: 1.1;
 }
 .blg-welcome-sub {
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 16px;
-  line-height: 1.5;
+  font-size: 13px; color: #555; margin-bottom: 16px; line-height: 1.5;
 }
-
-/* ── Divisor estrela ── */
 .blg-star-divider {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 8px 0 16px;
+  display: flex; align-items: center; gap: 10px; margin: 8px 0 16px;
 }
-.blg-star-divider::before,
-.blg-star-divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: #d8c890;
+.blg-star-divider::before, .blg-star-divider::after {
+  content: ''; flex: 1; height: 1px; background: #d8c890;
 }
-.blg-star-ico {
-  font-size: 14px;
-  color: #d4a800;
-}
-
-/* ── Label seção ── */
+.blg-star-ico { font-size: 14px; color: #d4a800; }
 .blg-section-lbl {
-  font-size: 13px;
-  font-weight: 700;
-  color: #5a4a1a;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 14px;
-  text-align: center;
+  font-size: 11px; font-weight: 700; color: #9a8a50;
+  text-transform: uppercase; letter-spacing: .9px; margin-bottom: 14px;
 }
-
-/* ── Grid de perfis (cartõezinhos) ── */
 .blg-user-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
-  gap: 10px;
-  margin-bottom: 12px;
-  text-align: center;
+  gap: 10px; margin-bottom: 12px; text-align: center;
 }
 .blg-user-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: flex; flex-direction: column; align-items: center;
   padding: 0 0 12px;
-  background: #fff;
-  border: 1.5px solid #e8dfc0;
-  border-radius: 16px;
-  cursor: pointer;
+  background: #fff; border: 1.5px solid #e8dfc0;
+  border-radius: 16px; cursor: pointer;
   transition: all .22s cubic-bezier(.16,1,.3,1);
-  font-family: inherit;
-  overflow: hidden;
-  position: relative;
+  font-family: inherit; overflow: hidden; position: relative;
 }
 .blg-user-item:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(0,0,0,.15);
   border-color: #f5c842;
 }
-/* Tarja colorida no topo do card */
 .blg-user-av {
-  width: 100%;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  font-weight: 900;
-  color: #fff;
-  border-radius: 14px 14px 0 0;
-  margin-bottom: 8px;
-  letter-spacing: -0.5px;
-  flex-shrink: 0;
+  width: 100%; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 900; color: #fff;
+  border-radius: 14px 14px 0 0; margin-bottom: 8px;
 }
-/* Avatar / ícone do perfil */
-.blg-user-emoji {
-  font-size: 28px;
-  margin-bottom: 6px;
-  line-height: 1;
-}
+.blg-user-emoji { font-size: 28px; margin-bottom: 6px; line-height: 1; }
 .blg-user-info { width: 100%; padding: 0 6px; }
 .blg-user-nome {
-  font-size: 11px;
-  font-weight: 700;
-  color: #1a1a2e;
-  margin-bottom: 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 11px; font-weight: 700; color: #1a1a2e; margin-bottom: 4px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .blg-user-cargo-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  font-size: 10px;
-  color: #888;
+  display: flex; align-items: center; justify-content: center;
+  gap: 3px; font-size: 10px; color: #888;
 }
-.blg-user-arrow {
-  font-size: 12px;
-  color: #ccc;
-  margin-top: 4px;
-}
+.blg-user-arrow { font-size: 12px; color: #ccc; margin-top: 4px; }
 .blg-user-item:hover .blg-user-arrow { color: #f5c842; }
 .blg-loading { text-align:center; padding:16px; color:#9a8a50; font-size:13px; }
-
-/* ── Step 2 — PIN ── */
 .blg-step { text-align: left; }
 .blg-back {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: transparent;
-  border: none;
-  color: #9a8a50;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  padding: 0;
-  margin-bottom: 14px;
-  font-family: inherit;
-  transition: color .15s;
+  display: flex; align-items: center; gap: 6px;
+  background: transparent; border: none;
+  color: #9a8a50; font-size: 13px; font-weight: 500;
+  cursor: pointer; padding: 0; margin-bottom: 14px;
+  font-family: inherit; transition: color .15s;
 }
 .blg-back:hover { color: #1a1a2e; }
 .blg-selected-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: #fffbea;
-  border: 1.5px solid #f5c842;
-  border-radius: 14px;
-  padding: 12px 14px;
-  margin-bottom: 18px;
+  display: flex; align-items: center; gap: 12px;
+  background: #fffbea; border: 1.5px solid #f5c842;
+  border-radius: 14px; padding: 12px 14px; margin-bottom: 18px;
 }
 .blg-sel-av {
   width: 38px; height: 38px; border-radius: 50%;
@@ -10127,8 +10022,7 @@ body.login-active { overflow: hidden !important; }
 .blg-pin {
   width: 58px; height: 64px;
   background: #fff; border: 2px solid #e8dfc0;
-  border-radius: 14px;
-  font-size: 28px; font-weight: 800;
+  border-radius: 14px; font-size: 28px; font-weight: 800;
   color: #1a1a2e; text-align: center;
   transition: border-color .18s, box-shadow .18s;
   font-family: monospace; -webkit-appearance: none;
@@ -10155,27 +10049,22 @@ body.login-active { overflow: hidden !important; }
 .blg-enter-btn:hover   { opacity:.92; box-shadow: 0 8px 28px rgba(245,200,66,.55); }
 .blg-enter-btn:active  { transform: scale(.98); }
 .blg-enter-btn:disabled {
-  background: #d0c890; color: #6a5a30;
-  cursor: not-allowed; box-shadow: none;
+  background: #d0c890; color: #6a5a30; cursor: not-allowed; box-shadow: none;
 }
 .blg-first-access {
-  margin-top: 12px; text-align: center;
-  font-size: 12px; color: #9a8a50;
+  margin-top: 12px; text-align: center; font-size: 12px; color: #9a8a50;
 }
 .blg-first-access a {
   color: #c09000; font-weight: 600; text-decoration: none; cursor: pointer;
 }
 .blg-first-access a:hover { text-decoration: underline; }
-
-/* ── Footer ── */
 .blg-footer {
   text-align: center; font-size: 12px; color: #9a8a50;
-  margin-top: 20px; letter-spacing: .3px;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin-top: 20px; letter-spacing: .4px;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
 }
-.blg-footer::before,.blg-footer::after {
-  content: ''; display: inline-block;
-  width: 24px; height: 1px; background: #d0c090;
+.blg-footer::before, .blg-footer::after {
+  content: ''; display: inline-block; width: 20px; height: 1px; background: #d0c090;
 }
 
 
@@ -11192,14 +11081,10 @@ const Auth = (() => {
 
   // ── Abre a tela de login ──────────────────────────────────
   const _mostrarLogin = async () => {
-    // Oculta o app quando mostra o login
-    const app = document.querySelector('.app');
-    if (app) { app.style.display = 'none'; app.style.visibility = 'hidden'; }
     document.body.classList.add('login-active');
     const el = document.getElementById('bsmLogin');
     if (!el) return;
     el.style.display = 'flex';
-    el.style.opacity = '1';
     await renderWelcome();
   };
 
@@ -11208,14 +11093,11 @@ const Auth = (() => {
     if (!el) return;
     el.style.transition = 'opacity .35s ease';
     el.style.opacity = '0';
-    // Mostra o app imediatamente (não espera a animação)
-    const app = document.querySelector('.app');
-    if (app) { app.style.display = 'flex'; app.style.visibility = 'visible'; }
     setTimeout(() => {
       el.style.display = 'none';
       el.style.opacity = '1';
       document.body.classList.remove('login-active');
-    }, 350);
+    }, 360);
   };
 
   // ── Renderiza lista de usuários (Step 1) ─────────────────
@@ -11239,7 +11121,7 @@ const Auth = (() => {
     list.innerHTML = ativos.map(u => {
       const meta = PERFIL_META[u.perfil] || PERFIL_META.professor;
       const cor  = _avCor(u.id);
-      const ini  = u.nome.split(' ').filter(Boolean).slice(0,2).map(p=>p[0]).join('').toUpperCase();
+      const ini   = u.nome.split(' ').filter(Boolean).slice(0,2).map(p=>p[0]).join('').toUpperCase();
       const nome1 = Utils.esc(u.nome.split(' ')[0]);
       return `
         <button class="blg-user-item" onclick="Auth._selecionarUser('${u.id}')">
@@ -11248,7 +11130,7 @@ const Auth = (() => {
           <div class="blg-user-info">
             <div class="blg-user-nome">${nome1}</div>
             <div class="blg-user-cargo-row">
-              <span>${meta.cargo||meta.label||u.perfil}</span>
+              <span>${Utils.esc(meta.cargo||meta.label||u.perfil)}</span>
             </div>
           </div>
           <div class="blg-user-arrow">›</div>
@@ -11392,9 +11274,9 @@ const Auth = (() => {
     if (!_sessao) return;
     const perm = PERMS[_sessao.perfil] || PERMS.professor;
 
-    // App visível — força display:flex independente
+    // App visível
     const app = document.querySelector('.app');
-    if (app) { app.style.display = 'flex'; app.style.visibility = 'visible'; }
+    if (app) app.style.visibility = 'visible';
 
     // Filtra nav
     document.querySelectorAll('.nav-item[data-page]').forEach(btn => {
@@ -11443,36 +11325,23 @@ const Auth = (() => {
     _usuarioSel = null;
     await DB.remove('sessao', 'atual');
     document.querySelectorAll('.nav-item[data-page]').forEach(b => b.style.display = '');
-    const appEl = document.querySelector('.app');
-    if (appEl) { appEl.style.display = 'none'; }
     await _mostrarLogin();
   };
 
   // ── Init ─────────────────────────────────────────────────
   const init = async () => {
-    // Garante que o app esteja oculto no início
-    const app = document.querySelector('.app');
-    if (app) { app.style.display = 'none'; app.style.visibility = 'hidden'; }
-
-    try {
-      const s = await DB.get('sessao', 'atual');
-      if (s?.usuarioId) {
-        const u = await DB.get('usuarios', s.usuarioId);
-        if (u && u.ativo !== false) {
-          _sessao = s;
-          // Mostra o app ANTES de aplicar perfil
-          if (app) { app.style.display = 'flex'; app.style.visibility = 'visible'; }
-          _aplicarPerfil();
-          const el = document.getElementById('bsmLogin');
-          if (el) { el.style.display = 'none'; el.style.opacity = '0'; }
-          document.body.classList.remove('login-active');
-          return true;
-        }
+    const s = await DB.get('sessao', 'atual');
+    if (s?.usuarioId) {
+      const u = await DB.get('usuarios', s.usuarioId);
+      if (u && u.ativo !== false) {
+        _sessao = s;
+        _aplicarPerfil();
+        const el = document.getElementById('bsmLogin');
+        if (el) el.style.display = 'none';
+        document.body.classList.remove('login-active');
+        return true;
       }
-    } catch(e) {
-      console.warn('BSM init error:', e);
     }
-
     await _mostrarLogin();
     return false;
   };
@@ -12725,30 +12594,12 @@ const PainelTV = (() => {
    BOOT
    ============================================================ */
 document.addEventListener('DOMContentLoaded', async () => {
-  // ── DIAGNÓSTICO: mostra onde o boot para ───────────────
-  const _diag = (msg) => {
-    let d = document.getElementById('_bootDiag');
-    if (!d) {
-      d = document.createElement('div');
-      d.id = '_bootDiag';
-      d.style.cssText = 'position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:9999999;background:#1a1a2e;color:#f5c842;padding:8px 18px;border-radius:20px;font-size:12px;font-weight:700;font-family:monospace;pointer-events:none;transition:opacity .3s';
-      document.body.appendChild(d);
-    }
-    d.textContent = '⚙ ' + msg;
-  };
-  const _diagHide = () => {
-    const d = document.getElementById('_bootDiag');
-    if (d) { d.style.opacity = '0'; setTimeout(()=>d.remove(), 400); }
-  };
   // Inicializa banco
   await DB.init();
 
   // v5.0 — Auth: verifica sessão ou mostra tela de login
-  _diag('Iniciando banco de dados...');
   Sidebar.initDesktop();
-  _diag('Verificando sessão...');
   await Auth.init();
-  _diagHide();
 
   // Inicializa navegação
   initNavigation();

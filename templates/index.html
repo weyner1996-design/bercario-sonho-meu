@@ -144,7 +144,7 @@ img { max-width: 100%; display: block; }
 /* ============================================================
    LAYOUT
    ============================================================ */
-.app { display: flex; min-height: 100vh; visibility: hidden; }
+.app { display: none; min-height: 100vh; }
 
 /* ── Sidebar collapse (desktop) ─────────────────────────── */
 :root { --sb-collapsed: 56px; }
@@ -11192,10 +11192,14 @@ const Auth = (() => {
 
   // ── Abre a tela de login ──────────────────────────────────
   const _mostrarLogin = async () => {
+    // Oculta o app quando mostra o login
+    const app = document.querySelector('.app');
+    if (app) { app.style.display = 'none'; app.style.visibility = 'hidden'; }
     document.body.classList.add('login-active');
     const el = document.getElementById('bsmLogin');
     if (!el) return;
     el.style.display = 'flex';
+    el.style.opacity = '1';
     await renderWelcome();
   };
 
@@ -11204,11 +11208,14 @@ const Auth = (() => {
     if (!el) return;
     el.style.transition = 'opacity .35s ease';
     el.style.opacity = '0';
+    // Mostra o app imediatamente (não espera a animação)
+    const app = document.querySelector('.app');
+    if (app) { app.style.display = 'flex'; app.style.visibility = 'visible'; }
     setTimeout(() => {
       el.style.display = 'none';
       el.style.opacity = '1';
       document.body.classList.remove('login-active');
-    }, 360);
+    }, 350);
   };
 
   // ── Renderiza lista de usuários (Step 1) ─────────────────
@@ -11385,9 +11392,9 @@ const Auth = (() => {
     if (!_sessao) return;
     const perm = PERMS[_sessao.perfil] || PERMS.professor;
 
-    // App visível
+    // App visível — força display:flex independente
     const app = document.querySelector('.app');
-    if (app) app.style.visibility = 'visible';
+    if (app) { app.style.display = 'flex'; app.style.visibility = 'visible'; }
 
     // Filtra nav
     document.querySelectorAll('.nav-item[data-page]').forEach(btn => {
@@ -11436,23 +11443,36 @@ const Auth = (() => {
     _usuarioSel = null;
     await DB.remove('sessao', 'atual');
     document.querySelectorAll('.nav-item[data-page]').forEach(b => b.style.display = '');
+    const appEl = document.querySelector('.app');
+    if (appEl) { appEl.style.display = 'none'; }
     await _mostrarLogin();
   };
 
   // ── Init ─────────────────────────────────────────────────
   const init = async () => {
-    const s = await DB.get('sessao', 'atual');
-    if (s?.usuarioId) {
-      const u = await DB.get('usuarios', s.usuarioId);
-      if (u && u.ativo !== false) {
-        _sessao = s;
-        _aplicarPerfil();
-        const el = document.getElementById('bsmLogin');
-        if (el) el.style.display = 'none';
-        document.body.classList.remove('login-active');
-        return true;
+    // Garante que o app esteja oculto no início
+    const app = document.querySelector('.app');
+    if (app) { app.style.display = 'none'; app.style.visibility = 'hidden'; }
+
+    try {
+      const s = await DB.get('sessao', 'atual');
+      if (s?.usuarioId) {
+        const u = await DB.get('usuarios', s.usuarioId);
+        if (u && u.ativo !== false) {
+          _sessao = s;
+          // Mostra o app ANTES de aplicar perfil
+          if (app) { app.style.display = 'flex'; app.style.visibility = 'visible'; }
+          _aplicarPerfil();
+          const el = document.getElementById('bsmLogin');
+          if (el) { el.style.display = 'none'; el.style.opacity = '0'; }
+          document.body.classList.remove('login-active');
+          return true;
+        }
       }
+    } catch(e) {
+      console.warn('BSM init error:', e);
     }
+
     await _mostrarLogin();
     return false;
   };

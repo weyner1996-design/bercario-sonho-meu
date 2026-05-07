@@ -2084,7 +2084,7 @@ tbody td { padding: 9px 13px; font-size: var(--fs-base); vertical-align: middle;
 }
 </style>
 </head>
-<body>
+<body style="background:#e8f4f8;margin:0;padding:0;">
 
 <!-- ============================================================
      TOAST CONTAINER
@@ -12725,12 +12725,30 @@ const PainelTV = (() => {
    BOOT
    ============================================================ */
 document.addEventListener('DOMContentLoaded', async () => {
+  // ── DIAGNÓSTICO: mostra onde o boot para ───────────────
+  const _diag = (msg) => {
+    let d = document.getElementById('_bootDiag');
+    if (!d) {
+      d = document.createElement('div');
+      d.id = '_bootDiag';
+      d.style.cssText = 'position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:9999999;background:#1a1a2e;color:#f5c842;padding:8px 18px;border-radius:20px;font-size:12px;font-weight:700;font-family:monospace;pointer-events:none;transition:opacity .3s';
+      document.body.appendChild(d);
+    }
+    d.textContent = '⚙ ' + msg;
+  };
+  const _diagHide = () => {
+    const d = document.getElementById('_bootDiag');
+    if (d) { d.style.opacity = '0'; setTimeout(()=>d.remove(), 400); }
+  };
   // Inicializa banco
   await DB.init();
 
   // v5.0 — Auth: verifica sessão ou mostra tela de login
+  _diag('Iniciando banco de dados...');
   Sidebar.initDesktop();
+  _diag('Verificando sessão...');
   await Auth.init();
+  _diagHide();
 
   // Inicializa navegação
   initNavigation();

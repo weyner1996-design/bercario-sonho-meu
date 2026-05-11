@@ -2562,6 +2562,18 @@ tbody td { padding: 9px 13px; font-size: var(--fs-base); vertical-align: middle;
         <span class="nav-label">Recibos & NF</span>
       </button>
 
+      <button class="nav-item" data-page="fila">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="23" y1="11" x2="23" y2="17"/><line x1="20" y1="14" x2="26" y2="14"/></svg>
+        <span class="nav-label">Fila de Espera</span>
+      </button>
+      <button class="nav-item" data-page="contas">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
+        <span class="nav-label">Contas Fixas</span>
+      </button>
+      <button class="nav-item" data-page="fila">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        <span class="nav-label">Fila de Espera</span>
+      </button>
       <button class="nav-item" data-page="inadimplencia">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         <span class="nav-label">Inadimplência</span>
@@ -2711,6 +2723,9 @@ tbody td { padding: 9px 13px; font-size: var(--fs-base); vertical-align: middle;
             <div class="page-sub"  id="dashSub">Carregando resumo...</div>
           </div>
           <div class="page-actions">
+            <button class="btn btn-ghost btn-sm" onclick="MorningBriefing.gerar()">☀️ Briefing do Dia</button>
+            <button class="btn btn-ghost btn-sm" onclick="Comunicados.abrir()">📢 Comunicado</button>
+            <button class="btn btn-ghost btn-sm" onclick="Comunicados.render()">📣 Comunicados</button>
             <button class="btn btn-ghost btn-sm" onclick="Dashboard.exportRelatorio()">📊 Relatório</button>
             <button class="btn btn-secondary" onclick="Router.go('matriculas')">+ Nova Matrícula</button>
           </div>
@@ -3297,6 +3312,9 @@ tbody td { padding: 9px 13px; font-size: var(--fs-base); vertical-align: middle;
 
       <!-- ==================== DRE MENSAL ==================== -->
       <section class="page" id="page-dre" data-print-title="DRE Mensal — Berçário Sonho Meu"></section>
+      <section class="page" id="page-contas" data-print-title="Contas &amp; Obrigações — Berçário Sonho Meu"></section>
+      <section class="page" id="page-fila" data-print-title="Fila de Espera — Berçário Sonho Meu"></section>
+      <section class="page" id="page-fila" data-print-title="Fila de Espera — Berçário Sonho Meu"></section>
 
       <!-- ==================== GASTOS ==================== -->
       <section class="page" id="page-gastos" data-print-title="Gastos & Caixa — Berçário Sonho Meu">
@@ -3374,10 +3392,13 @@ tbody td { padding: 9px 13px; font-size: var(--fs-base); vertical-align: middle;
               <option value="vencendo">Vencendo em 7d</option>
               <option value="semValidade">Sem validade</option>
             </select>
-            <button class="btn btn-ghost btn-sm" onclick="Est.exportMovCSV()">📊 Exportar Mov.</button>
+            <button class="btn btn-ghost btn-sm" id="estModoBtn" onclick="Est.toggleModo()" title="Alternar modo compacto/expandido">⊟ Compacto</button>
+            <button class="btn btn-ghost btn-sm" onclick="Est.exportMovCSV()">📊 Exportar</button>
             <button class="btn btn-secondary" onclick="Est.openForm()">+ Novo Item</button>
           </div>
         </div>
+        <!-- Chips de categoria -->
+        <div id="estChips" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:var(--sp-md)"></div>
         <div class="grid-4 mb" id="estKpis"></div>
         <div id="estCats"></div>
       </section>
@@ -3520,9 +3541,11 @@ tbody td { padding: 9px 13px; font-size: var(--fs-base); vertical-align: middle;
         <div class="page-header">
           <div>
             <div class="page-title">🍽️ Cozinha & Cardápio</div>
-            <div class="page-sub">Cardápio semanal editável · Alertas de alergia · Integração com estoque</div>
+            <div class="page-sub">Cardápio semanal editável · Templates reutilizáveis · Alertas de alergia em tempo real</div>
           </div>
           <div class="page-actions">
+            <button class="btn btn-ghost btn-sm" onclick="Cozinha.carregarTemplate()">📂 Carregar Template</button>
+            <button class="btn btn-ghost btn-sm" onclick="Cozinha.salvarComoTemplate()">💾 Salvar como Template</button>
             <button class="btn btn-ghost btn-sm" onclick="Cozinha.imprimir()">🖨️ Imprimir</button>
             <button class="btn btn-secondary" onclick="Cozinha.salvar()">💾 Salvar Cardápio</button>
           </div>
@@ -3759,6 +3782,10 @@ tbody td { padding: 9px 13px; font-size: var(--fs-base); vertical-align: middle;
               <div class="form-group"><label class="form-label">E-mail</label><input class="form-input" type="email" id="cfgEmail"></div>
             </div>
             <div class="form-group"><label class="form-label">Responsável Legal</label><input class="form-input" id="cfgResp"></div>
+            <div class="form-row c2">
+              <div class="form-group"><label class="form-label">🟢 Chave PIX</label><input class="form-input" id="cfgPix" placeholder="CPF, CNPJ, email ou chave aleatória"></div>
+              <div class="form-group"><label class="form-label">Cidade (para PIX)</label><input class="form-input" id="cfgCidade" placeholder="Ex: GOIANIA"></div>
+            </div>
             <div class="form-group">
               <label class="form-label">Logo da Escola</label>
               <div style="display:flex;align-items:center;gap:10px">
@@ -4040,19 +4067,47 @@ const Utils = (() => {
    ============================================================ */
 const DB = (() => {
   const DB_NAME    = 'bercario_sonho_meu';
-  const DB_VERSION = 3;
+  const DB_VERSION = 6;
   let _db = null;
 
   const STORES = [
-    'matriculas', 'mensalidades', 'presenca', 'documentos',
-    'gastos', 'estoque', 'funcionarios', 'manutencao',
-    'lotes', 'vendasUnif', 'fichasTec', 'recibos',
-    'config', 'avisos', 'histAv', 'movEstoque', 'eventos', 'fornecedores', 'revisoes',
-    // v5.0 — usuários, salas, pedagógico
-    'salas', 'usuarios', 'sessao',
-    'planejamentos', 'mat_pedagogicos', 'mov_pedagogicos', 'dicas_regras',
-    // v7.0 — Desenvolvimento Infantil
-    'dev_fichas', 'dev_avaliacoes', 'dev_obs', 'dev_alertas'
+    'matriculas',
+    'mensalidades',
+    'presenca',
+    'documentos',
+    'gastos',
+    'estoque',
+    'funcionarios',
+    'manutencao',
+    'lotes',
+    'vendasUnif',
+    'fichasTec',
+    'recibos',
+    'config',
+    'avisos',
+    'histAv',
+    'movEstoque',
+    'eventos',
+    'fornecedores',
+    'revisoes',
+    'salas',
+    'usuarios',
+    'sessao',
+    'planejamentos',
+    'mat_pedagogicos',
+    'mov_pedagogicos',
+    'dicas_regras',
+    'dev_fichas',
+    'dev_avaliacoes',
+    'dev_obs',
+    'dev_alertas',
+    'contas_fixas',
+    'portfolio',
+    'ativ_personalizadas',
+    'diario_bordo',
+    'medicamentos',
+    'ocorrencias',
+    'fila_espera'
   ];
 
   // Seed de dados iniciais
@@ -4358,6 +4413,9 @@ const Router = (() => {
     recibos:      'Recibos & NF',
     gastos:         'Gastos & Caixa',
     inadimplencia:  'Inadimplência',
+    contas:         'Contas & Obrigações Fixas',
+    fila:           'Fila de Espera',
+    fila:           'Fila de Espera',
     dre:            'DRE Mensal',
     projecao:       'Projeção de Receita',
     ocupacao:       'Indicadores de Ocupação',
@@ -6657,6 +6715,10 @@ const Alunos = (() => {
         <button class="drawer-tab" onclick="Alunos._tab('financeiro','${id}',this)">💰 Financeiro</button>
         <button class="drawer-tab" onclick="Alunos._tab('docs','${id}',this)">📁 Documentos</button>
         <button class="drawer-tab" onclick="Alunos._tab('presenca','${id}',this)">✅ Presença</button>
+        <button class="drawer-tab" onclick="Alunos._tab('diario','${id}',this)">📓 Diário</button>
+        <button class="drawer-tab" onclick="Alunos._tab('medicamentos','${id}',this)">💊 Medicamentos</button>
+        <button class="drawer-tab" onclick="Alunos._tab('ocorrencias','${id}',this)">📋 Ocorrências</button>
+        <button class="drawer-tab" onclick="Alunos._tab('portfolio','${id}',this)" style="color:var(--pink)">🖼️ Portfólio</button>
         <button class="drawer-tab" onclick="Alunos._tab('desenvolvimento','${id}',this)" style="color:var(--teal-dk);font-weight:600">🌱 Desenvolvimento</button>
       </div>
 
@@ -6681,6 +6743,10 @@ const Alunos = (() => {
     if (tab === 'financeiro')     el.innerHTML = await _tabFinanceiro(a);
     if (tab === 'docs')           el.innerHTML = _tabDocs(a);
     if (tab === 'presenca')       el.innerHTML = await _tabPresenca(a);
+    if (tab === 'portfolio')       await Portfolio.abrirAba(a.id, el);
+    if (tab === 'diario')          await DiarioBordo.abrirAba(a.id, el);
+    if (tab === 'medicamentos')    await Medicamentos.abrirAba(a.id, el);
+    if (tab === 'ocorrencias')     await Ocorrencias.abrirAba(a.id, el);
     if (tab === 'desenvolvimento') await _tabDesenvolvimento(a, el);
   };
 
@@ -8241,9 +8307,10 @@ const Mens = (() => {
           <td>
             <div class="td-actions">
               ${m.st !== 'pago' ? `<button class="btn btn-success btn-xs" onclick="Mens.openPagar('${m.id}')" title="Registrar pagamento">✓ Pagar</button>` : ''}
-              <button class="btn btn-wa btn-xs" onclick="Mens.sendWA('${m._matId}','${m.id}')" title="WhatsApp">💬</button>
+              <button class="btn btn-ghost btn-xs" onclick="Mens.sendWA('${m._matId}','${m.id}')" title="WhatsApp">💬</button>
               <button class="btn btn-ghost btn-xs" onclick="Mens.reemitirRecibo('${m.id}')" title="Recibo">🧾</button>
               <button class="btn btn-ghost btn-xs" onclick="Boleto.gerar('${m.id}')" title="Boleto">📄</button>
+              <button class="btn btn-ghost btn-xs" style="color:#32bcad" onclick="PIX.abrirModal('${m.id}')" title="Pagar via PIX">📱 PIX</button>
               <button class="btn btn-danger btn-xs" onclick="Mens.deleteConfirm('${m.id}')" title="Excluir">🗑️</button>
             </div>
           </td>
@@ -9531,6 +9598,8 @@ const Gastos = (() => {
    ============================================================ */
 const Est = (() => {
   let _all = [], _movs = [], _filtered = [];
+  let _catAtiva = 'all'; // chip de categoria ativo
+  let _modoCompacto = false;
 
   const CATS = {
     cozinha:    { ic: '🥗', lb: 'Cozinha',         cor: 'var(--success)', bg: 'var(--success-lt)' },
@@ -9543,16 +9612,56 @@ const Est = (() => {
   /* ── render principal ── */
   const render = async () => {
     [_all, _movs] = await Promise.all([DB.getAll('estoque'), DB.getAll('histAv').catch(() => [])]);
-    // Usa store dedicada de movimentações se existir
     try { _movs = await DB.getAll('movEstoque'); } catch { _movs = []; }
+    _renderChips();
+    filter();
+  };
+
+  /* ── chips de categoria ── */
+  const _renderChips = () => {
+    const el = document.getElementById('estChips');
+    if (!el) return;
+    // Contar itens por categoria
+    const contagem = {};
+    _all.forEach(e => { contagem[e.categ] = (contagem[e.categ] || 0) + 1; });
+    const total = _all.length;
+
+    const chips = [{ id: 'all', ic: '🗂️', lb: 'Todos', n: total }, ...Object.entries(CATS).map(([id, c]) => ({ id, ic: c.ic, lb: c.lb, n: contagem[id] || 0 }))];
+    el.innerHTML = chips.map(ch => {
+      const ativo = ch.id === _catAtiva;
+      const cat   = CATS[ch.id];
+      const cor   = ativo ? (cat?.cor || 'var(--teal-dk)') : 'var(--ink-3)';
+      const bg    = ativo ? (cat?.bg  || 'var(--teal-lt)') : 'var(--bg-2)';
+      const bord  = ativo ? (cat?.cor || 'var(--teal)') : 'var(--border)';
+      return `<button onclick="Est._setCategoria('${ch.id}')"
+        style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:99px;
+               border:1.5px solid ${bord};background:${bg};color:${cor};
+               font-size:12px;font-weight:${ativo?700:500};cursor:pointer;transition:.15s;white-space:nowrap">
+        ${ch.ic} ${ch.lb} <span style="background:${ativo?cor:'var(--border)'};color:${ativo?'#fff':'var(--ink-3)'};border-radius:99px;padding:0 6px;font-size:10px;margin-left:2px">${ch.n}</span>
+      </button>`;
+    }).join('');
+  };
+
+  const _setCategoria = cat => {
+    _catAtiva = cat;
+    _renderChips();
+    filter();
+  };
+
+  /* ── toggle modo compacto ── */
+  const toggleModo = () => {
+    _modoCompacto = !_modoCompacto;
+    const btn = document.getElementById('estModoBtn');
+    if (btn) btn.textContent = _modoCompacto ? '⊞ Expandir' : '⊟ Compacto';
     filter();
   };
 
   /* ── filtro ── */
   const filter = () => {
-    const q     = (document.getElementById('estSearch')?.value || '').toLowerCase().trim();
-    const filt  = document.getElementById('estFiltro')?.value || 'all';
-    _filtered = _all.filter(e => {
+    const q    = (document.getElementById('estSearch')?.value || '').toLowerCase().trim();
+    const filt = document.getElementById('estFiltro')?.value || 'all';
+    _filtered  = _all.filter(e => {
+      if (_catAtiva !== 'all' && e.categ !== _catAtiva) return false;
       if (q && !Utils.normalize(e.nome).includes(Utils.normalize(q))) return false;
       if (filt === 'baixo'       && e.qtd > e.minimo)  return false;
       if (filt === 'vencendo'    && !(e.venc && Utils.diffDays(e.venc) >= 0 && Utils.diffDays(e.venc) <= 7)) return false;
@@ -9911,7 +10020,7 @@ const Est = (() => {
   };
 
   return {
-    render, filter,
+    render, filter, toggleModo, _setCategoria,
     openForm, save, del,
     editQtdInline, _saveQtdInline,
     openMovModal, confirmarSaida,
@@ -10993,33 +11102,11 @@ const Agenda = (() => {
     const tit = document.getElementById('agCalTitulo');
     if (tit) tit.textContent = `${Utils.MONTHS_LONG[_calM]} ${_calY}`;
 
-    const primDia   = new Date(_calY, _calM, 1).getDay();
-    const ultDia    = new Date(_calY, _calM + 1, 0).getDate();
-    const hoje      = Utils.today();
-    const DN        = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-
-    // Mapeia eventos do mês
-    const evMap = {};
-    // Aniversários
-    _mats.forEach(m => {
-      if (!m.nasc) return;
-      const d = m.nasc.slice(5); // MM-DD
-      const k = `${_calY}-${d}`;
-      if (!evMap[k]) evMap[k] = [];
-      evMap[k].push({ tipo: 'aniversario', label: m.nome.split(' ')[0] });
-    });
-    // Vencimentos do mês (não pagos)
-    _mens.filter(m => m.st !== 'pago' && (m.vencimento||'').startsWith(`${_calY}-${String(_calM+1).padStart(2,'0')}`)).forEach(m => {
-      const mat = _mats.find(a => a.id === m.alunoId);
-      if (!evMap[m.vencimento]) evMap[m.vencimento] = [];
-      evMap[m.vencimento].push({ tipo: 'vencimento', label: mat?.nome.split(' ')[0] || '?' });
-    });
-    // Eventos manuais
-    _eventos.forEach(e => {
-      if (!(e.dt||'').startsWith(`${_calY}-${String(_calM+1).padStart(2,'0')}`)) return;
-      if (!evMap[e.dt]) evMap[e.dt] = [];
-      evMap[e.dt].push({ tipo: e.tipo || 'outro', label: e.titulo || '' });
-    });
+    const primDia = new Date(_calY, _calM, 1).getDay();
+    const ultDia  = new Date(_calY, _calM + 1, 0).getDate();
+    const hoje    = Utils.today();
+    const DN      = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+    const evMap   = _buildEvMap();
 
     const grid = document.getElementById('agCalGrid');
     if (!grid) return;
@@ -11037,24 +11124,31 @@ const Agenda = (() => {
       const isSel  = k === _diaSel;
       const dow    = (primDia + d - 1) % 7;
       const isDom  = dow === 0;
-      html += `<div onclick="Agenda._selDia('${k}')"
-        style="min-height:58px;padding:4px;border-radius:var(--r-sm);cursor:pointer;
+      html += `<div
+        onclick="Agenda._selDia('${k}')"
+        ondblclick="Agenda.relatorioDia('${k}')"
+        onmouseenter="Agenda._showTooltip(event,'${k}')"
+        onmouseleave="Agenda._hideTooltip()"
+        style="min-height:58px;padding:4px;border-radius:var(--r-sm);cursor:pointer;position:relative;
                border:1.5px solid var(--${isSel?'teal-md':isHoje?'teal-lt':'border'});
-               background:var(--${isSel?'teal-lt':isHoje?'bg-2':'white'})"
-        onmouseover="this.style.background='var(--bg-2)'" onmouseout="this.style.background='var(--${isSel?'teal-lt':isHoje?'bg-2':'white'})'">
-        <div style="font-size:12px;font-weight:${isHoje?800:500};color:var(--${isHoje?'teal-dk':isDom?'danger':'ink'});
-             ${isHoje?'background:var(--teal-dk);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;':''}">${d}</div>
-        ${evs.slice(0,2).map(e => {
-          const t = TIPOS[e.tipo] || TIPOS.outro;
+               background:var(--${isSel?'teal-lt':isHoje?'bg-2':'white'})">
+        <div style="font-size:12px;font-weight:${isHoje?800:500};
+             ${isHoje?'background:var(--teal-dk);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;':'color:var(--'+(isDom?'danger':'ink')+')'}">
+          ${d}
+        </div>
+        ${evs.slice(0,2).map(ev => {
+          const t = TIPOS[ev.tipo] || TIPOS.outro;
           return `<div style="font-size:8px;font-weight:700;padding:1px 3px;border-radius:3px;margin-top:2px;
-            background:${t.cor}22;color:${t.cor};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.ic} ${Utils.esc(e.label)}</div>`;
+            background:${t.cor}22;color:${t.cor};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.ic} ${Utils.esc(ev.label)}</div>`;
         }).join('')}
         ${evs.length > 2 ? `<div style="font-size:8px;color:var(--ink-3)">+${evs.length-2}</div>` : ''}
+        ${evs.length ? `<div style="position:absolute;top:3px;right:3px;width:5px;height:5px;border-radius:50%;background:var(--teal)"></div>` : ''}
       </div>`;
     }
     html += '</div>';
     grid.innerHTML = html;
   };
+
 
   const _selDia = k => {
     _diaSel = k;
@@ -11203,7 +11297,211 @@ const Agenda = (() => {
     Toast.show('success', '📤 Arquivo .ics exportado! Importe no Google Calendar.');
   };
 
-  return { render, navCal, _selDia, openEvento, saveEvento, delEvento, exportICS };
+  /* ── Tooltip flutuante ao hover no dia ─────────────────── */
+  let _tooltipEl = null;
+
+  const _showTooltip = (e, k) => {
+    _hideTooltip();
+    const evMap = _buildEvMap();
+    const evs = evMap[k] || [];
+    if (!evs.length) return;
+
+    const div = document.createElement('div');
+    div.id = 'agTooltip';
+    div.style.cssText = `position:fixed;z-index:9998;background:var(--white);border:1px solid var(--border);
+      border-radius:var(--r-md);box-shadow:var(--shadow-md);padding:8px 12px;min-width:160px;max-width:240px;
+      pointer-events:none;font-size:12px;animation:fadeIn .12s ease`;
+    div.innerHTML = `
+      <div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:11px;color:var(--ink-3)">
+        ${Utils.fmtDate(k)} — ${evs.length} evento(s)
+      </div>
+      ${evs.map(ev => {
+        const t = TIPOS[ev.tipo] || TIPOS.outro;
+        return `<div style="display:flex;align-items:center;gap:6px;padding:2px 0">
+          <span style="color:${t.cor}">${t.ic}</span>
+          <span style="color:var(--ink);line-height:1.3">${Utils.esc(ev.label)}</span>
+        </div>`;
+      }).join('')}
+      <div style="font-size:10px;color:var(--ink-4);margin-top:6px;border-top:1px solid var(--border);padding-top:4px">
+        Duplo-clique para relatório do dia
+      </div>`;
+
+    document.body.appendChild(div);
+    _tooltipEl = div;
+
+    // Posicionar perto do mouse
+    const rect = e.target.getBoundingClientRect();
+    const tw   = div.offsetWidth || 200;
+    const th   = div.offsetHeight || 80;
+    let left   = rect.right + 4;
+    let top    = rect.top;
+    if (left + tw > window.innerWidth - 8)  left = rect.left - tw - 4;
+    if (top  + th > window.innerHeight - 8) top  = window.innerHeight - th - 8;
+    div.style.left = `${Math.max(4, left)}px`;
+    div.style.top  = `${Math.max(4, top)}px`;
+  };
+
+  const _hideTooltip = () => {
+    if (_tooltipEl) { _tooltipEl.remove(); _tooltipEl = null; }
+    const el = document.getElementById('agTooltip');
+    if (el) el.remove();
+  };
+
+  /* ── Relatório do dia (duplo-clique) ───────────────────── */
+  const relatorioDia = async k => {
+    const [planos, cfg] = await Promise.all([
+      DB.getAll('planejamentos').catch(() => []),
+      DB.getConfig(),
+    ]);
+    const nomeEsc = cfg.nomeEscola || 'Berçário Sonho Meu';
+    const hoje    = Utils.fmtDate(k);
+    const dow     = new Date(k + 'T12:00:00').getDay();
+    const DK_MAP  = {1:'seg',2:'ter',3:'qua',4:'qui',5:'sex'};
+    const dk      = DK_MAP[dow] || 'seg';
+
+    // Coletar todos os dados do dia
+    const evMap   = _buildEvMap();
+    const evsDia  = evMap[k] || [];
+    const menses  = _mens.filter(m => m.vencimento === k && m.st !== 'pago');
+    const anivs   = _mats.filter(m => m.nasc?.slice(5) === k.slice(5));
+    const eventos = _eventos.filter(e => e.dt === k);
+    const plano   = planos.find(p => p.data === k);
+
+    // Cardápio do dia (da config)
+    let cardapioHtml = '<p style="color:#888">Cardápio não registrado para este dia.</p>';
+    try {
+      const cfg2 = await DB.getConfig();
+      const cd   = cfg2.cardapio?.[dk];
+      if (cd) {
+        const LBL2 = { cafe:'☀️ Café', alm:'🍽️ Almoço', lch:'🍎 Lanche' };
+        cardapioHtml = Object.entries(LBL2).map(([r, lb]) =>
+          `<p style="margin:3px 0"><strong>${lb}:</strong> ${(cd[r]||[]).join(', ') || '—'}</p>`
+        ).join('');
+      }
+    } catch {}
+
+    const html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
+    <title>Relatório do Dia — ${hoje}</title>
+    <style>
+      *{box-sizing:border-box;margin:0;padding:0}
+      body{font-family:Arial,sans-serif;font-size:12px;color:#1a2533;padding:24px;max-width:800px;margin:auto}
+      h1{font-size:20px;color:#12586a;margin-bottom:2px}
+      .subtitle{font-size:13px;color:#666;margin-bottom:20px}
+      .section{margin-bottom:16px;border:1px solid #ddd;border-radius:8px;overflow:hidden}
+      .sec-head{background:#12586a;color:#fff;padding:8px 14px;font-weight:700;font-size:13px;display:flex;align-items:center;gap:8px}
+      .sec-body{padding:10px 14px;line-height:1.7}
+      .row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f0f7f9}
+      .row:last-child{border-bottom:none}
+      .badge{display:inline-block;background:#e8f5f7;color:#12586a;border-radius:12px;padding:1px 8px;font-size:10px;font-weight:700}
+      .empty{color:#8fa3b1;font-style:italic}
+      .print-btn{position:fixed;bottom:16px;right:16px;background:#12586a;color:#fff;border:none;
+        padding:10px 22px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer}
+      @media print{.print-btn{display:none}body{padding:12px}}
+    </style></head><body>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:6px">
+      <span style="font-size:36px">🌙</span>
+      <div>
+        <h1>${nomeEsc}</h1>
+        <div class="subtitle">📋 Relatório do Dia — <strong>${hoje}</strong></div>
+      </div>
+    </div>
+
+    <!-- Aniversários -->
+    ${anivs.length ? `<div class="section">
+      <div class="sec-head">🎂 Aniversários do Dia</div>
+      <div class="sec-body">
+        ${anivs.map(m => `<div class="row">
+          <span><strong>${m.nome}</strong></span>
+          <span class="badge">${new Date().getFullYear() - parseInt(m.nasc.slice(0,4))} anos · ${Utils.salaLabel(m.turma)}</span>
+        </div>`).join('')}
+      </div>
+    </div>` : ''}
+
+    <!-- Cardápio -->
+    <div class="section">
+      <div class="sec-head">🍽️ Cardápio do Dia</div>
+      <div class="sec-body">${cardapioHtml}</div>
+    </div>
+
+    <!-- Plano de aula -->
+    <div class="section">
+      <div class="sec-head">📚 Plano de Aula</div>
+      <div class="sec-body">
+        ${plano ? `
+          <div class="row"><span><strong>Atividade:</strong> ${Utils.esc(plano.atividade || plano.titulo || '—')}</span></div>
+          ${plano.objetivo ? `<div class="row"><span><strong>Objetivo:</strong> ${Utils.esc(plano.objetivo)}</span></div>` : ''}
+          ${plano.materiais ? `<div class="row"><span><strong>Materiais:</strong> ${Utils.esc(plano.materiais)}</span></div>` : ''}
+        ` : '<p class="empty">Nenhum plano de aula registrado para este dia.</p>'}
+      </div>
+    </div>
+
+    <!-- Mensalidades -->
+    ${menses.length ? `<div class="section">
+      <div class="sec-head">💰 Mensalidades com Vencimento Hoje</div>
+      <div class="sec-body">
+        ${menses.map(m => {
+          const mat = _mats.find(a => a.id === m.alunoId);
+          return `<div class="row">
+            <span><strong>${mat?.nome || '—'}</strong> · ${m.ref}</span>
+            <span class="badge">${Utils.money(m.valor)}</span>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>` : ''}
+
+    <!-- Eventos -->
+    ${eventos.filter(e => !e._czCardapio && !e._devAlunoId).length ? `<div class="section">
+      <div class="sec-head">📌 Eventos e Compromissos</div>
+      <div class="sec-body">
+        ${eventos.filter(e => !e._czCardapio && !e._devAlunoId).map(e => `<div class="row">
+          <span><strong>${Utils.esc(e.titulo)}</strong></span>
+          ${e.desc ? `<span style="color:#8fa3b1;font-size:11px">${Utils.esc(e.desc)}</span>` : ''}
+        </div>`).join('')}
+      </div>
+    </div>` : ''}
+
+    <!-- Assinaturas -->
+    <div style="margin-top:24px;display:grid;grid-template-columns:1fr 1fr;gap:40px;text-align:center">
+      <div><div style="border-top:1px solid #999;padding-top:6px;font-size:11px;color:#888">Coordenação Pedagógica</div></div>
+      <div><div style="border-top:1px solid #999;padding-top:6px;font-size:11px;color:#888">Responsável de Turno</div></div>
+    </div>
+
+    <button class="print-btn" onclick="window.print()">🖨️ Imprimir</button>
+    </body></html>`;
+
+    const blob = new Blob([html], {type: 'text/html;charset=utf-8'});
+    const a    = document.createElement('a');
+    a.href     = URL.createObjectURL(blob);
+    a.download = `relatorio_dia_${k}.html`;
+    document.body.appendChild(a); a.click();
+    setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(a.href); }, 500);
+    Toast.show('success', `📋 Relatório de ${Utils.fmtDate(k)} gerado!`);
+  };
+
+  /* ── Construir mapa de eventos (helper compartilhado) ─── */
+  const _buildEvMap = () => {
+    const evMap = {};
+    _mats.forEach(m => {
+      if (!m.nasc) return;
+      const k = `${_calY}-${m.nasc.slice(5)}`;
+      if (!evMap[k]) evMap[k] = [];
+      evMap[k].push({ tipo: 'aniversario', label: m.nome.split(' ')[0] });
+    });
+    _mens.filter(m => m.st !== 'pago' && (m.vencimento||'').startsWith(`${_calY}-${String(_calM+1).padStart(2,'0')}`))
+      .forEach(m => {
+        const mat = _mats.find(a => a.id === m.alunoId);
+        if (!evMap[m.vencimento]) evMap[m.vencimento] = [];
+        evMap[m.vencimento].push({ tipo: 'vencimento', label: mat?.nome.split(' ')[0] || '?' });
+      });
+    _eventos.forEach(e => {
+      if (!(e.dt||'').startsWith(`${_calY}-${String(_calM+1).padStart(2,'0')}`)) return;
+      if (!evMap[e.dt]) evMap[e.dt] = [];
+      evMap[e.dt].push({ tipo: e.tipo || 'outro', label: e.titulo || '' });
+    });
+    return evMap;
+  };
+
+  return { render, navCal, _selDia, openEvento, saveEvento, delEvento, exportICS, relatorioDia, _showTooltip, _hideTooltip };
 })();
 
 /* ============================================================
@@ -11353,11 +11651,96 @@ const Cozinha = (() => {
       : '<div style="font-size:var(--fs-sm);color:var(--success-dk)">✅ Estoque da cozinha adequado para o cardápio desta semana</div>';
   };
 
+  const salvarComoTemplate = async () => {
+    const nome = prompt('Nome do template (ex: "Semana Padrão", "Semana do Peixe"):');
+    if (!nome?.trim()) return;
+    const cfg = await DB.getConfig();
+    const templates = cfg.czTemplates || [];
+    templates.push({ id: Utils.uuid(), nome: nome.trim(), cardapio: JSON.parse(JSON.stringify(_cardapio)), criadoEm: Utils.today() });
+    cfg.czTemplates = templates;
+    await DB.setConfig(cfg);
+    Toast.show('success', `✅ Template "${nome}" salvo!`);
+  };
+
+  const carregarTemplate = async () => {
+    const cfg = await DB.getConfig();
+    const templates = cfg.czTemplates || [];
+    if (!templates.length) { Toast.show('warning', 'Nenhum template salvo ainda. Salve um cardápio como template primeiro.'); return; }
+
+    Modal.open('modalSec', `
+      <div class="modal-header">
+        <div class="modal-title">📂 Carregar Template de Cardápio</div>
+        <button class="modal-close" onclick="Modal.close('modalSec')">×</button>
+      </div>
+      <div class="modal-body">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          ${templates.map(t => `
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--bg-2);border-radius:var(--r-md);border:1px solid var(--border)">
+              <div>
+                <div style="font-weight:700;font-size:14px">${Utils.esc(t.nome)}</div>
+                <div style="font-size:11px;color:var(--ink-3)">Salvo em ${Utils.fmtDate(t.criadoEm)}</div>
+              </div>
+              <div style="display:flex;gap:6px">
+                <button class="btn btn-secondary btn-sm" onclick="Cozinha._aplicarTemplate('${t.id}')">Aplicar</button>
+                <button class="btn btn-ghost btn-xs" style="color:var(--danger)" onclick="Cozinha._deletarTemplate('${t.id}')">🗑️</button>
+              </div>
+            </div>`).join('')}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="Modal.close('modalSec')">Fechar</button>
+      </div>`);
+  };
+
+  const _aplicarTemplate = async id => {
+    const cfg = await DB.getConfig();
+    const t = (cfg.czTemplates || []).find(t => t.id === id);
+    if (!t) return;
+    _cardapio = JSON.parse(JSON.stringify(t.cardapio));
+    Modal.close('modalSec');
+    _renderCardapio();
+    _renderAlertasAlergia();
+    Toast.show('success', `✅ Template "${t.nome}" aplicado! Salve para confirmar.`);
+  };
+
+  const _deletarTemplate = async id => {
+    const cfg = await DB.getConfig();
+    cfg.czTemplates = (cfg.czTemplates || []).filter(t => t.id !== id);
+    await DB.setConfig(cfg);
+    Toast.show('success', 'Template removido.');
+    Modal.close('modalSec');
+  };
+
   const salvar = async () => {
     const cfg = await DB.getConfig();
     cfg.cardapio = _cardapio;
     await DB.setConfig(cfg);
-    Toast.show('success', '💾 Cardápio salvo!');
+    // Salvar eventos de cardápio na agenda para cada dia da semana atual
+    await _sincronizarAgenda();
+    Toast.show('success', '💾 Cardápio salvo e sincronizado com a Agenda!');
+  };
+
+  const _sincronizarAgenda = async () => {
+    const { seg } = _semanaInfo();
+    const eventos  = await DB.getAll('eventos').catch(() => []);
+    // Remover eventos de cardápio da semana atual
+    const diasSemana = DK.map((_, i) => {
+      const d = new Date(seg); d.setDate(seg.getDate() + i);
+      return d.toISOString().slice(0, 10);
+    });
+    await Promise.all(eventos.filter(e => e._czCardapio && diasSemana.includes(e.dt)).map(e => DB.remove('eventos', e.id)));
+    // Criar novo evento por dia com o cardápio
+    await Promise.all(diasSemana.map((dt, i) => {
+      const dk   = DK[i];
+      const items = [...((_cardapio[dk]?.alm || []))];
+      if (!items.length) return Promise.resolve();
+      return DB.save('eventos', {
+        id: Utils.uuid(), dt, tipo: 'cardapio',
+        titulo: `🍽️ Almoço: ${items.slice(0,2).join(', ')}${items.length>2?'...':''}`,
+        desc: REF.map(r => `${LBL[r]}: ${(_cardapio[dk]?.[r]||[]).join(', ')}`).join(' | '),
+        _czCardapio: true
+      });
+    }));
   };
 
   const imprimir = () => {
@@ -11378,7 +11761,8 @@ const Cozinha = (() => {
     w.document.close();
   };
 
-  return { render, navSemana, _editItem, _addItem, salvar, imprimir };
+  return { render, navSemana, _editItem, _addItem, salvar, imprimir, salvarComoTemplate, carregarTemplate, _aplicarTemplate, _deletarTemplate };
+
 })();
 
 /* ============================================================
@@ -13060,6 +13444,8 @@ const Cfg = (() => {
     s('cfgTel',     _cfg.telefone);
     s('cfgEmail',   _cfg.email);
     s('cfgResp',    _cfg.responsavel);
+    s('cfgPix',     _cfg.chavePix);
+    s('cfgCidade',  _cfg.cidade);
     s('cfgMens',    _cfg.mensalidade);
     s('cfgDesc',    _cfg.desconto);
     s('cfgJuros',   _cfg.juros);
@@ -13120,6 +13506,8 @@ const Cfg = (() => {
       telefone:      g('cfgTel')      || _cfg.telefone,
       email:         g('cfgEmail')    || '',
       responsavel:   g('cfgResp')     || _cfg.responsavel,
+      chavePix:      g('cfgPix')      || _cfg.chavePix || '',
+      cidade:        g('cfgCidade')   || _cfg.cidade   || 'GOIANIA',
       mensalidade:   parseFloat(g('cfgMens'))    || 933.88,
       desconto:      parseFloat(g('cfgDesc'))    || 13,
       juros:         parseFloat(g('cfgJuros'))   || 0.5,
@@ -13703,14 +14091,14 @@ const Auth = (() => {
     master: {
       pages: ['dashboard','matriculas','alunos','presenca','documentos',
               'mensalidades','cobracas','recibos','gastos','estoque',
-              'inadimplencia','dre','projecao','ocupacao',
+              'inadimplencia','dre','projecao','ocupacao','contas','fila',
               'uniforme','agenda','cozinha','funcionarios','manutencao',
               'pedagogico','desenvolvimento','paineltv','usuarios','importar','config'],
       write: '*', salas: '*',
     },
     diretora: {
       pages: ['dashboard','matriculas','alunos','presenca','documentos',
-              'mensalidades','cobracas','gastos','inadimplencia','dre','projecao','ocupacao',
+              'mensalidades','cobracas','gastos','inadimplencia','dre','projecao','ocupacao','fila',
               'agenda','cozinha','funcionarios','manutencao','pedagogico','desenvolvimento','paineltv'],
       write: ['presenca','documentos','agenda','cozinha','manutencao','pedagogico','desenvolvimento'],
       salas: '*',
@@ -15256,7 +15644,12 @@ const DevInfantil = (() => {
           <div class="page-title">🌱 Desenvolvimento Infantil</div>
           <div class="page-sub">Acompanhamento evolutivo individualizado — questionário por faixa etária, alertas e relatórios</div>
         </div>
-        <button class="btn btn-secondary" onclick="DevInfantil.novaAvaliacao()">+ Nova Avaliação</button>
+        <div class="page-actions">
+          <button class="btn btn-ghost btn-sm" onclick="DevInfantil.compararAlunos()">📊 Comparar Alunos</button>
+          <button class="btn btn-ghost btn-sm" onclick="DevInfantil.relatorioTurma()">📋 Relatório Turma</button>
+          <button class="btn btn-ghost btn-sm" onclick="BibliotecaAtiv.abrir()">📚 Biblioteca</button>
+          <button class="btn btn-secondary" onclick="DevInfantil.novaAvaliacao()">+ Nova Avaliação</button>
+        </div>
       </div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:var(--sp-xl)">
         <div class="card" style="text-align:center;padding:14px">
@@ -15646,6 +16039,13 @@ const DevInfantil = (() => {
     await _agendarProxima(alunoId, data);
     Modal.close('modalLg');
     Toast.show('success',`✅ Avaliação salva!${alertasG.length?' ⚠️ '+alertasG.length+' alerta(s)':''}`);
+    if (alertasG.length) {
+      setTimeout(() => {
+        if (confirm(`⚠️ ${alertasG.length} alerta(s) detectado(s).\n\nDeseja gerar o Plano de Intervenção agora?`)) {
+          DevInfantil.gerarIntervencao(alunoId, avId);
+        }
+      }, 800);
+    }
     await render();
     } catch(err) {
       console.error('[BSM] Erro ao salvar avaliação:', err);
@@ -15792,9 +16192,342 @@ const DevInfantil = (() => {
     return Math.floor((new Date()-new Date(ds))/86400000);
   };
 
+
+  // ── #14 Comparação entre dois alunos (radar SVG) ─────────
+  const compararAlunos = async () => {
+    const mats = _mats.length ? _mats : (await DB.getAll('matriculas')).filter(m => m.st === 'matriculado');
+    const avs  = await DB.getAll('dev_avaliacoes');
+
+    Modal.open('modalLg', `
+      <div class="modal-header">
+        <div class="modal-title">📊 Comparação entre Alunos</div>
+        <button class="modal-close" onclick="Modal.close('modalLg')">×</button>
+      </div>
+      <div class="modal-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:var(--sp-md)">
+          <div class="form-group"><label class="form-label">Aluno 1</label>
+            <select class="form-select" id="cmpA1">
+              <option value="">Selecione…</option>
+              ${mats.map(m=>`<option value="${m.id}">${Utils.esc(m.nome.split(' ').slice(0,3).join(' '))}</option>`).join('')}
+            </select></div>
+          <div class="form-group"><label class="form-label">Aluno 2</label>
+            <select class="form-select" id="cmpA2">
+              <option value="">Selecione…</option>
+              ${mats.map(m=>`<option value="${m.id}">${Utils.esc(m.nome.split(' ').slice(0,3).join(' '))}</option>`).join('')}
+            </select></div>
+        </div>
+        <div id="cmpResult" style="text-align:center;color:var(--ink-3);padding:20px">Selecione dois alunos para comparar</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="Modal.close('modalLg')">Fechar</button>
+        <button class="btn btn-secondary" onclick="DevInfantil._gerarComparacao()">📊 Comparar</button>
+      </div>`);
+  };
+
+  const _gerarComparacao = async () => {
+    const id1 = document.getElementById('cmpA1')?.value;
+    const id2 = document.getElementById('cmpA2')?.value;
+    if (!id1 || !id2 || id1 === id2) { Toast.show('error','Selecione dois alunos diferentes'); return; }
+    const avs   = await DB.getAll('dev_avaliacoes');
+    const mats  = _mats.length ? _mats : await DB.getAll('matriculas');
+    const mat1  = mats.find(m => m.id === id1);
+    const mat2  = mats.find(m => m.id === id2);
+    const av1   = avs.filter(a => a.alunoId === id1).sort((a,b) => b.data.localeCompare(a.data))[0];
+    const av2   = avs.filter(a => a.alunoId === id2).sort((a,b) => b.data.localeCompare(a.data))[0];
+    const el    = document.getElementById('cmpResult');
+    if (!el) return;
+
+    const DOMS  = ['motor','cognitivo','socio'];
+    const LABEL = ['Motor','Cognitivo','Socio'];
+    const EMOJ  = ['🏃','🧠','❤️'];
+    const COR1  = '#1565C0', COR2 = '#E05A8A';
+
+    const pct = (av, dom) => av?.pontuacao?.[dom]?.pct ?? 0;
+
+    // SVG Radar
+    const CX = 160, CY = 140, R = 110;
+    const angles = DOMS.map((_, i) => (i / DOMS.length) * 2 * Math.PI - Math.PI / 2);
+    const pt = (r, angle) => ({ x: CX + r * Math.cos(angle), y: CY + r * Math.sin(angle) });
+
+    const poly = (avData, cor) => {
+      const pts = DOMS.map((dom, i) => {
+        const r = (pct(avData, dom) / 100) * R;
+        return pt(r, angles[i]);
+      });
+      return `<polygon points="${pts.map(p=>`${p.x},${p.y}`).join(' ')}" fill="${cor}33" stroke="${cor}" stroke-width="2"/>`;
+    };
+
+    const gridLines = [25,50,75,100].map(v => {
+      const pts = angles.map(a => pt(R*v/100, a));
+      return `<polygon points="${pts.map(p=>`${p.x},${p.y}`).join(' ')}" fill="none" stroke="var(--border)" stroke-width="0.5"/>`;
+    }).join('');
+
+    const axes = angles.map((a, i) => {
+      const end = pt(R, a);
+      const lbl = pt(R + 18, a);
+      return `<line x1="${CX}" y1="${CY}" x2="${end.x}" y2="${end.y}" stroke="var(--border)" stroke-width="1"/>
+        <text x="${lbl.x}" y="${lbl.y}" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="var(--ink-2)">${EMOJ[i]} ${LABEL[i]}</text>`;
+    }).join('');
+
+    el.innerHTML = `
+      <div style="display:grid;grid-template-columns:320px 1fr;gap:16px;align-items:start">
+        <svg width="320" height="280" viewBox="0 0 320 280" xmlns="http://www.w3.org/2000/svg">
+          ${gridLines}${axes}
+          ${av2 ? poly(av2, COR2) : ''}
+          ${av1 ? poly(av1, COR1) : ''}
+          ${DOMS.map((dom, i) => {
+            const p1 = pt((pct(av1,dom)/100)*R, angles[i]);
+            const p2 = av2 ? pt((pct(av2,dom)/100)*R, angles[i]) : null;
+            return `<circle cx="${p1.x}" cy="${p1.y}" r="4" fill="${COR1}"/>
+              ${p2 ? `<circle cx="${p2.x}" cy="${p2.y}" r="4" fill="${COR2}"/>` : ''}`;
+          }).join('')}
+        </svg>
+        <div>
+          <div style="display:flex;gap:12px;margin-bottom:12px;font-size:12px">
+            <span style="display:flex;align-items:center;gap:5px;font-weight:700">
+              <span style="width:12px;height:12px;background:${COR1};border-radius:50%;display:inline-block"></span>
+              ${Utils.esc(mat1?.nome.split(' ')[0] || '?')}
+            </span>
+            <span style="display:flex;align-items:center;gap:5px;font-weight:700">
+              <span style="width:12px;height:12px;background:${COR2};border-radius:50%;display:inline-block"></span>
+              ${Utils.esc(mat2?.nome.split(' ')[0] || '?')}
+            </span>
+          </div>
+          ${DOMS.map((dom, i) => {
+            const p1 = pct(av1, dom), p2 = pct(av2, dom);
+            const diff = p1 - p2;
+            const c1 = p1>=65?'#1A7A4A':p1>=40?'#F59E0B':'#E8644A';
+            const c2 = p2>=65?'#1A7A4A':p2>=40?'#F59E0B':'#E8644A';
+            return `<div style="margin-bottom:10px">
+              <div style="font-size:11px;font-weight:700;margin-bottom:4px">${EMOJ[i]} ${LABEL[i]}</div>
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">
+                <span style="font-size:10px;width:60px;color:${COR1};font-weight:700">${mat1?.nome.split(' ')[0]}</span>
+                <div style="flex:1;height:6px;background:var(--border);border-radius:6px">
+                  <div style="height:100%;width:${p1}%;background:${c1};border-radius:6px"></div>
+                </div>
+                <span style="font-size:10px;font-weight:700;color:${c1};min-width:32px">${p1}%</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px">
+                <span style="font-size:10px;width:60px;color:${COR2};font-weight:700">${mat2?.nome.split(' ')[0]}</span>
+                <div style="flex:1;height:6px;background:var(--border);border-radius:6px">
+                  <div style="height:100%;width:${p2}%;background:${c2};border-radius:6px"></div>
+                </div>
+                <span style="font-size:10px;font-weight:700;color:${c2};min-width:32px">${p2}%</span>
+              </div>
+            </div>`;
+          }).join('')}
+          ${!av1 ? `<div style="font-size:11px;color:var(--amber)">⚠️ ${mat1?.nome.split(' ')[0]} sem avaliação</div>` : ''}
+          ${!av2 ? `<div style="font-size:11px;color:var(--amber)">⚠️ ${mat2?.nome.split(' ')[0]} sem avaliação</div>` : ''}
+        </div>
+      </div>`;
+  };
+
+  // ── #15 Plano de intervenção automático ──────────────────
+  const gerarIntervencao = async (alunoId, avId) => {
+    const [av, mat] = await Promise.all([DB.get('dev_avaliacoes', avId), DB.get('matriculas', alunoId)]);
+    if (!av || !mat) return;
+    const fd = DEV_QUESTIONARIO.dados[av.faixa] || DEV_QUESTIONARIO.dados[12];
+
+    const ATIVIDADES = {
+      motor: [
+        'Circuito de movimento com obstáculos baixos (almofadas, túnel de pano)',
+        'Brincadeira de rolar bola de diferentes tamanhos',
+        'Atividade de encaixe e empilhamento de blocos',
+        'Passeio na área externa com exploração do ambiente',
+        'Jogo de pegar e soltar objetos em recipientes',
+      ],
+      cognitivo: [
+        'Caixa de exploração sensorial com diferentes texturas',
+        'Livros de imagens grandes com nomeação de objetos',
+        'Brincadeira de esconder e procurar objetos',
+        'Jogo de associação imagem–objeto real',
+        'Atividade com causa e efeito: apertar botão → som/movimento',
+      ],
+      socio: [
+        'Rodinha de música e movimentos em grupo',
+        'Atividade de turno: falar e escutar (usando um objeto)',
+        'Brincar com fantoches nomeando emoções',
+        'Momento de imitação de expressões faciais no espelho',
+        'Brincadeira cooperativa: passar objeto de mão em mão',
+      ],
+    };
+
+    const alertas = Object.entries(av.pontuacao || {})
+      .filter(([k, v]) => k !== '_total' && (v?.pct ?? 100) < 65)
+      .sort((a, b) => (a[1]?.pct ?? 0) - (b[1]?.pct ?? 0));
+
+    if (!alertas.length) { Toast.show('success', '✅ Nenhum domínio com déficit — intervenção não necessária!'); return; }
+
+    const cfg     = (await DB.getAll('config'))[0] || {};
+    const nomeEsc = cfg.nomeEscola || 'Berçário Sonho Meu';
+
+    const secoes = alertas.map(([dom, pontuacao]) => {
+      const meta = { motor:'🏃 Motor', cognitivo:'🧠 Cognitivo', socio:'❤️ Socioemocional' };
+      const ativs = ATIVIDADES[dom] || [];
+      const pct   = pontuacao?.pct ?? 0;
+      const nivel = pct < 40 ? '🔴 Crítico' : '🟡 Atenção';
+      return `
+        <div style="margin-bottom:20px;border:1px solid #E8E0F7;border-radius:12px;overflow:hidden">
+          <div style="background:${pct<40?'#FDECEA':'#FFFBEB'};padding:10px 16px;border-bottom:2px solid ${pct<40?'#E8644A':'#F59E0B'}">
+            <strong>${meta[dom]||dom}</strong> — ${nivel} (${pct}%)
+          </div>
+          <div style="padding:12px 16px">
+            <p style="font-size:12px;color:#666;margin-bottom:10px">Atividades sugeridas para estimulação:</p>
+            <ol style="font-size:13px;line-height:1.8;padding-left:20px">
+              ${ativs.slice(0,3).map(a=>`<li>${a}</li>`).join('')}
+            </ol>
+          </div>
+        </div>`;
+    }).join('');
+
+    const html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
+    <title>Plano de Intervenção — ${mat.nome}</title>
+    <style>*{box-sizing:border-box}body{font-family:Arial,sans-serif;font-size:13px;color:#2D1B69;padding:28px;max-width:800px;margin:auto}
+    h1{font-size:20px;color:#7C5CBF;margin-bottom:4px}h2{font-size:13px;color:#888;font-weight:400;margin-bottom:20px}
+    .meta{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:20px}
+    .meta-item{background:#F5F3FF;border-radius:8px;padding:10px}
+    .meta-label{font-size:10px;text-transform:uppercase;color:#7C5CBF;font-weight:700}
+    .meta-val{font-size:14px;font-weight:600}
+    [contenteditable]{outline:2px dashed #C4B5F7;border-radius:4px;padding:2px;min-height:1em}
+    [contenteditable]:focus{outline:2px solid #7C5CBF}
+    .print-btn{position:fixed;bottom:20px;right:20px;background:#7C5CBF;color:#fff;border:none;padding:10px 22px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer}
+    @media print{.print-btn{display:none}}</style></head><body>
+    <h1>🌱 Plano de Intervenção Pedagógica</h1>
+    <h2>${nomeEsc} · Gerado em ${Utils.fmtDate(Utils.today())}</h2>
+    <div class="meta">
+      <div class="meta-item"><div class="meta-label">Aluno(a)</div><div class="meta-val">${Utils.esc(mat.nome)}</div></div>
+      <div class="meta-item"><div class="meta-label">Turma</div><div class="meta-val">${Utils.salaLabel(mat.turma)}</div></div>
+      <div class="meta-item"><div class="meta-label">Avaliação</div><div class="meta-val">${Utils.fmtDate(av.data)} · Faixa ${av.faixa}m</div></div>
+    </div>
+    ${secoes}
+    <div style="margin-top:20px;border:1px solid #E8E0F7;border-radius:12px;padding:16px">
+      <strong>Observações adicionais da educadora:</strong>
+      <p contenteditable="true" style="margin-top:8px;min-height:60px;color:#888">Escreva aqui observações, adaptações ou metas específicas...</p>
+    </div>
+    <div style="margin-top:24px;display:grid;grid-template-columns:1fr 1fr;gap:40px;text-align:center">
+      <div><div style="border-top:1px solid #2D1B69;padding-top:8px;font-size:11px;color:#666">Educadora Responsável</div></div>
+      <div><div style="border-top:1px solid #2D1B69;padding-top:8px;font-size:11px;color:#666">Coordenação Pedagógica</div></div>
+    </div>
+    <button class="print-btn" onclick="window.print()">🖨️ Imprimir</button>
+    </body></html>`;
+
+    const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `intervencao_${mat.nome.split(' ')[0].toLowerCase()}_${Utils.today()}.html`;
+    document.body.appendChild(a); a.click();
+    setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(a.href);},500);
+    Toast.show('success','📋 Plano de intervenção gerado!');
+  };
+
+  // ── #17 Relatório de turma agregado ──────────────────────
+  const relatorioTurma = async () => {
+    const mats = _mats.length ? _mats : (await DB.getAll('matriculas')).filter(m => m.st === 'matriculado');
+    const salas = await DB.getAll('salas');
+
+    Modal.open('modalSec', `
+      <div class="modal-header">
+        <div class="modal-title">📊 Relatório de Turma</div>
+        <button class="modal-close" onclick="Modal.close('modalSec')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Selecione a sala</label>
+          <select class="form-select" id="relTurmaSala">
+            <option value="">Todas as salas</option>
+            ${salas.map(s=>`<option value="${s.id}">${Utils.esc(s.nome)}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="Modal.close('modalSec')">Cancelar</button>
+        <button class="btn btn-secondary" onclick="DevInfantil._gerarRelTurma()">📊 Gerar Relatório</button>
+      </div>`);
+  };
+
+  const _gerarRelTurma = async () => {
+    const salaId = document.getElementById('relTurmaSala')?.value;
+    const mats   = (_mats.length ? _mats : await DB.getAll('matriculas')).filter(m => m.st==='matriculado');
+    const alunos = salaId ? mats.filter(m => m.turma === salaId) : mats;
+    if (!alunos.length) { Toast.show('error','Nenhum aluno nesta sala'); return; }
+
+    const [avs, fichas, alertasAll] = await Promise.all([
+      DB.getAll('dev_avaliacoes'), DB.getAll('dev_fichas'),
+      DB.getAll('dev_alertas').catch(()=>[]),
+    ]);
+    const fichaMap = Object.fromEntries(fichas.map(f => [f.alunoId, f]));
+
+    const DOMS = ['motor','cognitivo','socio'];
+    const LABEL = { motor:'Motor', cognitivo:'Cognitivo', socio:'Socioemocional' };
+    const cfg = (await DB.getAll('config'))[0] || {};
+    const nomeEsc = cfg.nomeEscola || 'Berçário Sonho Meu';
+    const salaLabel = salaId ? Utils.salaLabel(salaId) : 'Todas as Salas';
+
+    // Calcular médias por domínio
+    const medias = {};
+    DOMS.forEach(dom => {
+      const vals = alunos.map(a => fichaMap[a.id]?.pontuacao?.[dom]?.pct).filter(v => v !== undefined);
+      medias[dom] = vals.length ? Math.round(vals.reduce((s,v)=>s+v,0)/vals.length) : 0;
+    });
+
+    const comAlerta = alertasAll.filter(a => a.status==='aberto' && alunos.find(m=>m.id===a.alunoId));
+    const semFicha  = alunos.filter(a => !fichaMap[a.id]).length;
+
+    const tabelaAlunos = alunos.map(a => {
+      const f   = fichaMap[a.id];
+      const als = alertasAll.filter(x => x.alunoId===a.id && x.status==='aberto');
+      const pcts= DOMS.map(dom => f?.pontuacao?.[dom]?.pct ?? '—');
+      return `<tr>
+        <td style="font-weight:600">${Utils.esc(a.nome.split(' ').slice(0,2).join(' '))}</td>
+        ${pcts.map(p=>`<td style="text-align:center;font-weight:700;color:${typeof p==='number'?p>=65?'#1A7A4A':p>=40?'#F59E0B':'#E8644A':'#888'}">${typeof p==='number'?p+'%':'—'}</td>`).join('')}
+        <td style="text-align:center">${als.length?`<span style="color:#E8644A;font-weight:700">${als.length} alerta(s)</span>`:'✅'}</td>
+        <td style="font-size:11px;color:#666">${f?.ultimaAv?Utils.fmtDate(f.ultimaAv):'<span style="color:#F59E0B">Sem avaliação</span>'}</td>
+      </tr>`;
+    }).join('');
+
+    const html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
+    <title>Relatório de Turma — ${salaLabel}</title>
+    <style>*{box-sizing:border-box}body{font-family:Arial,sans-serif;font-size:12px;color:#1a2533;padding:24px;max-width:900px;margin:auto}
+    h1{font-size:18px;color:#12586a}h2{font-size:12px;color:#888;font-weight:400;margin-bottom:16px}
+    .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:20px}
+    .kpi{background:#f5f9fa;border-radius:8px;padding:10px;text-align:center}
+    .kpi-n{font-size:20px;font-weight:800;color:#12586a}.kpi-l{font-size:10px;color:#888}
+    table{width:100%;border-collapse:collapse;margin-bottom:16px}
+    th,td{border:1px solid #ddd;padding:6px 8px;text-align:left}th{background:#f0f7f9;font-weight:700;font-size:11px}
+    .print-btn{position:fixed;bottom:16px;right:16px;background:#12586a;color:#fff;border:none;padding:8px 20px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer}
+    @media print{.print-btn{display:none}}</style></head><body>
+    <h1>📊 Relatório de Turma — ${salaLabel}</h1>
+    <h2>${nomeEsc} · Emitido em ${Utils.fmtDate(Utils.today())}</h2>
+    <div class="kpis">
+      <div class="kpi"><div class="kpi-n">${alunos.length}</div><div class="kpi-l">Alunos</div></div>
+      <div class="kpi"><div class="kpi-n" style="color:${medias.motor>=65?'#1A7A4A':'#F59E0B'}">${medias.motor}%</div><div class="kpi-l">Média Motor</div></div>
+      <div class="kpi"><div class="kpi-n" style="color:${medias.cognitivo>=65?'#1A7A4A':'#F59E0B'}">${medias.cognitivo}%</div><div class="kpi-l">Média Cognitivo</div></div>
+      <div class="kpi"><div class="kpi-n" style="color:${medias.socio>=65?'#1A7A4A':'#F59E0B'}">${medias.socio}%</div><div class="kpi-l">Média Socioemocional</div></div>
+      <div class="kpi"><div class="kpi-n" style="color:${comAlerta.length?'#E8644A':'#1A7A4A'}">${comAlerta.length}</div><div class="kpi-l">Alertas ativos</div></div>
+    </div>
+    <table>
+      <thead><tr><th>Aluno</th><th>Motor</th><th>Cognitivo</th><th>Socioemocional</th><th>Alertas</th><th>Última Avaliação</th></tr></thead>
+      <tbody>${tabelaAlunos}</tbody>
+    </table>
+    ${semFicha>0?`<p style="color:#F59E0B;margin-bottom:12px">⚠️ ${semFicha} aluno(s) sem avaliação registrada.</p>`:''}
+    <button class="print-btn" onclick="window.print()">🖨️ Imprimir</button>
+    </body></html>`;
+
+    Modal.close('modalSec');
+    const blob = new Blob([html],{type:'text/html;charset=utf-8'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `relatorio_turma_${Utils.today()}.html`;
+    document.body.appendChild(a); a.click();
+    setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(a.href);},500);
+    Toast.show('success','📊 Relatório de turma gerado!');
+  };
+
   return {
     render, abrirFicha, novaAvaliacao, editarAvaliacao, _salvarAvaliacao,
     novaObs, _salvarObs, gerarRelatorio, _aba, _onAlunoChange, _fecharAlerta,
+    compararAlunos, _gerarComparacao, gerarIntervencao,
+    relatorioTurma, _gerarRelTurma,
   };
 })();
 
@@ -16576,7 +17309,123 @@ const Boleto = (() => {
     Toast.show('success','🖨️ Boleto gerado! Abra o arquivo para imprimir.');
   };
 
-  return { gerar };
+  /* ── #07 PIX QR Code ─────────────────────────────────────── */
+  const gerarPix = async mensId => {
+    const [m, cfg] = await Promise.all([DB.get('mensalidades', mensId), DB.getConfig()]);
+    if (!m) return;
+    const mat      = await DB.get('matriculas', m.alunoId);
+    const chavePix = cfg.chavePix || '';
+    if (!chavePix) {
+      Toast.show('warning', 'Configure a chave PIX em Configurações antes de usar esta função.');
+      return;
+    }
+    const valor    = (m.valor || 0).toFixed(2);
+    const nome     = (cfg.nomeEscola || 'Bercario').replace(/[^A-Za-z0-9 ]/g, '').slice(0, 25).toUpperCase();
+    const cidade   = (cfg.cidade || 'GOIANIA').replace(/[^A-Za-z0-9 ]/g, '').slice(0, 15).toUpperCase();
+    const txid     = ('BSM' + mensId.slice(-8)).toUpperCase();
+    const desc     = ('BSM ' + (m.ref || '')).slice(0, 25);
+
+    // Montar payload EMV do PIX (estático simplificado)
+    const _tlv = (id, val) => id + String(val.length).padStart(2, '0') + val;
+    const gui   = _tlv('00', 'BR.GOV.BCB.PIX') + _tlv('01', chavePix);
+    const mai   = _tlv('26', gui);
+    const addDt = _tlv('05', desc);
+    const addInfo = _tlv('62', addDt);
+    let payload = '000201' + mai + '52040000' + '5303986' +
+      '54' + String(valor.length).padStart(2, '0') + valor +
+      '5802BR' +
+      _tlv('59', nome) + _tlv('60', cidade) +
+      addInfo + '6304';
+    // CRC16-CCITT
+    const _crc = str => {
+      let crc = 0xFFFF;
+      for (let i = 0; i < str.length; i++) {
+        crc ^= str.charCodeAt(i) << 8;
+        for (let j = 0; j < 8; j++) crc = (crc & 0x8000) ? (crc << 1) ^ 0x1021 : crc << 1;
+      }
+      return (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+    };
+    payload += _crc(payload);
+
+    // QR Code SVG simples via módulos (matriz de pontos)
+    const _qrSvg = data => {
+      // Implementação simplificada de QR visual (representação do payload em barras)
+      // Para um QR funcional em produção, recomenda-se a lib qrcodejs via CDN
+      const cells = 21;
+      const size  = 180;
+      const cell  = Math.floor(size / cells);
+      // Usar hash do payload para criar padrão visual único (não é QR real, é visual indicativo)
+      let h = 0;
+      for (const ch of data) h = (Math.imul(31, h) + ch.charCodeAt(0)) | 0;
+      const rng = (seed) => { let s = seed; return () => { s = (Math.imul(s, 1664525) + 1013904223) | 0; return (s >>> 0) / 0xFFFFFFFF; }; };
+      const rand = rng(Math.abs(h));
+      let rect = '';
+      // Finder patterns (cantos)
+      [[0,0],[cells-7,0],[0,cells-7]].forEach(([r,c]) => {
+        rect += `<rect x="${c*cell}" y="${r*cell}" width="${7*cell}" height="${7*cell}" fill="#000"/>`;
+        rect += `<rect x="${(c+1)*cell}" y="${(r+1)*cell}" width="${5*cell}" height="${5*cell}" fill="#fff"/>`;
+        rect += `<rect x="${(c+2)*cell}" y="${(r+2)*cell}" width="${3*cell}" height="${3*cell}" fill="#000"/>`;
+      });
+      // Dados
+      for (let r = 0; r < cells; r++) {
+        for (let c = 0; c < cells; c++) {
+          const inFinder = (r<8&&c<8)||(r<8&&c>=cells-8)||(r>=cells-8&&c<8);
+          if (!inFinder && rand() > 0.5) {
+            rect += `<rect x="${c*cell}" y="${r*cell}" width="${cell}" height="${cell}" fill="#000"/>`;
+          }
+        }
+      }
+      return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
+        <rect width="${size}" height="${size}" fill="white"/>
+        ${rect}
+      </svg>`;
+    };
+
+    const qrSvg = _qrSvg(payload);
+    const html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
+      <title>PIX — ${mat?.nome || ''}</title>
+      <style>*{box-sizing:border-box}body{font-family:Arial,sans-serif;padding:24px;max-width:400px;margin:auto;text-align:center}
+      h2{color:#32bcad;font-size:18px;margin-bottom:4px}
+      .info{background:#f0fdf9;border:1px solid #32bcad;border-radius:10px;padding:14px;margin:14px 0;text-align:left}
+      .info div{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #e0f5f2;font-size:13px}
+      .info div:last-child{border-bottom:none}
+      .chave{background:#f5f5f5;border-radius:8px;padding:10px;margin:10px 0;word-break:break-all;font-size:12px;font-family:monospace}
+      .copy-btn{background:#32bcad;color:#fff;border:none;padding:10px 24px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;width:100%}
+      .payload{background:#f5f5f5;border-radius:8px;padding:10px;font-size:10px;font-family:monospace;word-break:break-all;margin:10px 0}
+      .aviso{font-size:10px;color:#888;margin-top:12px}
+      .print-btn{background:#666;color:#fff;border:none;padding:8px 18px;border-radius:8px;font-size:12px;cursor:pointer;margin-top:6px}
+      @media print{.copy-btn,.print-btn{display:none}}</style></head><body>
+      <div style="font-size:28px;margin-bottom:4px">🟢</div>
+      <h2>Pagamento via PIX</h2>
+      <p style="font-size:13px;color:#666;margin-bottom:12px">${cfg.nomeEscola||'Berçário Sonho Meu'}</p>
+      ${qrSvg}
+      <p style="font-size:11px;color:#888;margin-top:4px">Aponte a câmera do app do seu banco para o QR Code</p>
+      <div class="info">
+        <div><span><b>Aluno</b></span><span>${mat?.nome||'—'}</span></div>
+        <div><span><b>Referência</b></span><span>${m.ref||'—'}</span></div>
+        <div><span><b>Vencimento</b></span><span>${Utils.fmtDate(m.vencimento)}</span></div>
+        <div><span><b>Valor</b></span><span style="font-weight:700;color:#32bcad;font-size:16px">${Utils.money(m.valor)}</span></div>
+      </div>
+      <p style="font-size:12px;color:#555;margin-bottom:4px">Ou copie a chave PIX:</p>
+      <div class="chave">${chavePix}</div>
+      <button class="copy-btn" onclick="navigator.clipboard.writeText('${chavePix}');this.textContent='✅ Chave copiada!'">📋 Copiar Chave PIX</button>
+      <p style="font-size:11px;color:#888;margin-top:12px;margin-bottom:4px">Payload completo (Pix Copia e Cola):</p>
+      <div class="payload">${payload}</div>
+      <button class="copy-btn" style="background:#1a7a4a" onclick="navigator.clipboard.writeText('${payload}');this.textContent='✅ Copiado!'">📋 Copiar Pix Copia e Cola</button>
+      <div class="aviso">⚠️ Este documento é para controle interno. O QR Code é indicativo — use o Pix Copia e Cola para garantir o pagamento.</div>
+      <button class="print-btn" onclick="window.print()">🖨️ Imprimir</button>
+    </body></html>`;
+
+    const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `pix_${mat?.nome?.split(' ')[0]?.toLowerCase()||'aluno'}_${m.vencimento}.html`;
+    document.body.appendChild(a); a.click();
+    setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(a.href); }, 500);
+    Toast.show('success', '🟢 PIX gerado! Payload Pix Copia e Cola incluído.');
+  };
+
+  return { gerar, gerarPix };
 })();
 
 /* ============================================================
@@ -17176,6 +18025,1254 @@ window.addEventListener('error', e => {
 });
 
 
+/* ============================================================
+   BIBLIOTECA DE ATIVIDADES (#16)
+   Banco por faixa etária e domínio, vinculado ao plano de aula
+   ============================================================ */
+const BibliotecaAtiv = (() => {
+  // Atividades pré-cadastradas por domínio e faixa
+  const BANCO = {
+    motor: {
+      '0-6':  ['Estimulação sensorial com texturas diversas','Posição de bruços com suporte visual','Alcance de objetos coloridos pendurados','Banho de sol com movimentos livres'],
+      '6-12': ['Rolamento de barriga para as costas','Engatinhamento em circuito simples','Exploração de diferentes superfícies','Brincar sentado com apoio de almofadas'],
+      '12-24':['Circuito de obstáculos baixos','Caminhada com empurradores','Subir e descer degrau com apoio','Arremessar bola em cesta baixa'],
+      '24-48':['Pular em pé em almofadas','Pedalar triciclo','Recortar com tesoura de ponta arredondada','Desenhar formas simples com giz gordo'],
+    },
+    cognitivo: {
+      '0-6':  ['Mobiles coloridos de alto contraste','Espelho não reflexivo para auto-exploração','Caixa de sons suaves e distintos','Seguir objeto com os olhos'],
+      '6-12': ['Brinquedos de encaixe simples','Tambor e xilofone para causa-efeito','Livros de tecido com texturas','Esconder e revelar objeto sob pano'],
+      '12-24':['Quebra-cabeça de 2-4 peças grandes','Classificar objetos por cor','Livros de imagens com nomeação','Imitação de ações simples do adulto'],
+      '24-48':['Memória com 4 pares','Sequência de 3 imagens','Reconhecer e nomear cores e formas','Contar até 5 com objetos concretos'],
+    },
+    socio: {
+      '0-6':  ['Contato visual e sorriso com cuidador','Arrulhos e respostas vocais','Músicas de ninar com contato físico','Massagem gentil com verbalização'],
+      '6-12': ['Brincar de esconde-esconde','Turno vocal: adulto fala, bebê responde','Explorar rosto do cuidador','Acenos e gestos comunicativos'],
+      '12-24':['Roda de música em grupo','Brincar ao lado de outra criança','Identificar emoções em imagens','Brincadeira de faz-de-conta simples'],
+      '24-48':['Teatro de fantoches','Jogo cooperativo simples','Resolução de conflito mediada','Escolhas e preferências expressas'],
+    },
+  };
+
+  const abrir = () => {
+    const DOMS = { motor:'🏃 Motor', cognitivo:'🧠 Cognitivo', socio:'❤️ Socioemocional' };
+    const FAIXAS = ['0-6','6-12','12-24','24-48'];
+
+    Modal.open('modalLg', `
+      <div class="modal-header">
+        <div class="modal-title">📚 Biblioteca de Atividades</div>
+        <button class="modal-close" onclick="Modal.close('modalLg')">×</button>
+      </div>
+      <div class="modal-body" style="overflow-y:auto;max-height:70vh">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:var(--sp-md)">
+          ${Object.entries(DOMS).map(([k,v]) =>
+            `<button class="btn btn-ghost btn-sm" onclick="BibliotecaAtiv._filtrarDom('${k}',this)" id="libBtn_${k}">${v}</button>`
+          ).join('')}
+          <select class="form-select" id="libFaixa" style="width:130px" onchange="BibliotecaAtiv._renderLib()">
+            <option value="">Todas as faixas</option>
+            ${FAIXAS.map(f=>`<option value="${f}">${f} meses</option>`).join('')}
+          </select>
+        </div>
+        <div id="libConteudo"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="Modal.close('modalLg')">Fechar</button>
+      </div>`);
+
+    setTimeout(() => BibliotecaAtiv._renderLib(), 100);
+  };
+
+  let _domAtivo = null;
+
+  const _filtrarDom = (dom, btn) => {
+    _domAtivo = _domAtivo === dom ? null : dom;
+    document.querySelectorAll('[id^="libBtn_"]').forEach(b =>
+      b.style.fontWeight = b.id === `libBtn_${dom}` && _domAtivo ? '700' : '400'
+    );
+    _renderLib();
+  };
+
+  const _renderLib = () => {
+    const faixa = document.getElementById('libFaixa')?.value || '';
+    const el    = document.getElementById('libConteudo');
+    if (!el) return;
+    const DOMS  = { motor:'🏃 Motor', cognitivo:'🧠 Cognitivo', socio:'❤️ Socioemocional' };
+
+    el.innerHTML = Object.entries(BANCO)
+      .filter(([dom]) => !_domAtivo || dom === _domAtivo)
+      .map(([dom, faixas]) => {
+        const itens = Object.entries(faixas)
+          .filter(([f]) => !faixa || f === faixa)
+          .flatMap(([f, ativs]) => ativs.map(a => ({ f, a })));
+        if (!itens.length) return '';
+        return `
+          <div style="margin-bottom:var(--sp-md)">
+            <div style="font-size:13px;font-weight:700;margin-bottom:8px">${DOMS[dom]||dom}</div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              ${itens.map(({f,a}) => `
+                <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg-2);border-radius:8px">
+                  <div style="flex:1;font-size:13px">${a}</div>
+                  <span style="font-size:10px;color:var(--ink-3);white-space:nowrap">${f}m</span>
+                  <button class="btn btn-ghost btn-xs" style="color:var(--teal-dk)"
+                    onclick="BibliotecaAtiv._usarNaPlano('${a.replace(/'/g,'&apos;')}')">+ Plano</button>
+                </div>`).join('')}
+            </div>
+          </div>`;
+      }).join('') || '<div style="text-align:center;color:var(--ink-3);padding:20px">Nenhuma atividade encontrada</div>';
+  };
+
+  const _usarNaPlano = texto => {
+    Modal.close('modalLg');
+    Toast.show('success', 'Atividade copiada! Acesse Pedagógico → Novo Plano para usar.');
+    setTimeout(() => {
+      Router.go('pedagogico');
+      setTimeout(() => {
+        const field = document.getElementById('plAtiv') || document.getElementById('plTitulo');
+        if (field) { field.value = texto; field.focus(); }
+      }, 500);
+    }, 600);
+  };
+
+  return { abrir, _filtrarDom, _renderLib, _usarNaPlano };
+})();
+
+/* ============================================================
+   PORTFÓLIO DIGITAL DO ALUNO (#13)
+   Galeria de fotos e trabalhos no perfil
+   ============================================================ */
+const Portfolio = (() => {
+  const abrirAba = async (alunoId, containerEl) => {
+    const items = await DB.getAll('portfolio').catch(()=>[]);
+    const mine  = items.filter(p => p.alunoId === alunoId).sort((a,b)=>b.dt.localeCompare(a.dt));
+
+    containerEl.innerHTML = `
+      <div style="padding:var(--sp-md) 0">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--sp-md)">
+          <div style="font-size:13px;color:var(--ink-3)">${mine.length} item(s) no portfólio</div>
+          <button class="btn btn-secondary btn-sm" onclick="Portfolio.novoItem('${alunoId}')">+ Adicionar</button>
+        </div>
+        ${!mine.length
+          ? `<div class="empty-state"><div class="empty-icon">🖼️</div><div class="empty-title">Portfólio vazio</div><div class="empty-sub">Adicione fotos e trabalhos do aluno</div></div>`
+          : `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px">
+              ${mine.map(p => `
+                <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer" onclick="Portfolio.verItem('${p.id}','${alunoId}')">
+                  ${p.tipo==='foto' && p.dados ? `<img src="${p.dados}" style="width:100%;height:100px;object-fit:cover">` : `<div style="width:100%;height:100px;background:var(--teal-lt);display:flex;align-items:center;justify-content:center;font-size:32px">${p.tipo==='desenho'?'🎨':'📄'}</div>`}
+                  <div style="padding:6px 8px">
+                    <div style="font-size:11px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${Utils.esc(p.titulo||'Sem título')}</div>
+                    <div style="font-size:10px;color:var(--ink-3)">${Utils.fmtDate(p.dt)}</div>
+                  </div>
+                </div>`).join('')}
+            </div>`}
+      </div>`;
+  };
+
+  const novoItem = alunoId => {
+    Modal.open('modalSec', `
+      <div class="modal-header">
+        <div class="modal-title">🖼️ Novo Item no Portfólio</div>
+        <button class="modal-close" onclick="Modal.close('modalSec')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group"><label class="form-label">Título</label>
+          <input class="form-input" id="pfTitulo" placeholder="Ex: Pintura com dedos, Desenho livre..."></div>
+        <div class="form-group"><label class="form-label">Tipo</label>
+          <select class="form-select" id="pfTipo">
+            <option value="foto">📷 Foto</option>
+            <option value="desenho">🎨 Desenho/Trabalho</option>
+            <option value="nota">📝 Nota/Observação</option>
+          </select></div>
+        <div class="form-group"><label class="form-label">Data</label>
+          <input class="form-input" type="date" id="pfData" value="${Utils.today()}"></div>
+        <div class="form-group"><label class="form-label">Foto (opcional)</label>
+          <input type="file" accept="image/*" id="pfFoto" class="form-input" onchange="Portfolio._previewFoto(this)"></div>
+        <div id="pfPreview" style="margin-top:8px"></div>
+        <div class="form-group"><label class="form-label">Descrição</label>
+          <textarea class="form-textarea" id="pfDesc" rows="2" placeholder="Descreva a atividade ou conquista..."></textarea></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="Modal.close('modalSec')">Cancelar</button>
+        <button class="btn btn-primary" onclick="Portfolio._salvar('${alunoId}')">💾 Salvar</button>
+      </div>`);
+  };
+
+  const _previewFoto = input => {
+    const file = input.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const el = document.getElementById('pfPreview');
+      if (el) el.innerHTML = `<img src="${e.target.result}" style="max-height:120px;border-radius:8px;max-width:100%">`;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const _salvar = async alunoId => {
+    const titulo = document.getElementById('pfTitulo')?.value.trim() || 'Sem título';
+    const tipo   = document.getElementById('pfTipo')?.value || 'nota';
+    const dt     = document.getElementById('pfData')?.value || Utils.today();
+    const desc   = document.getElementById('pfDesc')?.value.trim() || '';
+    const file   = document.getElementById('pfFoto')?.files[0];
+
+    let dados = null;
+    if (file) {
+      dados = await new Promise(res => {
+        const r = new FileReader();
+        r.onload = e => res(e.target.result);
+        r.readAsDataURL(file);
+      });
+    }
+
+    await DB.save('portfolio', { id: Utils.uuid(), alunoId, titulo, tipo, dt, desc, dados, criadoEm: new Date().toISOString() });
+    Modal.close('modalSec');
+    Toast.show('success', '✅ Item adicionado ao portfólio!');
+    // Reabrir a aba
+    const containerEl = document.getElementById('perfilTabContent');
+    if (containerEl) await abrirAba(alunoId, containerEl);
+  };
+
+  const verItem = async (itemId, alunoId) => {
+    const item = (await DB.getAll('portfolio').catch(()=>[])).find(p => p.id === itemId);
+    if (!item) return;
+    Modal.open('modalSec', `
+      <div class="modal-header">
+        <div class="modal-title">${Utils.esc(item.titulo)}</div>
+        <button class="modal-close" onclick="Modal.close('modalSec')">×</button>
+      </div>
+      <div class="modal-body" style="text-align:center">
+        ${item.dados ? `<img src="${item.dados}" style="max-width:100%;max-height:300px;border-radius:10px;margin-bottom:12px">` : `<div style="font-size:48px;margin-bottom:12px">${item.tipo==='desenho'?'🎨':'📄'}</div>`}
+        <div style="font-size:12px;color:var(--ink-3);margin-bottom:8px">${Utils.fmtDate(item.dt)}</div>
+        ${item.desc?`<div style="font-size:13px;color:var(--ink);line-height:1.6">${Utils.esc(item.desc)}</div>`:''}
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-danger btn-sm" onclick="Portfolio._excluir('${itemId}','${alunoId}')">🗑️ Excluir</button>
+        <button class="btn btn-ghost" onclick="Modal.close('modalSec')">Fechar</button>
+      </div>`);
+  };
+
+  const _excluir = async (itemId, alunoId) => {
+    await DB.remove('portfolio', itemId).catch(()=>{});
+    Modal.close('modalSec');
+    Toast.show('success','Item removido do portfólio');
+    const containerEl = document.getElementById('perfilTabContent');
+    if (containerEl) await abrirAba(alunoId, containerEl);
+  };
+
+  return { abrirAba, novoItem, _previewFoto, _salvar, verItem, _excluir };
+})();
+
+
+
+
+
+const ContasFixas = (() => {
+  let _all = [];
+
+  const CATS = {
+    agua:       { ic:'💧', lb:'Água / Saneamento' },
+    energia:    { ic:'⚡', lb:'Energia Elétrica'  },
+    internet:   { ic:'📡', lb:'Internet / Telefone'},
+    aluguel:    { ic:'🏠', lb:'Aluguel'            },
+    salarios:   { ic:'👤', lb:'Salários'           },
+    fgts:       { ic:'💼', lb:'FGTS / Encargos'    },
+    imposto:    { ic:'📋', lb:'Impostos'            },
+    seguro:     { ic:'🛡️', lb:'Seguro'             },
+    outros:     { ic:'📦', lb:'Outros'              },
+  };
+
+  const RECORR = {
+    mensal:      'Mensal',
+    bimestral:   'Bimestral',
+    trimestral:  'Trimestral',
+    semestral:   'Semestral',
+    anual:       'Anual',
+    unico:       'Único',
+  };
+
+  const render = async () => {
+    _all = await DB.getAll('contas_fixas').catch(() => []);
+    const el = document.getElementById('page-contas');
+    if (!el) return;
+
+    const hoje   = Utils.today();
+    const venc5  = _all.filter(c => c.proxVenc && Utils.diffDays(c.proxVenc) >= 0 && Utils.diffDays(c.proxVenc) <= 5).length;
+    const vencido= _all.filter(c => c.proxVenc && c.proxVenc < hoje && c.status !== 'pago').length;
+    const totalMes = _all.filter(c => c.recorrencia === 'mensal' || c.recorrencia === 'unico').reduce((s,c)=>s+(c.valor||0),0);
+
+    el.innerHTML = `
+      <div class="page-header">
+        <div>
+          <div class="page-title">💳 Contas & Obrigações Fixas</div>
+          <div class="page-sub">Água · Energia · Salários · Impostos · Vinculadas à Agenda</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-ghost btn-sm" onclick="ContasFixas.exportCSV()">📊 CSV</button>
+          <button class="btn btn-secondary" onclick="ContasFixas.abrirForm()">+ Nova Conta</button>
+        </div>
+      </div>
+
+      <!-- KPIs -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:var(--sp-xl)">
+        <div class="card" style="text-align:center;padding:14px">
+          <div style="font-size:24px;margin-bottom:4px">📋</div>
+          <div style="font-size:22px;font-weight:800;color:var(--teal-dk)">${_all.length}</div>
+          <div style="font-size:11px;color:var(--ink-3)">Contas cadastradas</div>
+        </div>
+        <div class="card" style="text-align:center;padding:14px;border-color:${vencido?'var(--danger)':'var(--border)'}">
+          <div style="font-size:24px;margin-bottom:4px">🔴</div>
+          <div style="font-size:22px;font-weight:800;color:var(--danger)">${vencido}</div>
+          <div style="font-size:11px;color:var(--ink-3)">Vencidas</div>
+        </div>
+        <div class="card" style="text-align:center;padding:14px;border-color:${venc5?'var(--amber)':'var(--border)'}">
+          <div style="font-size:24px;margin-bottom:4px">⚠️</div>
+          <div style="font-size:22px;font-weight:800;color:var(--amber)">${venc5}</div>
+          <div style="font-size:11px;color:var(--ink-3)">Vencem em 5 dias</div>
+        </div>
+        <div class="card" style="text-align:center;padding:14px">
+          <div style="font-size:24px;margin-bottom:4px">💰</div>
+          <div style="font-size:18px;font-weight:800;color:var(--ink)">${Utils.money(totalMes)}</div>
+          <div style="font-size:11px;color:var(--ink-3)">Total mensal estimado</div>
+        </div>
+      </div>
+
+      <!-- Lista por categoria -->
+      ${Object.entries(CATS).map(([catId, cat]) => {
+        const itens = _all.filter(c => c.categoria === catId).sort((a,b)=>(a.proxVenc||'').localeCompare(b.proxVenc||''));
+        if (!itens.length) return '';
+        return `
+          <div class="card" style="margin-bottom:var(--sp-md)">
+            <div class="section-title" style="margin-bottom:var(--sp-md)">${cat.ic} ${cat.lb}</div>
+            <div style="overflow-x:auto">
+              <table class="table">
+                <thead><tr><th>Nome</th><th>Valor</th><th>Recorrência</th><th>Próx. Vencimento</th><th>Status</th><th></th></tr></thead>
+                <tbody>
+                  ${itens.map(c => {
+                    const isVenc = c.proxVenc && c.proxVenc < hoje && c.status !== 'pago';
+                    const isAlerta = c.proxVenc && Utils.diffDays(c.proxVenc) >= 0 && Utils.diffDays(c.proxVenc) <= 5;
+                    const statusCor = c.status === 'pago' ? 'var(--success)' : isVenc ? 'var(--danger)' : isAlerta ? 'var(--amber)' : 'var(--ink-3)';
+                    const statusLbl = c.status === 'pago' ? '✅ Pago' : isVenc ? '🔴 Vencido' : isAlerta ? '⚠️ Vence em breve' : '⏳ Pendente';
+                    return `<tr>
+                      <td><strong>${Utils.esc(c.nome)}</strong>${c.obs?`<br><span style="font-size:11px;color:var(--ink-3)">${Utils.esc(c.obs)}</span>`:''}}</td>
+                      <td style="font-weight:700">${Utils.money(c.valor)}</td>
+                      <td>${RECORR[c.recorrencia]||c.recorrencia}</td>
+                      <td style="color:${statusCor};font-weight:600">${c.proxVenc?Utils.fmtDate(c.proxVenc):'—'}</td>
+                      <td><span style="font-size:12px;color:${statusCor};font-weight:700">${statusLbl}</span></td>
+                      <td style="display:flex;gap:4px;flex-wrap:nowrap">
+                        ${c.status !== 'pago' ? `<button class="btn btn-ghost btn-xs" style="color:var(--success)" onclick="ContasFixas.marcarPago('${c.id}')">✅ Pagar</button>` : `<button class="btn btn-ghost btn-xs" onclick="ContasFixas.reabrir('${c.id}')">↩️</button>`}
+                        <button class="btn btn-ghost btn-xs" onclick="ContasFixas.abrirForm('${c.id}')">✏️</button>
+                        <button class="btn btn-ghost btn-xs" style="color:var(--danger)" onclick="ContasFixas.excluir('${c.id}')">🗑️</button>
+                      </td>
+                    </tr>`;
+                  }).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>`;
+      }).join('')}
+
+      ${!_all.length ? `<div class="card" style="text-align:center;padding:40px">
+        <div style="font-size:48px;margin-bottom:12px">💳</div>
+        <div style="font-size:17px;font-weight:700;margin-bottom:8px">Nenhuma conta cadastrada</div>
+        <div style="font-size:13px;color:var(--ink-3);margin-bottom:20px">Cadastre água, energia, salários e outras obrigações fixas</div>
+        <button class="btn btn-secondary" onclick="ContasFixas.abrirForm()">+ Cadastrar Primeira Conta</button>
+      </div>` : ''}`;
+  };
+
+  const abrirForm = async id => {
+    const c = id ? _all.find(x => x.id === id) : null;
+    Modal.open('modalSec', `
+      <div class="modal-header">
+        <div class="modal-title">${c ? '✏️ Editar Conta' : '💳 Nova Conta Fixa'}</div>
+        <button class="modal-close" onclick="Modal.close('modalSec')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row c2">
+          <div class="form-group">
+            <label class="form-label">Nome da conta *</label>
+            <input class="form-input" id="cfNome" value="${Utils.esc(c?.nome||'')}" placeholder="Ex: Conta de Água SANEAGO">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Categoria</label>
+            <select class="form-select" id="cfCat">
+              ${Object.entries(CATS).map(([k,v])=>`<option value="${k}" ${c?.categoria===k?'selected':''}>${v.ic} ${v.lb}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+        <div class="form-row c2">
+          <div class="form-group">
+            <label class="form-label">Valor (R$) *</label>
+            <input class="form-input" type="number" step="0.01" id="cfValor" value="${c?.valor||''}" placeholder="0,00">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Recorrência</label>
+            <select class="form-select" id="cfRecorr">
+              ${Object.entries(RECORR).map(([k,v])=>`<option value="${k}" ${c?.recorrencia===k?'selected':''}>${v}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+        <div class="form-row c2">
+          <div class="form-group">
+            <label class="form-label">Próximo Vencimento</label>
+            <input class="form-input" type="date" id="cfVenc" value="${c?.proxVenc||Utils.today()}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Dia do vencimento (fixo)</label>
+            <input class="form-input" type="number" min="1" max="31" id="cfDiaVenc" value="${c?.diaVenc||''}" placeholder="Ex: 10">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Observações</label>
+          <input class="form-input" id="cfObs" value="${Utils.esc(c?.obs||'')}" placeholder="Fornecedor, número do contrato, etc.">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="Modal.close('modalSec')">Cancelar</button>
+        <button class="btn btn-primary" onclick="ContasFixas.salvar('${id||''}')">💾 Salvar</button>
+      </div>`);
+  };
+
+  const salvar = async id => {
+    const nome  = document.getElementById('cfNome')?.value.trim();
+    const valor = parseFloat(document.getElementById('cfValor')?.value) || 0;
+    if (!nome) { Toast.show('error','Nome obrigatório'); return; }
+    const conta = {
+      id:          id || Utils.uuid(),
+      nome,
+      categoria:   document.getElementById('cfCat')?.value || 'outros',
+      valor,
+      recorrencia: document.getElementById('cfRecorr')?.value || 'mensal',
+      proxVenc:    document.getElementById('cfVenc')?.value || Utils.today(),
+      diaVenc:     parseInt(document.getElementById('cfDiaVenc')?.value) || null,
+      obs:         document.getElementById('cfObs')?.value.trim() || '',
+      status:      id ? (_all.find(x=>x.id===id)?.status || 'pendente') : 'pendente',
+      criadoEm:    new Date().toISOString(),
+    };
+    await DB.save('contas_fixas', conta).catch(async () => {
+      // Store pode não existir — criar e tentar de novo
+      await DB.saveAll('contas_fixas', [conta]).catch(() => {});
+    });
+    // Sincronizar com Agenda
+    await _agendarVencimento(conta);
+    Modal.close('modalSec');
+    Toast.show('success', `✅ "${nome}" salva e agendada!`);
+    await render();
+  };
+
+  const marcarPago = async id => {
+    const c = _all.find(x => x.id === id); if (!c) return;
+    // Calcular próximo vencimento baseado na recorrência
+    const recorrDias = { mensal:30, bimestral:60, trimestral:90, semestral:180, anual:365, unico:0 };
+    const dias = recorrDias[c.recorrencia] || 30;
+    let proxVenc = c.proxVenc;
+    if (dias > 0 && c.recorrencia !== 'unico') {
+      const dt = new Date(c.proxVenc + 'T12:00:00');
+      dt.setDate(dt.getDate() + dias);
+      if (c.diaVenc) dt.setDate(c.diaVenc);
+      proxVenc = dt.toISOString().slice(0,10);
+    }
+    const atualizado = { ...c, status: 'pago', ultimoPagamento: Utils.today() };
+    if (c.recorrencia !== 'unico') atualizado.proxVenc = proxVenc;
+    await DB.save('contas_fixas', atualizado).catch(()=>{});
+    await _agendarVencimento(atualizado);
+    Toast.show('success', `✅ "${c.nome}" marcada como paga!`);
+    await render();
+  };
+
+  const reabrir = async id => {
+    const c = _all.find(x => x.id === id); if (!c) return;
+    await DB.save('contas_fixas', { ...c, status: 'pendente' }).catch(()=>{});
+    Toast.show('success', 'Conta reaberta.');
+    await render();
+  };
+
+  const excluir = async id => {
+    if (!await Modal.confirm('Excluir esta conta?', { danger: true, confirmLabel: 'Excluir' })) return;
+    await DB.remove('contas_fixas', id).catch(()=>{});
+    Toast.show('success', 'Conta removida.');
+    await render();
+  };
+
+  const _agendarVencimento = async conta => {
+    // Remove evento anterior desta conta na agenda
+    try {
+      const eventos = await DB.getAll('eventos');
+      await Promise.all(eventos.filter(e => e._contaId === conta.id).map(e => DB.remove('eventos', e.id)));
+      if (conta.status === 'pago' || !conta.proxVenc || conta.recorrencia === 'unico') return;
+      const cat = CATS[conta.categoria] || CATS.outros;
+      await DB.save('eventos', {
+        id:       Utils.uuid(),
+        dt:       conta.proxVenc,
+        tipo:     'outro',
+        titulo:   `${cat.ic} ${conta.nome} — ${Utils.money(conta.valor)}`,
+        desc:     `Conta fixa · ${RECORR[conta.recorrencia] || conta.recorrencia}`,
+        cor:      '#E8644A',
+        _contaId: conta.id,
+      });
+    } catch {}
+  };
+
+  const exportCSV = () => {
+    const rows = ['"Nome","Categoria","Valor","Recorrência","Próx. Vencimento","Status"'];
+    _all.forEach(c => {
+      rows.push(`"${c.nome}","${CATS[c.categoria]?.lb||c.categoria}","${(c.valor||0).toFixed(2)}","${RECORR[c.recorrencia]||c.recorrencia}","${c.proxVenc||''}","${c.status}"`);
+    });
+    Utils.downloadCSV(rows.join('\n'), `contas_fixas_${Utils.today()}.csv`);
+  };
+
+  return { render, abrirForm, salvar, marcarPago, reabrir, excluir, exportCSV };
+})();
+
+/* ============================================================
+   MORNING BRIEFING — Relatório imprimível do dia
+   ============================================================ */
+const MorningBriefing = (() => {
+  const gerar = async () => {
+    const hoje = Utils.today();
+    const [mats, mens, cfg] = await Promise.all([DB.getAll('matriculas'), DB.getAll('mensalidades'), DB.getConfig()]);
+    const ativos   = mats.filter(function(m){ return m.st === 'matriculado'; });
+    const mensHoje = mens.filter(function(m){ return m.vencimento === hoje && m.st !== 'pago'; });
+    const dow      = new Date(hoje+'T12:00:00').getDay();
+    const DIAS     = ['Dom','Seg','Ter','Qua','Qui','Sex','Sab'];
+    const nomeEsc  = cfg.nomeEscola || 'Berçário Sonho Meu';
+    var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Briefing</title>';
+    html += '<style>body{font-family:Arial;font-size:12px;padding:20px;max-width:800px;margin:auto}.s{border:1px solid #ddd;border-radius:8px;margin-bottom:12px}.sh{background:#12586a;color:#fff;padding:6px 12px;font-weight:700}.sb{padding:10px 12px}.r{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f0f0f0}.b{background:#e8f5f7;color:#12586a;border-radius:8px;padding:1px 8px;font-size:10px}@media print{button{display:none}}</style></head><body>';
+    html += '<h2>' + nomeEsc + ' — Briefing de ' + DIAS[dow] + ', ' + hoje + '</h2>';
+    if (mensHoje.length) {
+      html += '<div class="s"><div class="sh">💰 Mensalidades Vencendo Hoje (' + mensHoje.length + ')</div><div class="sb">';
+      mensHoje.forEach(function(m) { var mat=mats.find(function(a){return a.id===m.alunoId;}); html += '<div class="r"><span><strong>' + Utils.esc(mat?mat.nome:'—') + '</strong> · ' + m.ref + '</span><span class="b">' + Utils.money(m.valor) + '</span></div>'; });
+      html += '</div></div>';
+    }
+    html += '<div class="s"><div class="sh">👶 Alunos Ativos: ' + ativos.length + '</div><div class="sb"><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:4px;font-size:11px">';
+    ativos.forEach(function(m){ html += '<div>' + Utils.esc(m.nome.split(' ').slice(0,2).join(' ')) + ' <span style="color:#aaa">· ' + Utils.salaLabel(m.turma) + '</span></div>'; });
+    html += '</div></div></div>';
+    html += '<button onclick="window.print()" style="position:fixed;bottom:16px;right:16px;background:#12586a;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer">Imprimir</button>';
+    html += '</body></html>';
+    var blob = new Blob([html], {type:'text/html;charset=utf-8'});
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'briefing_'+hoje+'.html';
+    document.body.appendChild(a); a.click(); setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(a.href); }, 500);
+    Toast.show('success','☀️ Briefing gerado!');
+  };
+  return { gerar };
+})();
+
+
+
+/* ============================================================
+   BLOCO 2 — FAMÍLIA & COMUNICAÇÃO
+   #07 PIX QR · #20 Diário de Bordo · #25 Medicamentos
+   #28 Ocorrências · #21 Comunicados · #26 Fila de Espera
+   ============================================================ */
+
+/* ── #07 PIX QR Code (amplia Boleto) ───────────────────────
+   Payload PIX EMV formato 2 (sem certificado bancário)
+   ─────────────────────────────────────────────────────────── */
+const PIX = (() => {
+  // CRC-16/CCITT-FALSE
+  const _crc16 = str => {
+    let crc = 0xFFFF;
+    for (let i = 0; i < str.length; i++) {
+      crc ^= str.charCodeAt(i) << 8;
+      for (let j = 0; j < 8; j++) crc = crc & 0x8000 ? (crc << 1) ^ 0x1021 : crc << 1;
+    }
+    return (crc & 0xFFFF).toString(16).toUpperCase().padStart(4,'0');
+  };
+
+  const _campo = (id, val) => {
+    const v = String(val); return `${id}${String(v.length).padStart(2,'0')}${v}`;
+  };
+
+  const gerarPayload = (chave, nome, cidade, valor, txid) => {
+    const merchantAccInfo = _campo('00','BR.GOV.BCB.PIX') + _campo('01', chave);
+    const mcc             = '0000';
+    const txidStr         = (txid||'***').replace(/[^a-zA-Z0-9]/g,'').slice(0,25)||'***';
+    const addData         = _campo('05', txidStr);
+    const nomeClean       = nome.normalize('NFD').replace(/[\u0300-\u036f]/g,'').slice(0,25);
+    const cidadeClean     = cidade.normalize('NFD').replace(/[\u0300-\u036f]/g,'').slice(0,15);
+    const valorStr        = valor > 0 ? valor.toFixed(2) : '';
+
+    let payload = _campo('00','01')
+      + _campo('26', merchantAccInfo)
+      + _campo('52', mcc)
+      + _campo('53','986')
+      + (valorStr ? _campo('54', valorStr) : '')
+      + _campo('58','BR')
+      + _campo('59', nomeClean)
+      + _campo('60', cidadeClean)
+      + _campo('62', addData)
+      + '6304';
+
+    return payload + _crc16(payload);
+  };
+
+  // QR Code SVG puro (matriz de módulos via algoritmo simplificado)
+  const gerarQRSvg = payload => {
+    // Codificação básica: representar URL em QR visual via canvas offscreen
+    // Fallback: mostrar código copia-e-cola estilizado quando QR complexo demais
+    // Para PIX, o payload tem ~120 chars → QR versão 5 (37x37 módulos)
+    // Usamos representação visual do código como alternativa portável
+    const tamanho = 200;
+    return `
+      <div style="text-align:center;margin:12px 0">
+        <div style="display:inline-block;padding:12px;background:#fff;border:2px solid var(--border);border-radius:12px">
+          <svg width="${tamanho}" height="${tamanho}" viewBox="0 0 ${tamanho} ${tamanho}" xmlns="http://www.w3.org/2000/svg">
+            <rect width="${tamanho}" height="${tamanho}" fill="white"/>
+            <!-- Finder patterns (cantos) -->
+            <rect x="10" y="10" width="49" height="49" rx="4" fill="#000"/>
+            <rect x="15" y="15" width="39" height="39" rx="2" fill="#fff"/>
+            <rect x="20" y="20" width="29" height="29" rx="1" fill="#000"/>
+            <rect x="${tamanho-59}" y="10" width="49" height="49" rx="4" fill="#000"/>
+            <rect x="${tamanho-54}" y="15" width="39" height="39" rx="2" fill="#fff"/>
+            <rect x="${tamanho-49}" y="20" width="29" height="29" rx="1" fill="#000"/>
+            <rect x="10" y="${tamanho-59}" width="49" height="49" rx="4" fill="#000"/>
+            <rect x="15" y="${tamanho-54}" width="39" height="39" rx="2" fill="#fff"/>
+            <rect x="20" y="${tamanho-49}" width="29" height="29" rx="1" fill="#000"/>
+            <!-- Texto central -->
+            <text x="${tamanho/2}" y="${tamanho/2 - 8}" text-anchor="middle" font-size="10" fill="#555">Escaneie com</text>
+            <text x="${tamanho/2}" y="${tamanho/2 + 8}" text-anchor="middle" font-size="13" font-weight="700" fill="#12586a">Pix</text>
+            <text x="${tamanho/2}" y="${tamanho/2 + 24}" text-anchor="middle" font-size="9" fill="#888">app do banco</text>
+            <!-- Timing patterns -->
+            ${Array.from({length:8},(_,i)=>`<rect x="${69+i*8}" y="67" width="4" height="4" fill="${i%2?'#fff':'#000'}"/>
+              <rect x="67" y="${69+i*8}" width="4" height="4" fill="${i%2?'#fff':'#000'}"/>`).join('')}
+          </svg>
+        </div>
+        <div style="font-size:10px;color:var(--ink-3);margin-top:6px">QR Code Pix</div>
+      </div>`;
+  };
+
+  const abrirModal = async mensId => {
+    const [m, cfg] = await Promise.all([DB.get('mensalidades', mensId), DB.getConfig()]);
+    if (!m) return;
+    const mat = await DB.get('matriculas', m.alunoId);
+    if (!mat) return;
+
+    const chave   = cfg.chavePix || '';
+    const nome    = cfg.nomeEscola || 'Berçario Sonho Meu';
+    const cidade  = cfg.cidade || 'Trindade';
+    const valor   = m.valor || 0;
+    const txid    = `BSM${m.id.slice(-8).toUpperCase()}`;
+
+    if (!chave) {
+      Toast.show('warning','⚠️ Configure a chave Pix em Configurações → Dados Financeiros');
+      Router.go('config');
+      return;
+    }
+
+    const payload = gerarPayload(chave, nome, cidade, valor, txid);
+    const qrSvg   = gerarQRSvg(payload);
+
+    Modal.open('modalSec', `
+      <div class="modal-header">
+        <div class="modal-title">📱 Pagar via Pix</div>
+        <button class="modal-close" onclick="Modal.close('modalSec')">×</button>
+      </div>
+      <div class="modal-body" style="text-align:center">
+        <div style="margin-bottom:12px">
+          <div style="font-size:15px;font-weight:700">${Utils.esc(mat.nome)}</div>
+          <div style="font-size:13px;color:var(--ink-3)">${m.ref} · <strong style="color:var(--teal-dk)">${Utils.money(valor)}</strong></div>
+        </div>
+        ${qrSvg}
+        <div style="margin:12px 0">
+          <div style="font-size:11px;color:var(--ink-3);margin-bottom:6px">Ou copie o código Pix:</div>
+          <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-family:monospace;font-size:9px;word-break:break-all;color:var(--ink-2);max-height:60px;overflow:hidden;text-overflow:ellipsis" id="pixPayload">${Utils.esc(payload.slice(0,80))}...</div>
+          <button class="btn btn-secondary btn-sm" style="margin-top:6px" onclick="PIX._copiar('${payload.replace(/'/g,'\\\'')}')">📋 Copiar código completo</button>
+        </div>
+        <div style="font-size:10px;color:var(--ink-4);margin-top:8px">⚠️ QR ilustrativo — use o código copiado no app do banco</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="Modal.close('modalSec')">Fechar</button>
+        <button class="btn btn-primary" onclick="PIX._copiar('${payload.replace(/'/g,'\\\'')}')">📋 Copiar Pix</button>
+      </div>`);
+  };
+
+  const _copiar = txt => {
+    navigator.clipboard?.writeText(txt).then(() => Toast.show('success','✅ Código Pix copiado!'))
+      .catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = txt; document.body.appendChild(ta); ta.select();
+        document.execCommand('copy'); document.body.removeChild(ta);
+        Toast.show('success','✅ Código Pix copiado!');
+      });
+  };
+
+  return { abrirModal, gerarPayload, gerarQRSvg, _copiar };
+})();
+
+/* ── #20 DIÁRIO DE BORDO ────────────────────────────────────
+   Registro diário: mamou, dormiu, humor, fralda, observações
+   ─────────────────────────────────────────────────────────── */
+const DiarioBordo = (() => {
+  const HUMOR = { '😊':'Feliz', '😐':'Tranquilo', '😢':'Choroso', '😴':'Sonolento', '😤':'Agitado' };
+  const MAMOU = { sim:'Sim, bem', parcial:'Parcial', nao:'Não mamou' };
+  const DORMIU= { bem:'Bem', pouco:'Pouco', nao:'Não dormiu' };
+
+  const abrirAba = async (alunoId, el) => {
+    const hoje    = Utils.today();
+    const todos   = await DB.getAll('diario_bordo').catch(()=>[]);
+    const do_aluno= todos.filter(d => d.alunoId === alunoId).sort((a,b) => b.dt.localeCompare(a.dt));
+    const hoje_reg= do_aluno.find(d => d.dt === hoje);
+
+    el.innerHTML = `
+      <div style="padding:var(--sp-md) 0">
+        <!-- Registro de hoje -->
+        <div class="card" style="margin-bottom:var(--sp-md);border-color:var(--teal)">
+          <div class="section-title" style="margin-bottom:var(--sp-md)">📓 Registro de Hoje — ${Utils.fmtDate(hoje)}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+            <div class="form-group"><label class="form-label">😊 Humor</label>
+              <select class="form-select" id="dbHumor">
+                ${Object.entries(HUMOR).map(([k,v])=>`<option value="${k}" ${hoje_reg?.humor===k?'selected':''}>${k} ${v}</option>`).join('')}
+              </select></div>
+            <div class="form-group"><label class="form-label">🍼 Mamou / se alimentou</label>
+              <select class="form-select" id="dbMamou">
+                ${Object.entries(MAMOU).map(([k,v])=>`<option value="${k}" ${hoje_reg?.mamou===k?'selected':''}>${v}</option>`).join('')}
+              </select></div>
+            <div class="form-group"><label class="form-label">😴 Dormiu</label>
+              <select class="form-select" id="dbDormiu">
+                ${Object.entries(DORMIU).map(([k,v])=>`<option value="${k}" ${hoje_reg?.dormiu===k?'selected':''}>${v}</option>`).join('')}
+              </select></div>
+            <div class="form-group"><label class="form-label">🚼 Fralda (trocas)</label>
+              <input class="form-input" type="number" min="0" max="15" id="dbFralda" value="${hoje_reg?.fralda??0}" placeholder="0"></div>
+          </div>
+          <div class="form-group"><label class="form-label">📝 Observações do dia</label>
+            <textarea class="form-textarea" id="dbObs" rows="2" placeholder="Algo especial que aconteceu hoje...">${Utils.esc(hoje_reg?.obs||'')}</textarea></div>
+          <button class="btn btn-primary btn-sm" onclick="DiarioBordo.salvar('${alunoId}')">💾 Salvar Registro de Hoje</button>
+        </div>
+
+        <!-- Histórico -->
+        ${do_aluno.length ? `
+          <div class="section-title" style="margin-bottom:var(--sp-sm)">📅 Histórico</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            ${do_aluno.slice(0,10).map(d => `
+              <div style="background:var(--bg-2);border-radius:10px;padding:10px 12px">
+                <div style="font-size:11px;font-weight:700;color:var(--ink-3);margin-bottom:4px">${Utils.fmtDate(d.dt)}</div>
+                <div style="display:flex;gap:12px;font-size:12px;flex-wrap:wrap">
+                  <span>${d.humor} ${HUMOR[d.humor]||d.humor}</span>
+                  <span>🍼 ${MAMOU[d.mamou]||d.mamou}</span>
+                  <span>😴 ${DORMIU[d.dormiu]||d.dormiu}</span>
+                  <span>🚼 ${d.fralda||0}x</span>
+                </div>
+                ${d.obs?`<div style="font-size:11px;color:var(--ink-2);margin-top:4px">${Utils.esc(d.obs)}</div>`:''}
+              </div>`).join('')}
+          </div>` : `<div class="empty-state"><div class="empty-icon">📓</div><div class="empty-title">Sem registros anteriores</div></div>`}
+      </div>`;
+  };
+
+  const salvar = async alunoId => {
+    const hoje = Utils.today();
+    const todos = await DB.getAll('diario_bordo').catch(()=>[]);
+    const exist = todos.find(d => d.alunoId === alunoId && d.dt === hoje);
+    await DB.save('diario_bordo', {
+      id:      exist?.id || Utils.uuid(),
+      alunoId, dt: hoje,
+      humor:   document.getElementById('dbHumor')?.value  || '😊',
+      mamou:   document.getElementById('dbMamou')?.value  || 'sim',
+      dormiu:  document.getElementById('dbDormiu')?.value || 'bem',
+      fralda:  parseInt(document.getElementById('dbFralda')?.value)||0,
+      obs:     document.getElementById('dbObs')?.value.trim()||'',
+      educadora: Auth.getSessao()?.nome||'',
+    });
+    Toast.show('success','📓 Diário salvo!');
+    const el = document.getElementById('perfilTabContent');
+    if (el) await abrirAba(alunoId, el);
+  };
+
+  return { abrirAba, salvar };
+})();
+
+/* ── #25 MEDICAMENTOS ───────────────────────────────────────
+   Autorização, horário, dosagem, confirmação de aplicação
+   ─────────────────────────────────────────────────────────── */
+const Medicamentos = (() => {
+  const abrirAba = async (alunoId, el) => {
+    const todos = await DB.getAll('medicamentos').catch(()=>[]);
+    const mine  = todos.filter(m => m.alunoId === alunoId).sort((a,b)=>b.dtInicio.localeCompare(a.dtInicio));
+    const ativos= mine.filter(m => !m.dtFim || m.dtFim >= Utils.today());
+
+    el.innerHTML = `
+      <div style="padding:var(--sp-md) 0">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:var(--sp-md)">
+          <button class="btn btn-secondary btn-sm" onclick="Medicamentos.novoForm('${alunoId}')">+ Nova Autorização</button>
+        </div>
+
+        ${ativos.length ? `
+          <div class="section-title" style="margin-bottom:var(--sp-sm)">💊 Medicamentos Ativos</div>
+          ${ativos.map(m => `
+            <div style="background:var(--bg-2);border-left:3px solid var(--teal);border-radius:0 10px 10px 0;padding:12px;margin-bottom:8px">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                <div>
+                  <div style="font-weight:700;font-size:13px">${Utils.esc(m.nome)}</div>
+                  <div style="font-size:11px;color:var(--ink-3)">${Utils.esc(m.dosagem)} · ${Utils.esc(m.horario)}</div>
+                  <div style="font-size:11px;color:var(--ink-3)">${Utils.fmtDate(m.dtInicio)}${m.dtFim?' até '+Utils.fmtDate(m.dtFim):' (sem prazo)'}</div>
+                  ${m.obs?`<div style="font-size:11px;color:var(--ink-2);margin-top:2px">${Utils.esc(m.obs)}</div>`:''}
+                </div>
+                <div style="display:flex;gap:4px">
+                  <button class="btn btn-ghost btn-xs" style="color:var(--success)" onclick="Medicamentos.registrarAplicacao('${m.id}','${alunoId}')">✅ Aplicado</button>
+                  <button class="btn btn-ghost btn-xs" style="color:var(--danger)" onclick="Medicamentos.encerrar('${m.id}','${alunoId}')">⏹</button>
+                </div>
+              </div>
+              ${m.aplicacoes?.length ? `<div style="font-size:10px;color:var(--ink-3);margin-top:6px">
+                Aplicações: ${m.aplicacoes.slice(-3).map(a=>`${a.hora} (${a.edu})`).join(' · ')}
+              </div>` : ''}
+            </div>`).join('')}` : ''}
+
+        ${mine.filter(m=>m.dtFim&&m.dtFim<Utils.today()).length ? `
+          <details style="margin-top:var(--sp-md)">
+            <summary style="font-size:12px;color:var(--ink-3);cursor:pointer">Ver histórico encerrado</summary>
+            ${mine.filter(m=>m.dtFim&&m.dtFim<Utils.today()).map(m=>`
+              <div style="background:var(--bg-2);border-radius:8px;padding:8px 12px;margin-top:6px;opacity:.7">
+                <span style="font-weight:600">${Utils.esc(m.nome)}</span>
+                <span style="font-size:11px;color:var(--ink-3)"> · ${Utils.esc(m.dosagem)} · encerrado em ${Utils.fmtDate(m.dtFim)}</span>
+              </div>`).join('')}
+          </details>` : ''}
+
+        ${!mine.length ? `<div class="empty-state"><div class="empty-icon">💊</div><div class="empty-title">Sem medicamentos cadastrados</div></div>` : ''}
+      </div>`;
+  };
+
+  const novoForm = alunoId => {
+    Modal.open('modalSec', `
+      <div class="modal-header">
+        <div class="modal-title">💊 Nova Autorização de Medicamento</div>
+        <button class="modal-close" onclick="Modal.close('modalSec')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row c2">
+          <div class="form-group"><label class="form-label">Medicamento *</label>
+            <input class="form-input" id="medNome" placeholder="Nome do medicamento"></div>
+          <div class="form-group"><label class="form-label">Dosagem *</label>
+            <input class="form-input" id="medDosagem" placeholder="Ex: 5ml, 1 comprimido"></div>
+        </div>
+        <div class="form-row c2">
+          <div class="form-group"><label class="form-label">Horário(s) *</label>
+            <input class="form-input" id="medHorario" placeholder="Ex: 08h e 14h"></div>
+          <div class="form-group"><label class="form-label">Administrado por</label>
+            <input class="form-input" id="medAdmin" placeholder="Via oral, tópico..."></div>
+        </div>
+        <div class="form-row c2">
+          <div class="form-group"><label class="form-label">Data de início</label>
+            <input class="form-input" type="date" id="medInicio" value="${Utils.today()}"></div>
+          <div class="form-group"><label class="form-label">Data de término (opcional)</label>
+            <input class="form-input" type="date" id="medFim"></div>
+        </div>
+        <div class="form-group"><label class="form-label">Observações / Contraindicações</label>
+          <textarea class="form-textarea" id="medObs" rows="2" placeholder="Reações adversas, cuidados especiais..."></textarea></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="Modal.close('modalSec')">Cancelar</button>
+        <button class="btn btn-primary" onclick="Medicamentos.salvar('${alunoId}')">💾 Salvar Autorização</button>
+      </div>`);
+  };
+
+  const salvar = async alunoId => {
+    const nome = document.getElementById('medNome')?.value.trim();
+    if (!nome) { Toast.show('error','Nome do medicamento obrigatório'); return; }
+    await DB.save('medicamentos', {
+      id: Utils.uuid(), alunoId,
+      nome, dosagem: document.getElementById('medDosagem')?.value.trim()||'',
+      horario: document.getElementById('medHorario')?.value.trim()||'',
+      admin: document.getElementById('medAdmin')?.value.trim()||'oral',
+      dtInicio: document.getElementById('medInicio')?.value||Utils.today(),
+      dtFim: document.getElementById('medFim')?.value||null,
+      obs: document.getElementById('medObs')?.value.trim()||'',
+      aplicacoes: [], autorizado: Utils.today(),
+    });
+    Modal.close('modalSec');
+    Toast.show('success','✅ Medicamento autorizado!');
+    const el = document.getElementById('perfilTabContent');
+    if (el) await abrirAba(alunoId, el);
+  };
+
+  const registrarAplicacao = async (medId, alunoId) => {
+    const todos = await DB.getAll('medicamentos').catch(()=>[]);
+    const med   = todos.find(m => m.id === medId); if (!med) return;
+    const hora  = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    const edu   = Auth.getSessao()?.nome?.split(' ')[0] || 'Educadora';
+    med.aplicacoes = [...(med.aplicacoes||[]), { hora, edu, dt: Utils.today() }];
+    await DB.save('medicamentos', med);
+    Toast.show('success',`✅ Aplicação de ${med.nome} registrada às ${hora}`);
+    const el = document.getElementById('perfilTabContent');
+    if (el) await abrirAba(alunoId, el);
+  };
+
+  const encerrar = async (medId, alunoId) => {
+    if (!await Modal.confirm('Encerrar este medicamento?',{confirmLabel:'Encerrar',danger:true})) return;
+    const todos = await DB.getAll('medicamentos').catch(()=>[]);
+    const med   = todos.find(m => m.id === medId); if (!med) return;
+    await DB.save('medicamentos', {...med, dtFim: Utils.today()});
+    Toast.show('success','Medicamento encerrado');
+    const el = document.getElementById('perfilTabContent');
+    if (el) await abrirAba(alunoId, el);
+  };
+
+  return { abrirAba, novoForm, salvar, registrarAplicacao, encerrar };
+})();
+
+/* ── #28 OCORRÊNCIAS ────────────────────────────────────────
+   Acidentes, comportamentos, incidentes — com impressão
+   ─────────────────────────────────────────────────────────── */
+const Ocorrencias = (() => {
+  const TIPOS = {
+    acidente:      { ic:'🤕', lb:'Acidente/Queda' },
+    comportamento: { ic:'😤', lb:'Comportamento'  },
+    saude:         { ic:'🤒', lb:'Saúde/Mal-estar' },
+    patrimonial:   { ic:'🔧', lb:'Patrimonial'    },
+    outro:         { ic:'📋', lb:'Outro'           },
+  };
+
+  const abrirAba = async (alunoId, el) => {
+    const todos = await DB.getAll('ocorrencias').catch(()=>[]);
+    const mine  = todos.filter(o => o.alunoId === alunoId).sort((a,b)=>b.dt.localeCompare(a.dt));
+
+    el.innerHTML = `
+      <div style="padding:var(--sp-md) 0">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:var(--sp-md)">
+          <button class="btn btn-secondary btn-sm" onclick="Ocorrencias.novoForm('${alunoId}')">+ Registrar Ocorrência</button>
+        </div>
+        ${!mine.length ? `<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-title">Sem ocorrências registradas</div></div>` :
+        mine.map(o => {
+          const t = TIPOS[o.tipo] || TIPOS.outro;
+          return `
+            <div style="background:var(--bg-2);border-radius:10px;padding:12px;margin-bottom:8px">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                <span style="font-size:18px">${t.ic}</span>
+                <div style="flex:1">
+                  <div style="font-weight:700;font-size:13px">${t.lb}</div>
+                  <div style="font-size:11px;color:var(--ink-3)">${Utils.fmtDate(o.dt)} ${o.hora||''} · ${Utils.esc(o.educadora||'')}</div>
+                </div>
+                <button class="btn btn-ghost btn-xs" onclick="Ocorrencias.imprimir('${o.id}')">🖨️</button>
+              </div>
+              <div style="font-size:12px;color:var(--ink);line-height:1.5">${Utils.esc(o.descricao)}</div>
+              ${o.providencias?`<div style="font-size:11px;color:var(--teal-dk);margin-top:4px">→ ${Utils.esc(o.providencias)}</div>`:''}
+              ${o.assinadoEm?`<div style="font-size:10px;color:var(--ink-4);margin-top:4px">✅ Responsável notificado em ${Utils.fmtDate(o.assinadoEm)}</div>`:''}
+            </div>`;
+        }).join('')}
+      </div>`;
+  };
+
+  const novoForm = alunoId => {
+    const hora = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    Modal.open('modalSec', `
+      <div class="modal-header">
+        <div class="modal-title">📋 Registrar Ocorrência</div>
+        <button class="modal-close" onclick="Modal.close('modalSec')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row c2">
+          <div class="form-group"><label class="form-label">Tipo</label>
+            <select class="form-select" id="ocTipo">
+              ${Object.entries(TIPOS).map(([k,v])=>`<option value="${k}">${v.ic} ${v.lb}</option>`).join('')}
+            </select></div>
+          <div class="form-group"><label class="form-label">Hora</label>
+            <input class="form-input" type="time" id="ocHora" value="${hora}"></div>
+        </div>
+        <div class="form-group"><label class="form-label">Descrição detalhada *</label>
+          <textarea class="form-textarea" id="ocDesc" rows="3" placeholder="Descreva o que aconteceu, onde e como..."></textarea></div>
+        <div class="form-group"><label class="form-label">Providências tomadas</label>
+          <textarea class="form-textarea" id="ocProv" rows="2" placeholder="Primeiros socorros, contato com responsável..."></textarea></div>
+        <div class="form-group"><label class="form-label">Educadora responsável</label>
+          <input class="form-input" id="ocEdu" value="${Auth.getSessao()?.nome||''}"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="Modal.close('modalSec')">Cancelar</button>
+        <button class="btn btn-primary" onclick="Ocorrencias.salvar('${alunoId}')">💾 Registrar</button>
+      </div>`);
+  };
+
+  const salvar = async alunoId => {
+    const desc = document.getElementById('ocDesc')?.value.trim();
+    if (!desc) { Toast.show('error','Descrição obrigatória'); return; }
+    const id = Utils.uuid();
+    await DB.save('ocorrencias', {
+      id, alunoId, dt: Utils.today(),
+      hora: document.getElementById('ocHora')?.value||'',
+      tipo: document.getElementById('ocTipo')?.value||'outro',
+      descricao: desc,
+      providencias: document.getElementById('ocProv')?.value.trim()||'',
+      educadora: document.getElementById('ocEdu')?.value.trim()||'',
+      criadoEm: new Date().toISOString(),
+    });
+    Modal.close('modalSec');
+    Toast.show('success','✅ Ocorrência registrada!');
+    const el = document.getElementById('perfilTabContent');
+    if (el) await abrirAba(alunoId, el);
+  };
+
+  const imprimir = async ocId => {
+    const todos = await DB.getAll('ocorrencias').catch(()=>[]);
+    const o = todos.find(x => x.id === ocId); if (!o) return;
+    const mat = await DB.get('matriculas', o.alunoId);
+    const cfg = (await DB.getAll('config'))[0]||{};
+    const t = TIPOS[o.tipo]||TIPOS.outro;
+    const html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Ocorrência</title>
+    <style>*{box-sizing:border-box}body{font-family:Arial,sans-serif;font-size:13px;padding:24px;max-width:700px;margin:auto}
+    h1{font-size:18px;color:#12586a}h2{font-size:12px;color:#888;margin-bottom:20px}
+    .section{border:1px solid #ddd;border-radius:8px;padding:12px 16px;margin-bottom:14px}
+    .label{font-size:10px;text-transform:uppercase;color:#8fa3b1;font-weight:700;margin-bottom:3px}
+    .val{font-size:13px;color:#1a2533;line-height:1.5}
+    .assin{margin-top:28px;display:grid;grid-template-columns:1fr 1fr;gap:40px;text-align:center}
+    .assin div{border-top:1px solid #999;padding-top:8px;font-size:11px;color:#888}
+    .print-btn{position:fixed;bottom:16px;right:16px;background:#12586a;color:#fff;border:none;padding:8px 20px;border-radius:8px;font-size:12px;cursor:pointer}
+    @media print{.print-btn{display:none}}</style></head><body>
+    <h1>${t.ic} Registro de Ocorrência</h1>
+    <h2>${cfg.nomeEscola||'Berçário Sonho Meu'} · ${Utils.fmtDate(o.dt)} ${o.hora}</h2>
+    <div class="section"><div class="label">Aluno(a)</div><div class="val">${Utils.esc(mat?.nome||'—')} · ${Utils.salaLabel(mat?.turma||'')}</div></div>
+    <div class="section"><div class="label">Tipo</div><div class="val">${t.ic} ${t.lb}</div></div>
+    <div class="section"><div class="label">Descrição</div><div class="val">${Utils.esc(o.descricao)}</div></div>
+    ${o.providencias?`<div class="section"><div class="label">Providências tomadas</div><div class="val">${Utils.esc(o.providencias)}</div></div>`:''}
+    <div class="section"><div class="label">Educadora responsável</div><div class="val">${Utils.esc(o.educadora)}</div></div>
+    <div class="assin">
+      <div>Educadora / Coordenação</div>
+      <div>Responsável pelo Aluno</div>
+    </div>
+    <button class="print-btn" onclick="window.print()">🖨️ Imprimir</button>
+    </body></html>`;
+    const blob = new Blob([html],{type:'text/html;charset=utf-8'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `ocorrencia_${o.alunoId}_${o.dt}.html`;
+    document.body.appendChild(a); a.click();
+    setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(a.href);},500);
+    Toast.show('success','🖨️ Ocorrência gerada para impressão');
+  };
+
+  return { abrirAba, novoForm, salvar, imprimir };
+})();
+
+/* ── #21 COMUNICADOS EM MASSA ───────────────────────────────
+   WhatsApp em lote para responsáveis de uma sala
+   ─────────────────────────────────────────────────────────── */
+const Comunicados = (() => {
+  const abrir = async () => {
+    const [salas, mats] = await Promise.all([DB.getAll('salas'), DB.getAll('matriculas')]);
+    const ativos = mats.filter(m => m.st === 'matriculado');
+
+    Modal.open('modalLg', `
+      <div class="modal-header">
+        <div class="modal-title">📢 Comunicado em Massa</div>
+        <button class="modal-close" onclick="Modal.close('modalLg')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row c2">
+          <div class="form-group"><label class="form-label">Destinatários</label>
+            <select class="form-select" id="comSala" onchange="Comunicados._atualizar()">
+              <option value="">Todas as salas (${ativos.length} alunos)</option>
+              ${salas.map(s=>`<option value="${s.id}">${Utils.esc(s.nome)} (${ativos.filter(m=>m.turma===s.id).length})</option>`).join('')}
+            </select></div>
+          <div class="form-group"><label class="form-label">Contatos encontrados</label>
+            <div id="comCount" style="padding:8px 12px;background:var(--teal-lt);border-radius:8px;font-size:13px;font-weight:700;color:var(--teal-dk)">
+              ${ativos.length} responsáveis
+            </div></div>
+        </div>
+        <div class="form-group"><label class="form-label">Mensagem *</label>
+          <textarea class="form-textarea" id="comMsg" rows="5"
+            placeholder="Prezados responsáveis,&#10;&#10;Informamos que...&#10;&#10;Atenciosamente,&#10;Berçário Sonho Meu"></textarea></div>
+        <div id="comLinksArea" style="display:none;margin-top:var(--sp-md)">
+          <div class="section-title" style="margin-bottom:var(--sp-sm)">📲 Links WhatsApp gerados</div>
+          <div id="comLinks" style="display:flex;flex-direction:column;gap:6px;max-height:240px;overflow-y:auto"></div>
+          <div style="margin-top:8px;display:flex;gap:8px">
+            <button class="btn btn-ghost btn-sm" onclick="Comunicados._copiarEmails()">📋 Copiar e-mails</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="Modal.close('modalLg')">Fechar</button>
+        <button class="btn btn-primary" onclick="Comunicados.gerar()">📲 Gerar Links WhatsApp</button>
+      </div>`);
+  };
+
+  const _atualizar = async () => {
+    const salaId = document.getElementById('comSala')?.value;
+    const mats   = await DB.getAll('matriculas');
+    const ativos = mats.filter(m => m.st==='matriculado' && (!salaId || m.turma===salaId));
+    const el     = document.getElementById('comCount');
+    if (el) el.textContent = `${ativos.length} responsáveis`;
+  };
+
+  const gerar = async () => {
+    const msg    = document.getElementById('comMsg')?.value.trim();
+    const salaId = document.getElementById('comSala')?.value;
+    if (!msg) { Toast.show('error','Digite a mensagem'); return; }
+
+    const mats  = await DB.getAll('matriculas');
+    const ativos= mats.filter(m => m.st==='matriculado' && (!salaId || m.turma===salaId));
+    const linksEl= document.getElementById('comLinks');
+    const area   = document.getElementById('comLinksArea');
+
+    const contatos = ativos.flatMap(m => {
+      const items = [];
+      if (m.telMae) items.push({ nome: m.nome.split(' ')[0], resp: m.mae||'Responsável', tel: m.telMae });
+      else if (m.telPai) items.push({ nome: m.nome.split(' ')[0], resp: m.pai||'Responsável', tel: m.telPai });
+      return items;
+    });
+
+    if (!contatos.length) { Toast.show('warning','Nenhum telefone cadastrado'); return; }
+
+    const msgEnc = encodeURIComponent(msg);
+    if (linksEl) linksEl.innerHTML = contatos.map(c => {
+      const tel = c.tel.replace(/\D/g,'');
+      const link= `https://wa.me/55${tel}?text=${msgEnc}`;
+      return `
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--bg-2);border-radius:8px">
+          <span style="font-size:12px;flex:1">${Utils.esc(c.nome)} · ${Utils.esc(c.resp)}</span>
+          <a href="${link}" target="_blank" class="btn btn-ghost btn-xs" style="color:#25D366">📲 Abrir</a>
+        </div>`;
+    }).join('');
+
+    if (area) area.style.display = '';
+    Toast.show('success',`📲 ${contatos.length} link(s) gerado(s)!`);
+
+    // Salvar histórico
+    await DB.save('avisos', {
+      id: Utils.uuid(), dt: Utils.today(),
+      texto: msg, tipo: 'comunicado_massa',
+      sala: salaId||'todas', qtd: contatos.length,
+      criadoEm: new Date().toISOString(),
+    }).catch(()=>{});
+  };
+
+  const _copiarEmails = async () => {
+    const salaId = document.getElementById('comSala')?.value;
+    const mats   = await DB.getAll('matriculas');
+    const emails = mats.filter(m => m.st==='matriculado'&&(!salaId||m.turma===salaId))
+      .flatMap(m => [m.emailMae, m.emailPai].filter(Boolean));
+    if (!emails.length) { Toast.show('warning','Nenhum e-mail cadastrado'); return; }
+    navigator.clipboard?.writeText(emails.join('; ')).then(()=>Toast.show('success',`📋 ${emails.length} e-mail(s) copiado(s)!`));
+  };
+
+  return { abrir, _atualizar, gerar, _copiarEmails };
+})();
+
+/* ── #26 FILA DE ESPERA ─────────────────────────────────────
+   Cadastro de interessados por sala com notificação ao abrir vaga
+   ─────────────────────────────────────────────────────────── */
+const FilaEspera = (() => {
+  const render = async () => {
+    const el = document.getElementById('page-fila');
+    if (!el) return;
+    const [fila, salas, mats] = await Promise.all([
+      DB.getAll('fila_espera').catch(()=>[]),
+      DB.getAll('salas'), DB.getAll('matriculas'),
+    ]);
+    const ativos   = mats.filter(m => m.st==='matriculado');
+    const filaOrdem= fila.sort((a,b)=>a.dtCadastro.localeCompare(b.dtCadastro));
+
+    el.innerHTML = `
+      <div class="page-header">
+        <div><div class="page-title">⏳ Fila de Espera</div>
+        <div class="page-sub">Cadastro de interessados por sala · Notificação automática via WhatsApp ao abrir vaga</div></div>
+        <button class="btn btn-secondary" onclick="FilaEspera.novoForm()">+ Cadastrar Interessado</button>
+      </div>
+      ${!filaOrdem.length ? `<div class="card" style="text-align:center;padding:40px">
+        <div style="font-size:48px;margin-bottom:12px">⏳</div>
+        <div style="font-size:17px;font-weight:700;margin-bottom:8px">Fila de espera vazia</div>
+        <div style="font-size:13px;color:var(--ink-3);margin-bottom:20px">Cadastre interessados para ser notificado ao abrir uma vaga</div>
+        <button class="btn btn-secondary" onclick="FilaEspera.novoForm()">+ Primeiro Cadastro</button>
+      </div>` :
+      salas.map(s => {
+        const cap    = s.capacidade || 12;
+        const atSala = ativos.filter(m => m.turma === s.id).length;
+        const vagas  = Math.max(0, cap - atSala);
+        const filaSala= filaOrdem.filter(f => f.salaId === s.id || f.salaId === '');
+        if (!filaSala.length) return '';
+        return `
+          <div class="card" style="margin-bottom:var(--sp-md)">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-md)">
+              <div class="section-title" style="margin:0">${Utils.esc(s.nome)}</div>
+              <span style="font-size:12px;font-weight:700;color:${vagas?'var(--teal-dk)':'var(--danger)'}">
+                ${vagas ? `${vagas} vaga(s) disponível` : 'Lotada'}
+              </span>
+            </div>
+            <table class="table">
+              <thead><tr><th>#</th><th>Nome da criança</th><th>Responsável</th><th>Contato</th><th>Cadastrado</th><th></th></tr></thead>
+              <tbody>
+                ${filaSala.map((f,i) => `
+                  <tr>
+                    <td style="font-weight:700;color:var(--ink-3)">${i+1}º</td>
+                    <td><strong>${Utils.esc(f.nomeCrianca)}</strong><br><span style="font-size:10px;color:var(--ink-3)">${Utils.fmtDate(f.nascCrianca)}</span></td>
+                    <td>${Utils.esc(f.nomeResp)}</td>
+                    <td><a href="tel:${f.tel}" style="color:var(--teal-dk)">${Utils.esc(f.tel)}</a></td>
+                    <td style="font-size:11px">${Utils.fmtDate(f.dtCadastro)}</td>
+                    <td style="display:flex;gap:4px">
+                      ${vagas ? `<button class="btn btn-ghost btn-xs" style="color:#25D366" onclick="FilaEspera.notificar('${f.id}')">📲 Notificar</button>` : ''}
+                      <button class="btn btn-ghost btn-xs" style="color:var(--danger)" onclick="FilaEspera.remover('${f.id}')">🗑️</button>
+                    </td>
+                  </tr>`).join('')}
+              </tbody>
+            </table>
+          </div>`;
+      }).filter(Boolean).join('') || '<div class="card" style="text-align:center;padding:24px;color:var(--ink-3)">Nenhum interessado para as salas configuradas</div>'}`;
+  };
+
+  const novoForm = async () => {
+    const salas = await DB.getAll('salas');
+    Modal.open('modalSec', `
+      <div class="modal-header">
+        <div class="modal-title">⏳ Cadastrar na Fila de Espera</div>
+        <button class="modal-close" onclick="Modal.close('modalSec')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row c2">
+          <div class="form-group"><label class="form-label">Nome da criança *</label>
+            <input class="form-input" id="fiNomeCrianca" placeholder="Nome completo"></div>
+          <div class="form-group"><label class="form-label">Nascimento</label>
+            <input class="form-input" type="date" id="fiNasc"></div>
+        </div>
+        <div class="form-row c2">
+          <div class="form-group"><label class="form-label">Responsável *</label>
+            <input class="form-input" id="fiResp" placeholder="Nome do responsável"></div>
+          <div class="form-group"><label class="form-label">Telefone / WhatsApp *</label>
+            <input class="form-input" id="fiTel" placeholder="(62) 9 0000-0000"></div>
+        </div>
+        <div class="form-row c2">
+          <div class="form-group"><label class="form-label">Sala desejada</label>
+            <select class="form-select" id="fiSala">
+              <option value="">Qualquer sala</option>
+              ${salas.map(s=>`<option value="${s.id}">${Utils.esc(s.nome)}</option>`).join('')}
+            </select></div>
+          <div class="form-group"><label class="form-label">Observações</label>
+            <input class="form-input" id="fiObs" placeholder="Horário preferido, etc."></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="Modal.close('modalSec')">Cancelar</button>
+        <button class="btn btn-primary" onclick="FilaEspera.salvar()">💾 Cadastrar</button>
+      </div>`);
+  };
+
+  const salvar = async () => {
+    const nome = document.getElementById('fiNomeCrianca')?.value.trim();
+    const resp = document.getElementById('fiResp')?.value.trim();
+    const tel  = document.getElementById('fiTel')?.value.trim();
+    if (!nome || !resp || !tel) { Toast.show('error','Nome, responsável e telefone são obrigatórios'); return; }
+    await DB.save('fila_espera', {
+      id: Utils.uuid(), nomeCrianca: nome,
+      nascCrianca: document.getElementById('fiNasc')?.value||'',
+      nomeResp: resp, tel,
+      salaId: document.getElementById('fiSala')?.value||'',
+      obs: document.getElementById('fiObs')?.value.trim()||'',
+      dtCadastro: Utils.today(), criadoEm: new Date().toISOString(),
+    });
+    Modal.close('modalSec');
+    Toast.show('success','✅ Interessado cadastrado na fila!');
+    await render();
+  };
+
+  const notificar = async id => {
+    const fila = await DB.getAll('fila_espera').catch(()=>[]);
+    const f = fila.find(x => x.id === id); if (!f) return;
+    const cfg = (await DB.getAll('config'))[0]||{};
+    const escola = cfg.nomeEscola||'Berçário Sonho Meu';
+    const msg = encodeURIComponent(`Olá ${f.nomeResp.split(' ')[0]}! 🌙 ${escola}.\n\nTemos uma vaga disponível para ${f.nomeCrianca}!\n\nEntre em contato para confirmar a matrícula. 💛`);
+    const tel = f.tel.replace(/\D/g,'');
+    window.open(`https://wa.me/55${tel}?text=${msg}`, '_blank');
+  };
+
+  const remover = async id => {
+    if (!await Modal.confirm('Remover da fila de espera?',{danger:true,confirmLabel:'Remover'})) return;
+    await DB.remove('fila_espera', id).catch(()=>{});
+    Toast.show('success','Removido da fila');
+    await render();
+  };
+
+  return { render, novoForm, salvar, notificar, remover };
+})();
+
+
 document.addEventListener('DOMContentLoaded', async () => {
   // Inicializa banco
   await DB.init();
@@ -17208,9 +19305,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   await Badges.refresh();
 
   // Registra módulos no router
+/* ============================================================
+   BLOCO 2 — FAMÍLIA & COMUNICAÇÃO
+   #20 Diário de Bordo · #25 Medicamentos · #28 Ocorrências
+   #21 Comunicados em Massa · #26 Fila de Espera
+   ============================================================ */
+
   Router.register('dashboard', {
     onEnter: () => Dashboard.render()
   });
+
+  Router.register('fila',          { onEnter: () => FilaEspera.render() });
 
   Router.register('matriculas', {
     onEnter: () => Matriculas.render()
@@ -17240,10 +19345,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     onEnter: () => Recibos.render()
   });
 
+/* ============================================================
+   CONTAS FIXAS — Água, energia, impostos, salários
+   Vinculadas à agenda com alertas e integração no DRE
+   ============================================================ */
+
+
+
+
   Router.register('inadimplencia', { onEnter: () => Inadimplencia.render() });
-  Router.register('ocupacao',      { onEnter: () => Ocupacao.render() });
-  Router.register('projecao',      { onEnter: () => Projecao.render() });
-  Router.register('dre',           { onEnter: () => DRE.render() });
+  Router.register('fila',          { onEnter: () => FilaEspera.render() });
   Router.register('gastos', {
     onEnter: () => Gastos.render()
   });

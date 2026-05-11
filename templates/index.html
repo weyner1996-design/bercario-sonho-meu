@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#12586a">
-<meta name="description" content="Berçário Sonho Meu — Sistema de Gestão v8.0">
+<meta name="description" content="Berçário Sonho Meu — Sistema de Gestão v7.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>Berçário Sonho Meu · v8.0</title>
+<title>Berçário Sonho Meu · v7.0</title>
 
 <!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2579,7 +2579,7 @@ tbody td { padding: 9px 13px; font-size: var(--fs-base); vertical-align: middle;
         <div class="sb-moon">🌙</div>
         <div>
           <div class="sb-name">BERÇÁRIO SONHO MEU</div>
-          <div class="sb-ver">Sistema de Gestão v8.0</div>
+          <div class="sb-ver">Sistema de Gestão v7.0</div>
         </div>
       </div>
     </div>
@@ -2779,8 +2779,8 @@ tbody td { padding: 9px 13px; font-size: var(--fs-base); vertical-align: middle;
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         </button>
         <!-- Notificações -->
-        <button class="tb-icon-btn" id="notifToggleBtn" onclick="Notif.toggleTopbar()" aria-label="Notificações push" title="Notificações" style="position:relative;font-size:14px">
-          🔕
+        <button class="tb-icon-btn" onclick="Notif.toggle()" aria-label="Notificações" title="Notificações" style="position:relative">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
           <div class="notif-badge" id="notifBadge"></div>
         </button>
         <!-- Cobranças -->
@@ -2871,24 +2871,6 @@ tbody td { padding: 9px 13px; font-size: var(--fs-base); vertical-align: middle;
           <div class="card">
             <div class="section-title">🎂 Próximos Aniversários</div>
             <div id="dashAniversarios"></div>
-          </div>
-        </div>
-
-        <!-- #B5 Analytics: Presença semanal + Tendência -->
-        <div class="grid-2 mb-lg">
-          <div class="card">
-            <div class="card-header">
-              <div class="section-title" style="margin:0">📅 Presença — Semana Atual</div>
-              <button class="btn btn-ghost btn-sm" onclick="Router.go('presenca')">Registrar</button>
-            </div>
-            <div id="dashPresencaSem" style="margin-top:var(--sp-md)"></div>
-          </div>
-          <div class="card">
-            <div class="card-header">
-              <div class="section-title" style="margin:0">📈 Tendência Financeira</div>
-              <span id="dashTendBadge" style="font-size:11px"></span>
-            </div>
-            <div id="dashTendencia" style="margin-top:var(--sp-md)"></div>
           </div>
         </div>
       </section>
@@ -5487,116 +5469,7 @@ const Dashboard = (() => {
     await _renderAvisos(avisos.filter(a => !a.lido).slice(0, 5));
     _renderAcoes();
     _renderAniversarios(matriculas);
-    await _renderPresencaSem(matriculas);   // #B5
-    _renderTendencia(REC_HIST, DESP_HIST); // #B5
     await Badges.refresh();
-  };
-
-  // #B5 — Presença semanal (seg–sex atual)
-  const _renderPresencaSem = async matriculas => {
-    const el = document.getElementById('dashPresencaSem');
-    if (!el) return;
-    const hoje   = new Date();
-    const ini    = new Date(hoje); ini.setDate(hoje.getDate() - hoje.getDay() + 1); // seg
-    const DIAS   = ['Seg','Ter','Qua','Qui','Sex'];
-    const datas  = Array.from({length:5}, (_, i) => {
-      const d = new Date(ini); d.setDate(ini.getDate() + i);
-      return d.toISOString().slice(0,10);
-    });
-    const presAll   = await DB.getAll('presenca').catch(()=>[]);
-    const ativos    = matriculas.filter(m => m.st === 'matriculado');
-    const total     = ativos.length || 1;
-
-    const cols = datas.map((dt, i) => {
-      const isFuture = dt > hoje.toISOString().slice(0,10);
-      const regs     = presAll.filter(p => p.data === dt);
-      const pres     = regs.filter(r => r.estado === 'presente').length;
-      const pct      = Math.round(pres / total * 100);
-      const isHoje   = dt === hoje.toISOString().slice(0,10);
-      const cor      = isFuture ? '#e0e0e0' : pct >= 80 ? 'var(--success)' : pct >= 50 ? 'var(--warning)' : pct > 0 ? 'var(--danger)' : '#d0d0d0';
-      return `
-        <div style="display:flex;flex-direction:column;align-items:center;gap:5px">
-          <div style="width:100%;background:#f0f0f0;border-radius:6px;height:80px;display:flex;align-items:flex-end;overflow:hidden;border:${isHoje?'2px solid var(--teal)':'2px solid transparent'}">
-            <div style="width:100%;background:${cor};height:${isFuture ? 0 : Math.max(pct, pres?4:0)}%;border-radius:4px 4px 0 0;transition:height .4s ease"></div>
-          </div>
-          <div style="font-size:10px;font-weight:${isHoje?800:500};color:${isHoje?'var(--teal-dk)':'var(--ink-3)'}">${DIAS[i]}</div>
-          <div style="font-size:11px;font-weight:700;color:${isFuture?'#bbb':cor}">${isFuture?'—':pres>0?pct+'%':'0%'}</div>
-        </div>`;
-    });
-
-    el.innerHTML = `
-      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px">${cols.join('')}</div>
-      <div style="display:flex;gap:12px;margin-top:var(--sp-md);font-size:10px;color:var(--ink-3)">
-        <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--success);margin-right:3px"></span>≥80%</span>
-        <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--warning);margin-right:3px"></span>50–79%</span>
-        <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--danger);margin-right:3px"></span>&lt;50%</span>
-      </div>`;
-  };
-
-  // #B5 — Tendência financeira (mês atual vs anterior)
-  const _renderTendencia = (REC_HIST, DESP_HIST) => {
-    const el = document.getElementById('dashTendencia');
-    if (!el) return;
-    const mes   = new Date().getMonth();
-    const mesAnt = mes > 0 ? mes - 1 : 11;
-    const recAt  = REC_HIST[mes]   || 0;
-    const recAnt = REC_HIST[mesAnt] || 0;
-    const despAt = DESP_HIST[mes]   || 0;
-    const despAnt= DESP_HIST[mesAnt]|| 0;
-    const MESES  = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-
-    const _delta = (at, ant) => {
-      if (!ant) return { pct: 0, sinal: '→', cor: 'var(--ink-3)' };
-      const pct = Math.round((at - ant) / ant * 100);
-      return pct > 0
-        ? { pct, sinal: '↑', cor: 'var(--success-dk)' }
-        : pct < 0
-        ? { pct: Math.abs(pct), sinal: '↓', cor: 'var(--danger)' }
-        : { pct: 0, sinal: '→', cor: 'var(--ink-3)' };
-    };
-
-    const dRec  = _delta(recAt, recAnt);
-    const dDesp = _delta(despAt, despAnt);
-    const saldo  = recAt - despAt;
-    const saldoAnt = recAnt - despAnt;
-    const dSaldo = _delta(saldo, Math.abs(saldoAnt) || 1);
-
-    // Badge no header
-    const badge = document.getElementById('dashTendBadge');
-    if (badge) {
-      const bom = recAt >= recAnt && despAt <= despAnt * 1.1;
-      badge.innerHTML = bom
-        ? '<span class="badge badge-success" style="font-size:9px">📈 Mês favorável</span>'
-        : '<span class="badge badge-warning" style="font-size:9px">📉 Atenção</span>';
-    }
-
-    // Mini gráfico de linha (últimos 4 meses)
-    const meses4 = [3,2,1,0].map(i => (mes - i + 12) % 12);
-    const recs4  = meses4.map(m => REC_HIST[m]  || 0);
-    const desps4 = meses4.map(m => DESP_HIST[m] || 0);
-    const maxV   = Math.max(...recs4, ...desps4, 1);
-    const W = 260, H = 60, pad = 8;
-    const ptR = recs4.map((v,i) => `${pad + i*(W-pad*2)/3},${H-pad-(v/maxV*(H-pad*2))}`).join(' ');
-    const ptD = desps4.map((v,i) => `${pad + i*(W-pad*2)/3},${H-pad-(v/maxV*(H-pad*2))}`).join(' ');
-
-    el.innerHTML = `
-      <svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;margin-bottom:var(--sp-md)">
-        <polyline points="${ptR}" fill="none" stroke="var(--success)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
-        <polyline points="${ptD}" fill="none" stroke="var(--danger)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="5,3"/>
-        ${meses4.map((m,i)=>`<text x="${pad+i*(W-pad*2)/3}" y="${H}" text-anchor="middle" font-size="9" fill="#8fa3b1">${MESES[m]}</text>`).join('')}
-      </svg>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
-        ${[
-          { l:'Receita',  v:Utils.money(recAt),  d:dRec  },
-          { l:'Despesa',  v:Utils.money(despAt), d:dDesp },
-          { l:'Saldo',    v:Utils.money(saldo),  d:dSaldo},
-        ].map(x => `
-          <div style="background:var(--bg);border-radius:10px;padding:8px 10px">
-            <div style="font-size:9px;color:var(--ink-3);margin-bottom:3px">${x.l}</div>
-            <div style="font-size:13px;font-weight:800;color:var(--ink)">${x.v}</div>
-            <div style="font-size:10px;color:${x.d.cor};font-weight:700">${x.d.sinal} ${x.d.pct}% vs ${MESES[mesAnt]}</div>
-          </div>`).join('')}
-      </div>`;
   };
 
   return { render, novoAviso, salvarAviso, marcarLido, exportRelatorio };
@@ -14097,7 +13970,7 @@ const Cfg = (() => {
     const bkpTs = bkp.ts ? new Date(bkp.ts).toLocaleString('pt-BR') : '—';
     el.innerHTML = `
       <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:var(--fs-xs);color:var(--ink-3)">
-        <span>🌙 Berçário Sonho Meu v8.0</span>
+        <span>🌙 Berçário Sonho Meu v7.0</span>
         <span>👶 ${mats.length} matrícula(s)</span>
         <span>💰 ${mens.length} mensalidade(s)</span>
         <span>📄 ${docs.length} documento(s)</span>
@@ -14134,65 +14007,9 @@ const PWA = (() => {
       if (btn) btn.style.display = 'none';
     });
 
-    // #B5 Service Worker inline via Blob — funciona sem servidor
+    // Registra Service Worker
     if ('serviceWorker' in navigator) {
-      const SW_VERSION = 'bsm-v8-sw-1';
-      const swCode = `
-const CACHE = '${SW_VERSION}';
-const SHELL = []; // arquivo único — nada pré-cacheável via URL
-self.addEventListener('install', e => {
-  self.skipWaiting();
-});
-self.addEventListener('activate', e => {
-  e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-    ).then(() => self.clients.claim())
-  );
-});
-self.addEventListener('fetch', e => {
-  if (e.request.method !== 'GET') return;
-  const url = new URL(e.request.url);
-  // Cacheia fontes e CDNs externos
-  if (url.origin !== location.origin ||
-      url.hostname.includes('googleapis') ||
-      url.hostname.includes('jsdelivr') ||
-      url.hostname.includes('cdnjs') ||
-      url.hostname.includes('sheetjs')) {
-    e.respondWith(
-      caches.open(CACHE).then(cache =>
-        cache.match(e.request).then(cached => {
-          if (cached) return cached;
-          return fetch(e.request).then(resp => {
-            if (resp.ok) cache.put(e.request, resp.clone());
-            return resp;
-          }).catch(() => cached || new Response('', { status: 503 }));
-        })
-      )
-    );
-  }
-});
-self.addEventListener('message', e => {
-  if (e.data === 'skipWaiting') self.skipWaiting();
-});`;
-      try {
-        const blob = new Blob([swCode], { type: 'application/javascript' });
-        const swUrl = URL.createObjectURL(blob);
-        navigator.serviceWorker.register(swUrl, { scope: '/' })
-          .then(reg => {
-            console.log('[BSM] SW registrado — CDNs serão cacheados offline');
-            reg.addEventListener('updatefound', () => {
-              const nw = reg.installing;
-              nw?.addEventListener('statechange', () => {
-                if (nw.state === 'installed' && navigator.serviceWorker.controller)
-                  console.log('[BSM] SW atualizado');
-              });
-            });
-          })
-          .catch(e => console.log('[BSM] SW não suportado neste contexto:', e.message));
-      } catch(e) {
-        console.log('[BSM] SW blob falhou:', e.message);
-      }
+      navigator.serviceWorker.register('#').catch(() => {});
     }
   };
 
@@ -14602,97 +14419,7 @@ const Notif = (() => {
     if (panel && !panel.contains(e.target)) fechar();
   };
 
-  // ── #B5 Push Notification API ─────────────────────────────
-  let _permissao = false;
-
-  const pedirPermissao = async () => {
-    if (!('Notification' in window)) {
-      Toast.show('warning','⚠️ Notificações não suportadas neste navegador');
-      return false;
-    }
-    if (Notification.permission === 'granted') { _permissao = true; return true; }
-    if (Notification.permission === 'denied')  {
-      Toast.show('warning','🔕 Notificações bloqueadas — habilite nas configurações do navegador');
-      return false;
-    }
-    const perm = await Notification.requestPermission();
-    _permissao = perm === 'granted';
-    if (_permissao) { Toast.show('success','🔔 Notificações habilitadas!'); renderBotaoTopbar(); }
-    return _permissao;
-  };
-
-  const disparar = (titulo, opts = {}) => {
-    if (!_permissao && Notification.permission !== 'granted') return;
-    try {
-      const n = new Notification(`🌙 BSM — ${titulo}`, {
-        icon:  'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><text y="26" font-size="28">🌙</text></svg>',
-        tag:   opts.tag || 'bsm-geral',
-        body:  opts.body || '',
-        requireInteraction: opts.importante || false,
-      });
-      if (opts.onClick) n.onclick = e => { e.preventDefault(); window.focus(); opts.onClick(); };
-    } catch(e) { console.warn('[BSM] Notif push:', e); }
-  };
-
-  const verificarAlertasPush = async () => {
-    if (Notification.permission !== 'granted') return;
-    _permissao = true;
-    const hoje = Utils.today();
-    const amanha = new Date(); amanha.setDate(amanha.getDate() + 1);
-    const isoAm  = amanha.toISOString().slice(0,10);
-    const [mens, mats, estoque, presencas] = await Promise.all([
-      DB.getAll('mensalidades').catch(()=>[]),
-      DB.getAll('matriculas').catch(()=>[]),
-      DB.getAll('estoque').catch(()=>[]),
-      DB.getAll('presenca').catch(()=>[]),
-    ]);
-    const ativos = mats.filter(m => m.st === 'matriculado');
-    // Mensalidades hoje/amanhã
-    const venc = mens.filter(m => m.st !== 'pago' && (m.vencimento === hoje || m.vencimento === isoAm));
-    if (venc.length) disparar(`${venc.length} mensalidade(s) vencendo`, {
-      body: venc.slice(0,3).map(m => { const a = ativos.find(x=>x.id===m.alunoId); return `${a?.nome?.split(' ')[0]||'—'} — ${Utils.money(m.valor)}`; }).join('\n'),
-      tag: 'bsm-venc', importante: true,
-      onClick: () => Router.go('cobracas'),
-    });
-    // Presença não registrada (8h-17h)
-    const hora = new Date().getHours();
-    if (hora >= 8 && hora <= 17) {
-      const comPres = new Set(presencas.filter(p=>p.data===hoje).map(p=>p.alunoId));
-      if (ativos.length > 0 && ativos.every(a => !comPres.has(a.id)))
-        disparar('Presença não registrada hoje', { body:`${ativos.length} alunos aguardando registro`, tag:'bsm-pres', onClick:()=>Router.go('presenca') });
-    }
-    // Estoque crítico
-    const crit = estoque.filter(e=>(e.qtd||0)<=(e.minimo||0));
-    if (crit.length) disparar(`${crit.length} item(ns) em estoque crítico`, {
-      body: crit.slice(0,3).map(e=>`${e.nome}: ${e.qtd}/${e.minimo}`).join('\n'),
-      tag: 'bsm-est', onClick:()=>Router.go('estoque'),
-    });
-  };
-
-  const iniciarPush = () => {
-    if (Notification.permission === 'granted') {
-      _permissao = true;
-      renderBotaoTopbar();
-      setTimeout(verificarAlertasPush, 6000);
-      setInterval(verificarAlertasPush, 30 * 60 * 1000);
-    }
-  };
-
-  const renderBotaoTopbar = () => {
-    const btn = document.getElementById('notifToggleBtn');
-    if (btn) btn.textContent = Notification.permission === 'granted' ? '🔔' : '🔕';
-  };
-
-  const toggleTopbar = async () => {
-    if (Notification.permission !== 'granted') await pedirPermissao();
-    else Toast.show('info','🔔 Notificações ativas. Desabilite pelo navegador se desejar.');
-    renderBotaoTopbar();
-    if (Notification.permission === 'granted') await verificarAlertasPush();
-  };
-
-  return { carregar, toggle, fechar, marcarTodas, _clicar,
-           pedirPermissao, disparar, verificarAlertasPush, iniciarPush,
-           toggleTopbar, renderBotaoTopbar };
+  return { carregar, toggle, fechar, marcarTodas, _clicar };
 })();
 
 /* ============================================================
@@ -14815,7 +14542,7 @@ const Auth = (() => {
 
   // ── Hash seguro via WebCrypto (PBKDF2 + salt fixo por instalação) ──
   // Salt derivado do nome do banco — único por instalação, sem servidor
-  const _SALT = 'BSM_v8_' + (localStorage.getItem('bsm_inst_id') || (() => {
+  const _SALT = 'BSM_v7_' + (localStorage.getItem('bsm_inst_id') || (() => {
     const id = crypto.randomUUID();
     try { localStorage.setItem('bsm_inst_id', id); } catch(e) {}
     return id;
@@ -15095,7 +14822,7 @@ const Auth = (() => {
     const ver = document.querySelector('.sb-ver');
     if (ver) {
       const meta = PERFIL_META[_sessao.perfil];
-      ver.textContent = `v8.0 · ${meta?.label || _sessao.perfil}`;
+      ver.textContent = `v7.0 · ${meta?.label || _sessao.perfil}`;
     }
   };
 
@@ -17215,179 +16942,11 @@ const DevInfantil = (() => {
     Toast.show('success','📊 Relatório de turma gerado!');
   };
 
-  // ── #B5 Gráfico SVG de evolução temporal dos domínios ─────
-  const _graficoEvolucao = (avs, dominio) => {
-    if (avs.length < 2) return '<div style="text-align:center;opacity:.4;padding:12px;font-size:12px">Avalie ao menos 2 vezes para ver o gráfico</div>';
-    const W = 320, H = 90, pad = 8;
-    const sorted = [...avs].sort((a,b) => a.data.localeCompare(b.data)).slice(-8);
-    const vals   = sorted.map(a => {
-      const qs = a.respostas?.[dominio] || {};
-      const vs = Object.values(qs).filter(v => typeof v === 'number');
-      return vs.length ? vs.reduce((s,v) => s+v, 0) / vs.length : 0;
-    });
-    const maxV = Math.max(...vals, 4);
-    const pts  = vals.map((v, i) => {
-      const x = pad + (i / (sorted.length - 1)) * (W - pad*2);
-      const y = H - pad - (v / maxV) * (H - pad*2);
-      return `${x.toFixed(1)},${y.toFixed(1)}`;
-    }).join(' ');
-    const CORES = { motor:'#1565C0', cognitivo:'#7C5CBF', socio:'#E05A8A' };
-    const cor   = CORES[dominio] || '#12586a';
-    return `
-      <svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
-        <polyline points="${pts}" fill="none" stroke="${cor}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
-        ${vals.map((v, i) => {
-          const x = pad + (i / (sorted.length - 1)) * (W - pad*2);
-          const y = H - pad - (v / maxV) * (H - pad*2);
-          return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4" fill="${cor}" stroke="#fff" stroke-width="1.5"/>
-                  <text x="${x.toFixed(1)}" y="${(y-8).toFixed(1)}" text-anchor="middle" font-size="9" fill="${cor}" font-weight="700">${v.toFixed(1)}</text>
-                  <text x="${x.toFixed(1)}" y="${H-1}" text-anchor="middle" font-size="8" fill="#8fa3b1">${Utils.fmtDate(sorted[i].data).slice(0,5)}</text>`;
-        }).join('')}
-      </svg>`;
-  };
-
-  // ── #B5 Relatório pedagógico completo em PDF por aluno ─────
-  const relatorioPDF = async alunoId => {
-    const mat = await DB.get('matriculas', alunoId);
-    if (!mat) return;
-    const [fichas, avs, obs, diario, cfg] = await Promise.all([
-      DB.getAll('dev_fichas'),
-      DB.getAll('dev_avaliacoes'),
-      DB.getAll('dev_obs'),
-      DB.getAll('diario_bordo').catch(()=>[]),
-      DB.getAll('config'),
-    ]);
-    const ficha   = fichas.find(f => f.alunoId === alunoId);
-    const avsAluno= avs.filter(a => a.alunoId === alunoId).sort((a,b) => b.data.localeCompare(a.data));
-    const obsAluno= obs.filter(o => o.alunoId === alunoId).sort((a,b) => b.data?.localeCompare(a.data||''));
-    const diarioAluno = diario.filter(d => d.alunoId === alunoId).sort((a,b) => b.dt.localeCompare(a.dt)).slice(0,10);
-    const cfgDados = cfg[0] || {};
-    const nomeEsc  = cfgDados.nomeEscola || 'Berçário Sonho Meu';
-    const hoje     = new Date().toLocaleDateString('pt-BR');
-
-    const DOMS = ['motor','cognitivo','socio'];
-    const LABEL_DOM = { motor:'Motor', cognitivo:'Cognitivo', socio:'Socioemocional' };
-    const COR_DOM   = { motor:'#1565C0', cognitivo:'#7C5CBF', socio:'#E05A8A' };
-
-    // Médias por domínio da última avaliação
-    const ultimaAv  = avsAluno[0];
-    const mediasDom = DOMS.map(dom => {
-      if (!ultimaAv?.respostas?.[dom]) return { dom, media: 0 };
-      const vs = Object.values(ultimaAv.respostas[dom]).filter(v => typeof v === 'number');
-      return { dom, media: vs.length ? (vs.reduce((s,v) => s+v,0)/vs.length).toFixed(1) : '—' };
-    });
-
-    const html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
-<title>Relatório Pedagógico — ${mat.nome}</title>
-<style>
-  body { font-family: Arial, sans-serif; font-size: 12px; color: #222; padding: 28px; max-width: 800px; margin: 0 auto; }
-  h1   { font-size: 20px; color: #12586a; margin-bottom: 4px; }
-  h2   { font-size: 14px; color: #12586a; margin: 18px 0 6px; border-bottom: 2px solid #e0f0f5; padding-bottom: 4px; }
-  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
-  .escola { font-size: 11px; color: #666; }
-  .info-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-  .info-card { background: #f5fbfc; border: 1px solid #c8e8f0; border-radius: 8px; padding: 10px 12px; }
-  .info-card .lbl { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: .5px; }
-  .info-card .val { font-size: 16px; font-weight: 800; color: #12586a; }
-  .dom-bar  { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-  .dom-name { width: 120px; font-weight: 700; font-size: 11px; }
-  .bar-wrap  { flex: 1; background: #eee; border-radius: 4px; height: 14px; }
-  .bar-fill  { height: 14px; border-radius: 4px; }
-  .obs-item { padding: 8px 10px; background: #fafafa; border-left: 3px solid #12586a; margin-bottom: 6px; border-radius: 0 6px 6px 0; }
-  .av-item  { border: 1px solid #e0e0e0; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; }
-  .av-data  { font-size: 11px; color: #888; margin-bottom: 4px; }
-  table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
-  th { background: #e0f0f5; color: #12586a; font-size: 11px; padding: 5px 8px; text-align: left; }
-  td { font-size: 11px; padding: 5px 8px; border-bottom: 1px solid #f0f0f0; }
-  .print-btn { display: block; margin: 0 auto 20px; padding: 10px 28px; background: #12586a; color: #fff; border: none; border-radius: 8px; font-size: 13px; cursor: pointer; font-weight: 700; }
-  @media print { .print-btn { display: none; } body { padding: 14px; } }
-</style></head><body>
-<button class="print-btn" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
-<div class="header">
-  <div>
-    <h1>🌱 Relatório Pedagógico</h1>
-    <div style="font-size:18px;font-weight:800;color:#333;margin-top:4px">${mat.nome}</div>
-    <div style="font-size:11px;color:#888;margin-top:2px">${Utils.salaLabel(mat.turma)} · Gerado em ${hoje}</div>
-  </div>
-  <div class="escola">
-    <b>${nomeEsc}</b><br>
-    ${cfgDados.endereco||''}<br>
-    ${cfgDados.telefone||''}
-  </div>
-</div>
-
-<h2>📊 Resumo de Desenvolvimento</h2>
-<div class="info-grid">
-  <div class="info-card"><div class="lbl">Avaliações</div><div class="val">${avsAluno.length}</div></div>
-  <div class="info-card"><div class="lbl">Última avaliação</div><div class="val">${ultimaAv ? Utils.fmtDate(ultimaAv.data) : '—'}</div></div>
-  <div class="info-card"><div class="lbl">Observações</div><div class="val">${obsAluno.length}</div></div>
-</div>
-
-${mediasDom.map(({ dom, media }) => {
-  const pct = Math.min(100, Math.round((parseFloat(media)||0) / 4 * 100));
-  return `<div class="dom-bar">
-    <div class="dom-name" style="color:${COR_DOM[dom]}">${LABEL_DOM[dom]}</div>
-    <div class="bar-wrap"><div class="bar-fill" style="width:${pct}%;background:${COR_DOM[dom]}"></div></div>
-    <div style="width:32px;text-align:right;font-weight:700;color:${COR_DOM[dom]}">${media}</div>
-  </div>`;
-}).join('')}
-
-${avsAluno.length >= 2 ? `
-<h2>📈 Evolução por Domínio</h2>
-${DOMS.map(dom => `
-  <div style="margin-bottom:12px">
-    <div style="font-size:11px;font-weight:700;color:${COR_DOM[dom]};margin-bottom:4px">${LABEL_DOM[dom]}</div>
-    ${_graficoEvolucao(avsAluno, dom)}
-  </div>`).join('')}` : ''}
-
-${avsAluno.length ? `
-<h2>📋 Histórico de Avaliações</h2>
-${avsAluno.slice(0, 5).map(a => `
-  <div class="av-item">
-    <div class="av-data">${Utils.fmtDate(a.data)} · ${a.educadora || '—'}</div>
-    ${a.obs ? `<div style="font-style:italic;color:#555">"${a.obs}"</div>` : ''}
-  </div>`).join('')}` : ''}
-
-${obsAluno.length ? `
-<h2>📝 Observações</h2>
-${obsAluno.slice(0, 8).map(o => `
-  <div class="obs-item">
-    <div style="font-size:10px;color:#888;margin-bottom:2px">${Utils.fmtDate(o.data)} · ${o.educadora||'—'}</div>
-    <div>${o.texto||''}</div>
-  </div>`).join('')}` : ''}
-
-${diarioAluno.length ? `
-<h2>📓 Diário de Bordo (últimos ${diarioAluno.length} dias)</h2>
-<table><thead><tr><th>Data</th><th>Humor</th><th>Alimentação</th><th>Fraldas</th><th>Observação</th></tr></thead><tbody>
-${diarioAluno.map(d => `<tr>
-  <td>${Utils.fmtDate(d.dt)}</td>
-  <td>${d.humor||'—'}</td>
-  <td>${d.mamou||'—'}</td>
-  <td>${d.fralda??'—'}</td>
-  <td>${d.obs||''}</td>
-</tr>`).join('')}
-</tbody></table>` : ''}
-
-<div style="margin-top:28px;border-top:2px solid #e0f0f5;padding-top:14px;display:flex;justify-content:space-between;font-size:10px;color:#888">
-  <span>${nomeEsc} · ${cfgDados.responsavel||''}</span>
-  <span>Documento gerado automaticamente pelo BSM v8.0 — ${hoje}</span>
-</div>
-</body></html>`;
-
-    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-    const a    = document.createElement('a');
-    a.href     = URL.createObjectURL(blob);
-    a.download = `relatorio_pedagogico_${mat.nome.split(' ')[0].toLowerCase()}_${Utils.today()}.html`;
-    a.click();
-    Toast.show('success', `📄 Relatório de ${mat.nome.split(' ')[0]} gerado!`);
-  };
-
   return {
     render, abrirFicha, novaAvaliacao, editarAvaliacao, _salvarAvaliacao,
     novaObs, _salvarObs, gerarRelatorio, _aba, _onAlunoChange, _fecharAlerta,
     compararAlunos, _gerarComparacao, gerarIntervencao,
     relatorioTurma, _gerarRelTurma,
-    relatorioPDF, _graficoEvolucao,
   };
 })();
 
@@ -18584,7 +18143,7 @@ const PainelTV = (() => {
 
         <!-- Rodapé infantil -->
         <div class="tv-footer" style="border-top-color:${cor}">
-          <span class="tv-footer-brand" style="color:${cor}">🌙 Berçário Sonho Meu · v8.0</span>
+          <span class="tv-footer-brand" style="color:${cor}">🌙 Berçário Sonho Meu · v7.0</span>
           <div id="tvDots" style="display:flex;gap:8px;align-items:center"></div>
           <span id="tvSlideLabel" style="font-size:12px;color:${cor};opacity:.7;font-weight:600"></span>
         </div>
@@ -20656,7 +20215,7 @@ const Portal = (() => {
       <!-- Painel do aluno (oculto até login) -->
       <div id="portalPainel" style="display:none;margin-top:var(--sp-xl)"></div>`;
 
-    await _renderConfigPins(mats);
+    _renderConfigPins(mats);
   };
 
   // ── Selecionar aluno → mostrar PIN ───────────────────────
@@ -21390,7 +20949,6 @@ const SyncQR = (() => {
 })();
 
 
-
 document.addEventListener('DOMContentLoaded', async () => {
   // Inicializa banco
   await DB.init();
@@ -21418,8 +20976,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Notificações in-app — carregar e atualizar a cada 5 min
   Notif.carregar();
   setInterval(Notif.carregar, 5 * 60 * 1000);
-  Notif.iniciarPush();   // #B5 push notifications
-  Notif.renderBotaoTopbar();
 
   // Badges iniciais
   await Badges.refresh();

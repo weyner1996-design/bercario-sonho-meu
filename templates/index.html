@@ -17,12 +17,10 @@
 <!-- CDN Dependencies -->
 <script src="https://cdn.jsdelivr.net/npm/idb@7/build/umd.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/date-fns@3.6.0/cdn.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
-<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 
 <style>
 /* ============================================================
@@ -133,7 +131,7 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
-button { cursor: pointer; font-family: var(--font-body); border: none; outline: none; background: none; touch-action: manipulation; } /* #48 touch-action */
+button { cursor: pointer; font-family: var(--font-body); border: none; outline: none; background: none; }
 input, select, textarea { font-family: var(--font-body); outline: none; }
 a { color: inherit; text-decoration: none; }
 ul, ol { list-style: none; }
@@ -1369,6 +1367,31 @@ tbody td { padding: 9px 13px; font-size: var(--fs-base); vertical-align: middle;
    PRINT STYLES
    ============================================================ */
 /* ============================================================
+   #48 LAYOUT TABLET — Breakpoint 768px
+   ============================================================ */
+@media (max-width: 768px) {
+  .sidebar { width: var(--sb-collapsed, 56px) !important; }
+  .nav-label, .sb-logo-text, .sb-nome, .sb-role,
+  .sb-section-label { display: none !important; }
+  .nav-item { justify-content: center !important; padding: 0 !important;
+    width: 44px; height: 44px; border-radius: 50% !important; }
+  .main { margin-left: var(--sb-collapsed, 56px) !important; }
+  .grid-4, .grid-3 { grid-template-columns: 1fr 1fr !important; }
+  .content { padding: 12px !important; }
+  .topbar { padding: 0 10px !important; }
+  .tb-date { display: none !important; }
+  .form-row.c2, .form-row.c3 { grid-template-columns: 1fr !important; }
+  .btn { min-height: 40px; }
+  .modal-box { width: 96vw !important; max-width: none !important; }
+  .page-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .page-actions { flex-wrap: wrap; width: 100%; }
+}
+@media (max-width: 480px) {
+  .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr !important; }
+  .page-actions .btn { font-size: 11px; padding: 6px 10px; }
+}
+
+/* ============================================================
    TEMA ESCURO
    ============================================================ */
 [data-theme="dark"] {
@@ -1641,74 +1664,6 @@ tbody td { padding: 9px 13px; font-size: var(--fs-base); vertical-align: middle;
   .grid-4  { grid-template-columns: repeat(2,1fr); }
   .grid-3  { grid-template-columns: 1fr 1fr; }
   .kanban  { grid-template-columns: repeat(2,1fr); }
-}
-
-/* #48 — Layout tablet (901px–1024px)
-   Sidebar semi-compacta, conteúdo ajustado, grids menores  */
-@media (max-width: 1024px) and (min-width: 901px) {
-  :root { --sb-width: 180px; }
-
-  /* Sidebar — mais estreita, texto menor */
-  .sb-name  { font-size: 11px !important; }
-  .sb-ver   { display: none !important; }
-  .nav-label{ font-size: 11.5px !important; }
-  .nav-section-label { font-size: 9px !important; letter-spacing: .6px; }
-  .nav-item { padding: 8px 10px !important; gap: 7px !important; }
-  .nav-item svg { width: 17px; height: 17px; flex-shrink: 0; }
-  .sb-logo  { padding: 12px 10px 10px !important; }
-  .sb-moon  { width: 34px !important; height: 34px !important; border-radius: 10px !important; font-size: 16px !important; }
-  .sb-user  { padding: 8px 10px !important; gap: 7px; }
-  .sb-avatar{ width: 28px !important; height: 28px !important; font-size: 12px !important; }
-  .sb-user-name { font-size: 11px !important; }
-  .sb-user-role { display: none !important; }
-  .nav-badge{ font-size: 9px !important; padding: 1px 5px !important; min-width: 16px !important; }
-
-  /* Topbar — mais compacta */
-  .tb-breadcrumb { display: none !important; }
-  .tb-date       { display: none !important; }
-  .topbar        { padding: 0 var(--sp-lg) !important; }
-
-  /* Conteúdo — padding reduzido */
-  .content { padding: var(--sp-lg) var(--sp-lg) var(--sp-lg) !important; }
-
-  /* Grids — 4 colunas → 2 colunas */
-  .grid-4  { grid-template-columns: repeat(2, 1fr) !important; }
-
-  /* Cards de KPI — valores menores */
-  .kpi       { padding: var(--sp-md) var(--sp-lg) !important; }
-  .kpi-value { font-size: 22px !important; }
-  .kpi-label { font-size: 10px !important; }
-
-  /* Page header — agrupa em coluna em telas apertadas */
-  .page-header { gap: var(--sp-md) !important; }
-  .page-title  { font-size: var(--fs-xl) !important; }
-  .page-sub    { font-size: 11px !important; }
-
-  /* Drawer de perfil — largura tablet */
-  .drawer { width: min(420px, 90vw) !important; }
-
-  /* Tabela — fonte menor */
-  .table th, .table td { font-size: 11.5px !important; padding: 8px 10px !important; }
-
-  /* Modal — largura ajustada */
-  .modal-box { max-width: min(540px, 92vw) !important; }
-
-  /* Alunos grid — cards maiores em tablet */
-  .alunos-grid { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)) !important; }
-
-  /* Presença — itens mais compactos */
-  .presenca-item { padding: 8px 12px !important; }
-
-  /* Formulários — 2 colunas → 1 em campos estreitos */
-  .form-row.c3, .form-row.c4 { grid-template-columns: 1fr 1fr !important; }
-}
-
-/* #48 — Tablet portrait / landscape pequeno (640–900px) — reforço */
-@media (max-width: 900px) and (min-width: 641px) {
-  .content { padding: var(--sp-md) var(--sp-md) 90px !important; }
-  .grid-4  { grid-template-columns: repeat(2,1fr) !important; }
-  .page-header { flex-direction: row; flex-wrap: wrap; gap: var(--sp-sm); }
-  .drawer  { width: min(380px, 95vw) !important; }
 }
 @media (max-width: 900px) {
   .sidebar { transform: translateX(-100%); }
@@ -2623,42 +2578,23 @@ tbody td { padding: 9px 13px; font-size: var(--fs-base); vertical-align: middle;
         <span class="nav-badge danger" id="bdg-mens">0</span>
       </button>
 
-      <button class="nav-item" data-page="cobracas">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.15 9.81a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.06 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 16h1z"/></svg>
-        <span class="nav-label">Cobranças</span>
-        <span class="nav-badge danger" id="bdg-cobr">0</span>
-      </button>
-
       <button class="nav-item" data-page="recibos">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
         <span class="nav-label">Recibos & NF</span>
       </button>
 
-      <button class="nav-item" data-page="fila">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="23" y1="11" x2="23" y2="17"/><line x1="20" y1="14" x2="26" y2="14"/></svg>
-        <span class="nav-label">Fila de Espera</span>
-      </button>
-      <button class="nav-item" data-page="contas">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
-        <span class="nav-label">Contas Fixas</span>
-      </button>
       <button class="nav-item" data-page="inadimplencia">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         <span class="nav-label">Inadimplência</span>
       </button>
+
       <button class="nav-item" data-page="dre">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
         <span class="nav-label">DRE Mensal</span>
       </button>
-      <button class="nav-item" data-page="projecao">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-        <span class="nav-label">Projeção</span>
-      </button>
-      <button class="nav-item" data-page="ocupacao">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        <span class="nav-label">Ocupação</span>
-      </button>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+
+      <button class="nav-item" data-page="gastos">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M12 6v6l4 2"/></svg>
         <span class="nav-label">Gastos & Caixa</span>
       </button>
 
@@ -2675,32 +2611,41 @@ tbody td { padding: 9px 13px; font-size: var(--fs-base); vertical-align: middle;
         <span class="nav-label">Uniforme & Produção</span>
       </button>
 
-
       <button class="nav-item" data-page="pedagogico">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
         <span class="nav-label">Pedagógico</span>
       </button>
+
       <button class="nav-item" data-page="agenda">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         <span class="nav-label">Agenda</span>
       </button>
 
       <button class="nav-item" data-page="cozinha">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg>
         <span class="nav-label">Cozinha</span>
       </button>
 
       <div class="nav-section-label">Gestão</div>
 
       <button class="nav-item" data-page="funcionarios">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         <span class="nav-label">Funcionários</span>
       </button>
 
       <button class="nav-item" data-page="manutencao">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
         <span class="nav-label">Manutenção</span>
-        <span class="nav-badge warning" id="bdg-manut">0</span>
+      </button>
+
+      <button class="nav-item" data-page="desenvolvimento">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+        <span class="nav-label">Desenvolvimento</span>
+      </button>
+
+      <button class="nav-item" data-page="paineltv">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        <span class="nav-label">Painel TV</span>
       </button>
 
       <button class="nav-item" data-page="visitantes">
@@ -2708,54 +2653,30 @@ tbody td { padding: 9px 13px; font-size: var(--fs-base); vertical-align: middle;
         <span class="nav-label">Visitantes</span>
       </button>
 
-      <button class="nav-item" data-page="importar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        <span class="nav-label">Importar Dados</span>
-      </button>
-
-
-
-      <button class="nav-item" data-page="desenvolvimento">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-        <span class="nav-label">Desenvolvimento</span>
-      </button>
-
-      <button class="nav-item" data-page="paineltv">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17,2 12,7 7,2"/></svg>
-        <span class="nav-label">Painel TV</span>
-      </button>
-
-      <button class="nav-item" data-page="portal">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
-        <span class="nav-label">Portal Família</span>
-      </button>
-
-      <div class="nav-section-label" data-perm="master">Admin</div>
-      <button class="nav-item" data-page="usuarios" data-perm="master">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        <span class="nav-label">Usuários</span>
-      </button>
-
-      <button class="nav-item" data-page="auditoria" data-perm="master">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      <button class="nav-item" data-page="auditoria">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         <span class="nav-label">Auditoria</span>
+      </button>
+
+      <button class="nav-item" data-page="importar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span class="nav-label">Importar / Exportar</span>
+      </button>
+
+      <button class="nav-item" data-page="usuarios" data-perm="master">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg>
+        <span class="nav-label">Usuários</span>
       </button>
 
       <button class="nav-item" data-page="config">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         <span class="nav-label">Configurações</span>
       </button>
+
     </nav>
 
-    <div class="sb-foot">
-      <div class="sb-user" onclick="Toast.show('info','Perfil em breve!')">
-        <div class="sb-avatar" id="sbAvatar">W</div>
-        <div>
-          <div class="sb-user-name" id="sbUserName">Weyner</div>
-          <div class="sb-user-role" id="sbUserRole">Administrador</div>
-        </div>
-      </div>
-    </div>
+    <!-- Rodapé da sidebar -->
+    <div class="sb-footer" id="sbFooter"></div>
   </aside>
 
   <!-- MAIN -->
@@ -2807,8 +2728,7 @@ tbody td { padding: 9px 13px; font-size: var(--fs-base); vertical-align: middle;
           </div>
           <div class="page-actions">
             <button class="btn btn-ghost btn-sm" onclick="MorningBriefing.gerar()">☀️ Briefing do Dia</button>
-            <button class="btn btn-ghost btn-sm" onclick="Comunicados.abrir()">📢 Comunicado</button>
-            <button class="btn btn-ghost btn-sm" onclick="Comunicados.render()">📣 Comunicados</button>
+            
             <button class="btn btn-ghost btn-sm" onclick="Dashboard.exportRelatorio()">📊 Relatório</button>
             <button class="btn btn-secondary" onclick="Router.go('matriculas')">+ Nova Matrícula</button>
           </div>
@@ -2979,6 +2899,7 @@ tbody td { padding: 9px 13px; font-size: var(--fs-base); vertical-align: middle;
               <svg id="iconToggleView" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
               <span id="lblToggleView">Lista</span>
             </button>
+            <button class="btn btn-ghost btn-sm" onclick="Alunos.limparDuplicatas()" title="Remover registros duplicados do banco" style="color:var(--amber)">🔧 Corrigir duplicatas</button>
             <button class="btn btn-primary btn-sm" onclick="Matriculas.openWizard()">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               Nova Matrícula
@@ -3396,10 +3317,9 @@ tbody td { padding: 9px 13px; font-size: var(--fs-base); vertical-align: middle;
       <!-- ==================== DRE MENSAL ==================== -->
       <section class="page" id="page-dre" data-print-title="DRE Mensal — Berçário Sonho Meu"></section>
       <section class="page" id="page-contas" data-print-title="Contas &amp; Obrigações — Berçário Sonho Meu"></section>
-      <section class="page" id="page-fila" data-print-title="Fila de Espera — Berçário Sonho Meu"></section>
       <section class="page" id="page-visitantes" data-print-title="Visitantes — Berçário Sonho Meu"></section>
-      <section class="page" id="page-portal" data-print-title="Portal Família — Berçário Sonho Meu"></section>
-      <section class="page" id="page-auditoria" data-print-title="Log de Auditoria — Berçário Sonho Meu"></section>
+      <section class="page" id="page-auditoria" data-print-title="Auditoria — Berçário Sonho Meu"></section>
+      <section class="page" id="page-fila" data-print-title="Fila de Espera — Berçário Sonho Meu"></section>
 
       <!-- ==================== GASTOS ==================== -->
       <section class="page" id="page-gastos" data-print-title="Gastos & Caixa — Berçário Sonho Meu">
@@ -3428,6 +3348,18 @@ tbody td { padding: 9px 13px; font-size: var(--fs-base); vertical-align: middle;
             <button class="btn btn-secondary" onclick="Gastos.openForm()">+ Lançar Gasto</button>
           </div>
         </div>
+        <!-- Abas Gastos / Contas Fixas -->
+        <div style="display:flex;gap:0;margin-bottom:var(--sp-md);border-bottom:2px solid var(--border)">
+          <button id="gastosTabGastos" onclick="Gastos.setAba('gastos',this)"
+            style="padding:8px 20px;font-weight:700;font-size:13px;border:none;background:none;cursor:pointer;border-bottom:3px solid var(--teal-dk);color:var(--teal-dk)">
+            💸 Gastos & Caixa
+          </button>
+          <button id="gastosTabContas" onclick="Gastos.setAba('contas',this)"
+            style="padding:8px 20px;font-weight:600;font-size:13px;border:none;background:none;cursor:pointer;border-bottom:3px solid transparent;color:var(--ink-3)">
+            📋 Contas Fixas
+          </button>
+        </div>
+        <div id="gastosAbaConteudo"></div>
         <div class="grid-4 mb" id="gastosKpis"></div>
         <div class="grid-21 mb">
           <div class="card" style="padding:0;overflow:hidden">
@@ -3831,25 +3763,20 @@ tbody td { padding: 9px 13px; font-size: var(--fs-base); vertical-align: middle;
         <div class="card">
           <div class="section-title">📤 Exportar Dados</div>
           <div class="grid-4">
-            <button class="btn btn-secondary" onclick="Imp.exportJSON()">💾 Backup JSON</button>
-            <button class="btn btn-secondary" onclick="Imp.exportLZ()" title="Comprimido ~60% menor · formato .bsm">🗜️ Backup Comprimido</button>
+            <button class="btn btn-secondary" onclick="Imp.exportJSON()">💾 Backup JSON Completo</button>
+            <button class="btn btn-secondary" onclick="Imp.exportJSONComprimido()">🗜️ Backup Comprimido (.bsm)</button>
+            <button class="btn btn-ghost" onclick="Imp.exportExcelMultiAba()">📊 Excel Multi-aba (.xlsx)</button>
+            <button class="btn btn-ghost" onclick="Imp.gerarQRSync()">📱 Sync via QR Code</button>
             <button class="btn btn-ghost" onclick="Imp.exportCSVAlunos()">📊 CSV — Alunos</button>
             <button class="btn btn-ghost" onclick="Imp.exportCSVMens()">📊 CSV — Mensalidades</button>
             <button class="btn btn-ghost" onclick="Imp.exportCSVGastos()">📊 CSV — Gastos</button>
-            <button class="btn btn-ghost" onclick="Imp.exportarExcel()">📗 Excel Multi-aba</button>
-            <button class="btn btn-ghost" onclick="SyncQR.abrirGerar()">📡 QR de Sync</button>
-            <button class="btn btn-ghost" onclick="SyncQR.abrirLer()">📷 Ler QR</button>
           </div>
-          <div class="grid-2" style="margin-top:12px;gap:12px">
-            <div class="form-group" style="margin:0">
-              <label class="form-label">Restaurar Backup JSON</label>
+          <div class="form-group" style="margin-top:12px">
+            <label class="form-label">Restaurar de Backup (JSON ou .bsm comprimido)</label>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
               <input type="file" accept=".json" onchange="Imp.restoreJSON(this)"
-                     style="font-size:var(--fs-sm);padding:6px;border:1.5px solid var(--border);border-radius:var(--r-md);width:100%">
-            </div>
-            <div class="form-group" style="margin:0">
-              <label class="form-label">Restaurar Backup Comprimido (.bsm)</label>
-              <input type="file" accept=".bsm" onchange="Imp.restoreLZ(this)"
-                     style="font-size:var(--fs-sm);padding:6px;border:1.5px solid var(--border);border-radius:var(--r-md);width:100%">
+                     style="font-size:var(--fs-sm);padding:6px;border:1.5px solid var(--border);border-radius:var(--r-md);flex:1">
+              <button class="btn btn-ghost btn-sm" onclick="Imp.restoreJSONComprimido()">📂 Restaurar .bsm</button>
             </div>
           </div>
         </div>
@@ -4163,7 +4090,7 @@ const Utils = (() => {
    ============================================================ */
 const DB = (() => {
   const DB_NAME    = 'bercario_sonho_meu';
-  const DB_VERSION = 9;
+  const DB_VERSION = 10;
   let _db = null;
 
   const STORES = [
@@ -4200,13 +4127,9 @@ const DB = (() => {
     'contas_fixas',
     'portfolio',
     'ativ_personalizadas',
-    'diario_bordo',
-    'medicamentos',
-    'ocorrencias',
-    'fila_espera',
+    'diario_bordo', 'medicamentos', 'ocorrencias', 'fila_espera',
     'visitantes',
-    'portal_msgs',
-    'audit_log'
+    'auditoria'
   ];
 
   // Seed de dados iniciais
@@ -4382,39 +4305,8 @@ const DB = (() => {
   // CRUD genérico
   const getAll = store => _db.getAll(store);
   const get    = (store, id) => _db.get(store, id);
-
-  // #34 — Stores que geram entrada no log de auditoria
-  const _AUDIT_STORES = new Set([
-    'matriculas','mensalidades','gastos','funcionarios',
-    'usuarios','contas_fixas','config','portal_msgs',
-  ]);
-
-  const _auditLog = async (store, obj, op) => {
-    if (!_AUDIT_STORES.has(store)) return;
-    try {
-      const sess = (await _db.getAll('sessao'))[0];
-      await _db.put('audit_log', {
-        id:      `${Date.now()}_${Math.random().toString(36).slice(2,7)}`,
-        ts:      new Date().toISOString(),
-        store,
-        op,                              // 'save' | 'remove'
-        docId:   obj?.id || null,
-        resumo:  obj?.nome || obj?.titulo || obj?.ref || obj?.id || '',
-        usuario: sess?.nome || 'sistema',
-      });
-    } catch(e) { /* silencia — nunca bloquear o save principal */ }
-  };
-
-  const save = async (store, obj) => {
-    const result = await _db.put(store, obj);
-    _auditLog(store, obj, 'save');       // #34 assíncrono, não bloqueia
-    return result;
-  };
-
-  const remove = async (store, id) => {
-    await _db.delete(store, id);
-    _auditLog(store, { id }, 'remove');  // #34
-  };
+  const save   = (store, obj) => _db.put(store, obj);
+  const remove = (store, id) => _db.delete(store, id);
 
   const saveAll = async (store, items) => {
     const tx = _db.transaction(store, 'readwrite');
@@ -4469,6 +4361,7 @@ const DB = (() => {
 
   const _autoBackup = async () => {
     try {
+      // Verifica se todos os stores necessários existem antes de exportar
       const storesOk = STORES.every(s => _db.objectStoreNames.contains(s));
       if (!storesOk) {
         console.log('[BSM] Backup ignorado — migração de banco em andamento');
@@ -4477,16 +4370,9 @@ const DB = (() => {
       const data = await exportAll();
       const json = JSON.stringify(data);
       const ts   = new Date().toISOString();
-      // #41 — LZString: comprime antes de guardar no localStorage
-      const lz   = (typeof LZString !== 'undefined')
-        ? LZString.compressToUTF16(json)
-        : json; // fallback se CDN falhar
-      localStorage.setItem('bsm_autobackup_lz',   lz);
-      localStorage.setItem('bsm_autobackup_ts',    ts);
-      localStorage.setItem('bsm_autobackup_bytes', json.length); // tamanho original
-      // compatibilidade reversa — remove chave não-comprimida antiga
-      localStorage.removeItem('bsm_autobackup_data');
-      console.log(`[BSM] Backup LZ OK — ${ts} — orig ${(json.length/1024).toFixed(1)} KB → lz ${(lz.length/1024).toFixed(1)} KB`);
+      localStorage.setItem('bsm_autobackup_data', json);
+      localStorage.setItem('bsm_autobackup_ts',   ts);
+      console.log(`[BSM] Backup automático OK — ${ts} — ${(json.length/1024).toFixed(1)} KB`);
     } catch(e) {
       console.warn('[BSM] Falha no backup automático:', e);
     }
@@ -4509,33 +4395,16 @@ const DB = (() => {
 
   // Restaurar último backup automático
   const restoreAutoBackup = async () => {
-    // #41 — tenta chave LZ primeiro, depois fallback para JSON antigo
-    const lz  = localStorage.getItem('bsm_autobackup_lz');
-    const ts  = localStorage.getItem('bsm_autobackup_ts');
-    if (lz) {
-      const json = (typeof LZString !== 'undefined')
-        ? LZString.decompressFromUTF16(lz)
-        : lz;
-      if (!json) return null;
-      return { data: JSON.parse(json), ts };
-    }
-    // fallback: chave antiga não-comprimida
     const raw = localStorage.getItem('bsm_autobackup_data');
+    const ts  = localStorage.getItem('bsm_autobackup_ts');
     if (!raw) return null;
     return { data: JSON.parse(raw), ts };
   };
 
-  const getAutoBackupInfo = () => {
-    const lz    = localStorage.getItem('bsm_autobackup_lz') || '';
-    const orig  = parseInt(localStorage.getItem('bsm_autobackup_bytes') || '0');
-    const ratio = orig && lz.length ? Math.round((1 - lz.length/orig)*100) : 0;
-    return {
-      ts:       localStorage.getItem('bsm_autobackup_ts'),
-      size:     Math.round(orig / 1024),       // KB original
-      sizeLZ:   Math.round(lz.length / 1024),  // KB comprimido
-      ratio,                                    // % de redução
-    };
-  };
+  const getAutoBackupInfo = () => ({
+    ts:   localStorage.getItem('bsm_autobackup_ts'),
+    size: Math.round((localStorage.getItem('bsm_autobackup_data') || '').length / 1024)
+  });
 
   // Inicia intervalo de 30 min
   const _startBackupTimer = () => {
@@ -4568,7 +4437,7 @@ const Router = (() => {
     inadimplencia:  'Inadimplência',
     contas:         'Contas & Obrigações Fixas',
     fila:           'Fila de Espera',
-    fila:           'Fila de Espera',
+    visitantes:     'Controle de Visitantes',
     dre:            'DRE Mensal',
     projecao:       'Projeção de Receita',
     ocupacao:       'Indicadores de Ocupação',
@@ -5422,7 +5291,46 @@ const Dashboard = (() => {
     await render();
   };
 
-  const exportRelatorio = () => Toast.show('info', 'Exportação de relatório disponível na Etapa 6');
+  const exportRelatorio = async () => {
+    const [mats, mens, gastos, cfg] = await Promise.all([
+      DB.getAll('matriculas'), DB.getAll('mensalidades'),
+      DB.getAll('gastos'), DB.getConfig(),
+    ]);
+    const hoje     = Utils.today();
+    const anoMes   = hoje.slice(0,7);
+    const ativos   = mats.filter(m => m.st === 'matriculado');
+    const mensAno  = mens.filter(m => (m.dtPagamento||'').startsWith(hoje.slice(0,4)) && m.st === 'pago');
+    const recBruta = mensAno.reduce((s,m) => s+(m.valorPago||m.valor||0), 0);
+    const inadimp  = mens.filter(m => m.st === 'atrasado').length;
+    const despMes  = gastos.filter(g => (g.dt||'').startsWith(anoMes)).reduce((s,g)=>s+(g.valor||0),0);
+    const nomeEsc  = cfg.nomeEscola || 'Berçário Sonho Meu';
+
+    var html = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Relatório Executivo</title>';
+    html += '<style>*{box-sizing:border-box}body{font-family:Arial,sans-serif;font-size:12px;color:#1a2533;padding:24px;max-width:800px;margin:auto}';
+    html += 'h1{font-size:20px;color:#12586a}h2{font-size:13px;color:#666;margin-bottom:20px}';
+    html += '.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}';
+    html += '.kpi{background:#f5f9fa;border-radius:8px;padding:12px;text-align:center}';
+    html += '.kpi-n{font-size:22px;font-weight:800;color:#12586a}.kpi-l{font-size:10px;color:#888}';
+    html += '.btn-print{position:fixed;bottom:16px;right:16px;background:#12586a;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:12px;cursor:pointer}';
+    html += '@media print{.btn-print{display:none}}</style></head><body>';
+    html += '<h1>📊 Relatório Executivo — '+nomeEsc+'</h1>';
+    html += '<h2>Gerado em '+Utils.fmtDate(hoje)+'</h2>';
+    html += '<div class="kpis">';
+    html += '<div class="kpi"><div class="kpi-n">'+ativos.length+'</div><div class="kpi-l">Alunos ativos</div></div>';
+    html += '<div class="kpi"><div class="kpi-n">'+Utils.money(recBruta)+'</div><div class="kpi-l">Receita no ano</div></div>';
+    html += '<div class="kpi"><div class="kpi-n" style="color:'+(inadimp?'#c0392b':'#1A7A4A')+'">'+inadimp+'</div><div class="kpi-l">Inadimplentes</div></div>';
+    html += '<div class="kpi"><div class="kpi-n" style="color:#E8644A">'+Utils.money(despMes)+'</div><div class="kpi-l">Gastos este mês</div></div>';
+    html += '</div>';
+    html += '<button class="btn-print" onclick="window.print()">🖨️ Imprimir</button>';
+    html += '</body></html>';
+
+    var blob = new Blob([html],{type:'text/html;charset=utf-8'});
+    var a = document.createElement('a'); a.href=URL.createObjectURL(blob);
+    a.download='relatorio_executivo_'+hoje+'.html';
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(a.href);},500);
+    Toast.show('success','📊 Relatório executivo gerado!');
+  };
 
   // Render principal
   const render = async () => {
@@ -6691,7 +6599,10 @@ const Alunos = (() => {
 
   /* ── Render principal ── */
   const render = async () => {
-    _all = await DB.getAll('matriculas');
+    const todos = await DB.getAll('matriculas');
+    // Deduplica por ID (protege contra dados duplicados no banco)
+    const seen = new Set();
+    _all = todos.filter(m => { if (seen.has(m.id)) return false; seen.add(m.id); return true; });
     applyFilters();
   };
 
@@ -7182,6 +7093,9 @@ const Alunos = (() => {
           <button class="btn btn-ghost" onclick="DevInfantil.abrirFicha('${a.id}')">
             📋 Ver Ficha Completa
           </button>
+          <button class="btn btn-ghost" style="color:var(--teal-dk)" onclick="PortalResp.gerar('${a.id}')">
+            📲 Portal do Responsável
+          </button>
           ${avsAluno.length ? `
           <button class="btn btn-ghost" style="color:var(--teal-dk)" onclick="DevInfantil.gerarRelatorio('${avsAluno[0].id}','${a.id}')">
             📄 PDF Última Avaliação
@@ -7190,7 +7104,22 @@ const Alunos = (() => {
       </div>`;
   };
 
-  return { render, search, applyFilters, toggleView, openPerfil, _tab, _fotoClick, _fotoChange };
+  const limparDuplicatas = async () => {
+    const todos  = await DB.getAll('matriculas');
+    const seen   = new Map();
+    const dupes  = [];
+    todos.forEach(m => {
+      if (seen.has(m.id)) dupes.push(m.id);
+      else seen.set(m.id, m);
+    });
+    if (!dupes.length) { Toast.show('success', '✅ Nenhuma duplicata encontrada!'); return; }
+    if (!await Modal.confirm(`Remover ${dupes.length} registro(s) duplicado(s)?`, { confirmLabel: 'Limpar', danger: true })) return;
+    for (const id of dupes) await DB.remove('matriculas', id).catch(()=>{});
+    Toast.show('success', `✅ ${dupes.length} duplicata(s) removida(s)! Recarregue a página.`);
+    await render();
+  };
+
+  return { render, search, applyFilters, toggleView, openPerfil, _tab, _fotoClick, _fotoChange, limparDuplicatas };
 })();
 
 /* ============================================================
@@ -9739,10 +9668,60 @@ const Gastos = (() => {
     Toast.show('success', 'CSV exportado!');
   };
 
+  const setAba = async (aba, btnEl) => {
+    // Atualizar visual das abas
+    document.querySelectorAll('#gastosTabGastos,#gastosTabContas').forEach(b => {
+      b.style.borderBottomColor = 'transparent';
+      b.style.color = 'var(--ink-3)';
+      b.style.fontWeight = '600';
+    });
+    if (btnEl) {
+      btnEl.style.borderBottomColor = 'var(--teal-dk)';
+      btnEl.style.color = 'var(--teal-dk)';
+      btnEl.style.fontWeight = '700';
+    }
+
+    const abaEl = document.getElementById('gastosAbaConteudo');
+    const mainEls = ['gastosKpis','gastosTbody','gastosPag','gastosResumoDRE'];
+
+    if (aba === 'contas') {
+      if (abaEl) {
+        abaEl.style.display = '';
+        abaEl.innerHTML = '<div id="page-contas-inline"></div>';
+        // Renderizar ContasFixas no container inline
+        const inlineEl = document.getElementById('page-contas-inline');
+        if (inlineEl && typeof ContasFixas !== 'undefined') {
+          // Temporariamente redirecionar o render do ContasFixas para o container inline
+          const origEl = document.getElementById('page-contas');
+          if (origEl) origEl.id = 'page-contas-hidden';
+          inlineEl.id = 'page-contas';
+          await ContasFixas.render();
+          inlineEl.id = 'page-contas-inline';
+          if (origEl) origEl.id = 'page-contas';
+        }
+      }
+      // Esconder conteúdo de gastos
+      mainEls.forEach(id => { const el=document.getElementById(id); if(el) el.style.display='none'; });
+      document.querySelector('.grid-21.mb')?.style && (document.querySelector('.grid-21.mb').style.display='none');
+    } else {
+      if (abaEl) { abaEl.style.display='none'; abaEl.innerHTML=''; }
+      mainEls.forEach(id => { const el=document.getElementById(id); if(el) el.style.display=''; });
+      const g21 = document.querySelector('.grid-21.mb');
+      if (g21) g21.style.display='';
+      filter();
+    }
+  };
+
+  const abrirAbaContas = () => {
+    const btn = document.getElementById('gastosTabContas');
+    setAba('contas', btn);
+  };
+
   return {
     render, filter, sort, goPage,
     openForm, save, del, verComp, exportCSV,
-    _toggleEst, _fillEstUnid, _onComp
+    _toggleEst, _fillEstUnid, _onComp,
+    setAba, abrirAbaContas,
   };
 })();
 
@@ -12519,100 +12498,6 @@ th.sorted.desc::after { content:' ▼'; }
   0%,100% { box-shadow: 0 6px 20px rgba(245,158,11,.2); }
   50%      { box-shadow: 0 6px 30px rgba(245,158,11,.4); }
 }
-/* #44 — Parabéns animado ---------------------------------- */
-.tv-parabens-wrap {
-  position: relative; width: 100%; height: 100%;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  background: linear-gradient(135deg,#1a1060 0%,#3b1fa8 40%,#7c2fbe 70%,#e05a8a 100%);
-  overflow: hidden; gap: 0;
-}
-.tv-parabens-stars {
-  position: absolute; inset: 0; pointer-events: none;
-}
-.tv-parabens-star {
-  position: absolute;
-  font-size: 22px;
-  animation: tvStar var(--dur,3s) ease-in-out var(--delay,0s) infinite;
-  opacity: 0;
-}
-@keyframes tvStar {
-  0%   { opacity:0; transform: translateY(0)   scale(.6) rotate(0deg);   }
-  20%  { opacity:1; }
-  80%  { opacity:.8; }
-  100% { opacity:0; transform: translateY(-80px) scale(1.2) rotate(360deg); }
-}
-.tv-parabens-confetti {
-  position: absolute; inset: 0; pointer-events: none;
-}
-.tv-parabens-piece {
-  position: absolute; width: 10px; height: 10px; border-radius: 2px;
-  animation: tvConfetti var(--dur,4s) linear var(--delay,0s) infinite;
-  opacity: 0;
-}
-@keyframes tvConfetti {
-  0%   { opacity:0;   transform: translateY(-20px) rotate(0deg);   }
-  10%  { opacity:1; }
-  90%  { opacity:.6; }
-  100% { opacity:0;   transform: translateY(110vh)  rotate(720deg); }
-}
-.tv-parabens-emoji {
-  font-size: 80px; line-height: 1;
-  animation: tvCelebra 1.2s ease-in-out infinite alternate;
-  filter: drop-shadow(0 4px 16px rgba(0,0,0,.4));
-  z-index: 2;
-}
-@keyframes tvCelebra {
-  0%   { transform: scale(1)    rotate(-8deg); }
-  100% { transform: scale(1.15) rotate(8deg);  }
-}
-.tv-parabens-nome {
-  font-size: clamp(36px,5vw,64px);
-  font-weight: 900; color: #FFD700;
-  text-shadow: 0 4px 24px rgba(0,0,0,.5), 0 0 40px rgba(255,215,0,.4);
-  text-align: center; line-height: 1.1;
-  z-index: 2; max-width: 80%; margin-top: 8px;
-  animation: tvCelebra 1.8s ease-in-out infinite alternate;
-}
-.tv-parabens-sub {
-  font-size: 22px; color: rgba(255,255,255,.85); font-weight: 700;
-  z-index: 2; margin-top: 6px; letter-spacing: .5px;
-}
-.tv-parabens-anos {
-  background: rgba(255,255,255,.15); border: 2px solid rgba(255,255,255,.3);
-  border-radius: 40px; padding: 8px 28px; font-size: 20px;
-  font-weight: 800; color: #fff; z-index: 2; margin-top: 10px;
-  backdrop-filter: blur(6px);
-}
-.tv-parabens-outros {
-  position: absolute; bottom: 18px; left: 0; right: 0;
-  display: flex; justify-content: center; gap: 12px;
-  flex-wrap: wrap; padding: 0 28px; z-index: 2;
-}
-.tv-parabens-pill {
-  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25);
-  border-radius: 20px; padding: 5px 14px; font-size: 13px;
-  color: rgba(255,255,255,.8); font-weight: 600;
-  backdrop-filter: blur(4px);
-}
-/* #46 — Conquistas da semana */
-.tv-conquistas-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 10px; flex: 1; align-content: start; overflow: hidden;
-}
-.tv-conquista-card {
-  background: #fff; border-radius: 16px; padding: 14px 16px;
-  border: 2px solid #EDE9F8;
-  box-shadow: 0 3px 10px rgba(124,92,191,.08);
-  animation: tvSlideIn .4s cubic-bezier(.16,1,.3,1) both;
-}
-.tv-conquista-selo {
-  display: inline-flex; align-items: center; gap: 4px;
-  border: 1.5px solid; border-radius: 12px;
-  padding: 3px 8px; background: #faf8ff;
-  animation: tvStar 3s ease-in-out infinite;
-}
 /* Barra de progresso de presença */
 .tv-progress-bar {
   height: 10px; background: #EDE9F8; border-radius: 10px; overflow: hidden;
@@ -13585,177 +13470,7 @@ const Imp = (() => {
     a.href = URL.createObjectURL(blob);
     a.download = `backup-bsm-${Utils.today()}.json`;
     a.click();
-    Toast.show('success', '💾 Backup JSON exportado!');
-  };
-
-  // #41 — Backup LZ-String comprimido
-  const exportLZ = async () => {
-    if (typeof LZString === 'undefined') { Toast.show('error','LZString não carregado'); return; }
-    const data = await DB.exportAll();
-    const json = JSON.stringify(data);
-    const lz   = LZString.compressToBase64(json);
-    const blob = new Blob([lz], { type: 'application/octet-stream' });
-    const a    = document.createElement('a');
-    a.href     = URL.createObjectURL(blob);
-    a.download = `backup-bsm-${Utils.today()}.bsm`;
-    a.click();
-    const ratio = Math.round((1 - lz.length / json.length) * 100);
-    Toast.show('success', `💾 Backup comprimido — redução de ${ratio}%!`);
-  };
-
-  const restoreLZ = async inp => {
-    const f = inp.files?.[0]; if (!f) return;
-    if (!confirm('Restaurar backup comprimido? Todos os dados atuais serão SUBSTITUÍDOS.')) { inp.value=''; return; }
-    const reader = new FileReader();
-    reader.onload = async e => {
-      try {
-        const lz   = e.target.result;
-        const json = (typeof LZString !== 'undefined')
-          ? LZString.decompressFromBase64(lz)
-          : lz;
-        if (!json) throw new Error('Falha na descompressão');
-        const data = JSON.parse(json);
-        await DB.importAll(data);
-        Toast.show('success', '✅ Backup comprimido restaurado!');
-        setTimeout(() => location.reload(), 1500);
-      } catch { Toast.show('error', '❌ Arquivo de backup inválido!'); }
-    };
-    reader.readAsText(f);
-  };
-
-  // #33 — Excel Multi-aba (SheetJS)
-  const exportarExcel = async () => {
-    if (typeof XLSX === 'undefined') { Toast.show('error','SheetJS não carregado — verifique conexão'); return; }
-    Toast.show('info','⏳ Gerando planilha…');
-
-    const [mats, mens, gastos, presAll, funcs, estoque, visitantes] = await Promise.all([
-      DB.getAll('matriculas').catch(()=>[]),
-      DB.getAll('mensalidades').catch(()=>[]),
-      DB.getAll('gastos').catch(()=>[]),
-      DB.getAll('presenca').catch(()=>[]),
-      DB.getAll('funcionarios').catch(()=>[]),
-      DB.getAll('estoque').catch(()=>[]),
-      DB.getAll('visitantes').catch(()=>[]),
-    ]);
-
-    const wb = XLSX.utils.book_new();
-
-    // ── Aba 1: Alunos ──────────────────────────────────────
-    const matsAtivos = mats.filter(m => m.st === 'matriculado');
-    const wsAlunos = XLSX.utils.json_to_sheet(matsAtivos.map(m => ({
-      'Nome':          m.nome || '',
-      'Apelido':       m.apelido || '',
-      'Nascimento':    m.nasc ? Utils.fmtDate(m.nasc) : '',
-      'Turma':         Utils.salaLabel(m.turma),
-      'Status':        m.st || '',
-      'Mãe':           m.mae || '',
-      'Tel. Mãe':      m.telMae || '',
-      'E-mail Mãe':    m.emailMae || '',
-      'Pai':           m.pai || '',
-      'Tel. Pai':      m.telPai || '',
-      'E-mail Pai':    m.emailPai || '',
-      'CPF Aluno':     m.cpf || '',
-      'Alergias':      (m.alergias||[]).join('; '),
-      'Observações':   m.obs || '',
-      'Dia Vencimento':m.diaVenc || '',
-      'Cadastro':      m.dtCadastro ? Utils.fmtDate(m.dtCadastro) : '',
-    })));
-    XLSX.utils.book_append_sheet(wb, wsAlunos, '👶 Alunos');
-
-    // ── Aba 2: Mensalidades ────────────────────────────────
-    const wsMens = XLSX.utils.json_to_sheet(mens.map(m => {
-      const mat = mats.find(a => a.id === m.alunoId);
-      return {
-        'Aluno':       mat?.nome || m._nomeCrianca || m.alunoId || '',
-        'Referência':  m.ref || '',
-        'Vencimento':  m.vencimento ? Utils.fmtDate(m.vencimento) : '',
-        'Valor (R$)':  m.valor || 0,
-        'Status':      m.st || '',
-        'Dt. Pagamento': m.dtPago ? Utils.fmtDate(m.dtPago) : '',
-        'Valor Pago (R$)': m.valorPago || '',
-        'Forma':       m.forma || '',
-      };
-    }));
-    XLSX.utils.book_append_sheet(wb, wsMens, '💰 Mensalidades');
-
-    // ── Aba 3: Gastos ──────────────────────────────────────
-    const wsGastos = XLSX.utils.json_to_sheet(gastos.map(g => ({
-      'Data':       g.data ? Utils.fmtDate(g.data) : '',
-      'Descrição':  g.descricao || g.titulo || '',
-      'Categoria':  g.categ || '',
-      'Valor (R$)': g.valor || 0,
-      'Forma':      g.forma || '',
-      'Fornecedor': g.fornecedor || '',
-      'Vencimento': g.vencimento ? Utils.fmtDate(g.vencimento) : '',
-      'Status':     g.st || '',
-    })));
-    XLSX.utils.book_append_sheet(wb, wsGastos, '📉 Gastos');
-
-    // ── Aba 4: Presença (resumo por aluno/mês) ─────────────
-    const hoje    = new Date();
-    const mesAtual = `${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}`;
-    const presMes  = presAll.filter(p => p.data?.slice(0,7) === mesAtual);
-    const presResumo = matsAtivos.map(a => {
-      const regs     = presMes.filter(p => p.alunoId === a.id);
-      const presentes = regs.filter(r => r.estado === 'presente').length;
-      const ausentes  = regs.filter(r => r.estado === 'ausente').length;
-      const justific  = regs.filter(r => r.estado === 'justific').length;
-      return {
-        'Aluno':         a.nome,
-        'Turma':         Utils.salaLabel(a.turma),
-        'Mês':           mesAtual,
-        'Presentes':     presentes,
-        'Ausentes':      ausentes,
-        'Justificados':  justific,
-        'Total Registros': regs.length,
-        '% Presença':    regs.length ? Math.round(presentes/regs.length*100)+'%' : '—',
-      };
-    });
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(presResumo), '📅 Presença');
-
-    // ── Aba 5: Funcionários ────────────────────────────────
-    const wsFuncs = XLSX.utils.json_to_sheet(funcs.filter(f=>f.ativo).map(f => ({
-      'Nome':   f.nome || '',
-      'Cargo':  f.cargo || '',
-      'Turno':  f.turno || '',
-      'Salário (R$)': f.sal || 0,
-      'Telefone': f.tel || '',
-      'Status': f.ativo ? 'Ativo' : 'Inativo',
-    })));
-    XLSX.utils.book_append_sheet(wb, wsFuncs, '👤 Funcionários');
-
-    // ── Aba 6: Estoque ─────────────────────────────────────
-    const wsEst = XLSX.utils.json_to_sheet(estoque.map(e => ({
-      'Item':       e.nome || '',
-      'Categoria':  e.categ || '',
-      'Quantidade': e.qtd || 0,
-      'Unidade':    e.unid || '',
-      'Mínimo':     e.minimo || 0,
-      'Alerta':     (e.qtd||0) <= (e.minimo||0) ? 'SIM' : 'não',
-      'Val. Unit. (R$)': e.valUnit || '',
-      'Validade':   e.venc ? Utils.fmtDate(e.venc) : '',
-    })));
-    XLSX.utils.book_append_sheet(wb, wsEst, '📦 Estoque');
-
-    // ── Aba 7: Visitantes ──────────────────────────────────
-    if (visitantes.length) {
-      const wsVisit = XLSX.utils.json_to_sheet(visitantes.map(v => ({
-        'Data':       v.data ? Utils.fmtDate(v.data) : '',
-        'Nome':       v.nome || '',
-        'Documento':  v.doc || '',
-        'Empresa':    v.empresa || '',
-        'Motivo':     v.motivo || '',
-        'Descrição':  v.descricao || '',
-        'Entrada':    v.entrada || '',
-        'Saída':      v.saida || '',
-        'Atendente':  v.responsavel || '',
-      })));
-      XLSX.utils.book_append_sheet(wb, wsVisit, '👥 Visitantes');
-    }
-
-    // Gera e baixa o arquivo
-    XLSX.writeFile(wb, `BSM_Relatorio_${Utils.today()}.xlsx`);
-    Toast.show('success', `📗 Excel gerado — ${wb.SheetNames.length} abas!`);
+    Toast.show('success', '💾 Backup exportado!');
   };
 
   const restoreJSON = async inp => {
@@ -13802,14 +13517,146 @@ const Imp = (() => {
     Toast.show('success', 'CSV de gastos exportado!');
   };
 
+  // #41 — Backup comprimido com LZ-String
+  const exportJSONComprimido = async () => {
+    const stores = ['matriculas','mensalidades','presenca','gastos','estoque',
+      'agenda','funcionarios','planejamentos','dev_fichas','dev_avaliacoes',
+      'contas_fixas','diario_bordo','medicamentos','ocorrencias','fila_espera'];
+    const dados = {};
+    for (const s of stores) {
+      try { dados[s] = await DB.getAll(s); } catch {}
+    }
+    const json  = JSON.stringify(dados);
+    const original = json.length;
+    const compressed = LZString ? LZString.compressToBase64(json) : json;
+    const ratio = LZString ? Math.round((1 - compressed.length/original)*100) : 0;
+
+    const blob = new Blob([compressed], {type:'text/plain;charset=utf-8'});
+    const a    = document.createElement('a');
+    a.href     = URL.createObjectURL(blob);
+    a.download = 'bsm_backup_'+Utils.today()+'.bsm';
+    document.body.appendChild(a); a.click();
+    setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(a.href);},500);
+    Toast.show('success','💾 Backup gerado! Compressão: '+ratio+'% menor ('+Math.round(compressed.length/1024)+'KB)');
+  };
+
+  const restoreJSONComprimido = () => {
+    const inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = '.bsm,.json,.txt';
+    inp.onchange = async e => {
+      const file = e.target.files[0]; if (!file) return;
+      const text = await file.text();
+      let dados;
+      try {
+        // Tentar como LZ-String primeiro
+        const decompressed = LZString ? LZString.decompressFromBase64(text) : null;
+        dados = JSON.parse(decompressed || text);
+      } catch {
+        try { dados = JSON.parse(text); } catch {
+          Toast.show('error','Arquivo inválido — não é um backup BSM'); return;
+        }
+      }
+      if (!await Modal.confirm('Restaurar backup? Os dados atuais serão substituídos.',{danger:true,confirmLabel:'Restaurar'})) return;
+      let total = 0;
+      for (const [store, items] of Object.entries(dados)) {
+        if (!Array.isArray(items)) continue;
+        try {
+          for (const item of items) { await DB.save(store, item); total++; }
+        } catch {}
+      }
+      Toast.show('success','✅ '+total+' registros restaurados! Recarregue a página.');
+    };
+    inp.click();
+  };
+
+  // #42 — Sincronização via QR Code
+  const gerarQRSync = async () => {
+    if (!LZString) { Toast.show('error','LZ-String não carregado'); return; }
+    const stores = ['matriculas','mensalidades'];
+    const dados  = {};
+    for (const s of stores) {
+      try { dados[s] = await DB.getAll(s); } catch {}
+    }
+    const json = JSON.stringify(dados);
+    const comp = LZString.compressToBase64(json);
+
+    if (comp.length > 2000) {
+      Toast.show('warning','Dados muito grandes para QR. Faça backup tradicional.');
+      return;
+    }
+
+    Modal.open('modalSec', '<div class="modal-header"><div class="modal-title">📱 Sincronização via QR Code</div><button class="modal-close" onclick="Modal.close(\'modalSec\')">×</button></div>'
+      +'<div class="modal-body" style="text-align:center">'
+      +'<div style="font-size:13px;color:var(--ink-3);margin-bottom:16px">Aponte a câmera do outro dispositivo para sincronizar matrículas e mensalidades</div>'
+      +'<div id="qrSyncContainer" style="display:inline-block;padding:12px;background:white;border-radius:12px;border:1px solid var(--border)"></div>'
+      +'<div style="font-size:11px;color:var(--ink-4);margin-top:12px">QR válido por esta sessão apenas</div>'
+      +'</div>'
+      +'<div class="modal-footer"><button class="btn btn-ghost" onclick="Modal.close(\'modalSec\')">Fechar</button></div>');
+
+    setTimeout(() => {
+      const el = document.getElementById('qrSyncContainer');
+      if (el && typeof QRCode !== 'undefined') {
+        new QRCode(el, { text: comp, width: 200, height: 200, colorDark: '#12586a', colorLight: '#ffffff' });
+      } else if (el) {
+        el.innerHTML = '<div style="padding:20px;font-size:12px;color:#888">QRCode lib não carregada. Use o backup comprimido.</div>';
+      }
+    }, 200);
+  };
+
+  // #33 — Export Excel multi-aba
+  const exportExcelMultiAba = async () => {
+    if (typeof XLSX === 'undefined') {
+      Toast.show('error','XLSX não disponível. Tente o export CSV.');
+      return;
+    }
+    const [mats, mens, gastos, presencas, salas] = await Promise.all([
+      DB.getAll('matriculas'), DB.getAll('mensalidades'),
+      DB.getAll('gastos'), DB.getAll('presenca').catch(()=>[]),
+      DB.getAll('salas'),
+    ]);
+    const matMap  = Object.fromEntries(mats.map(m=>[m.id,m]));
+    const salaMap = Object.fromEntries(salas.map(s=>[s.id,s.nome]));
+    const wb = XLSX.utils.book_new();
+
+    // Aba Alunos
+    const alunosData = [['Nome','Sala','Nascimento','Responsável','Telefone','Status']];
+    mats.forEach(m => alunosData.push([m.nome||'',salaMap[m.turma]||m.turma||'',m.nasc||'',m.mae||m.pai||'',m.telMae||m.telPai||'',m.st||'']));
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(alunosData), 'Alunos');
+
+    // Aba Mensalidades
+    const mensData = [['Aluno','Referência','Vencimento','Valor','Forma','Status','Dt Pagamento']];
+    mens.forEach(m => {
+      const mat = matMap[m.alunoId]||{};
+      mensData.push([mat.nome||'',m.ref||'',m.vencimento||'',m.valor||0,m.forma||'',m.st||'',m.dtPagamento||'']);
+    });
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(mensData), 'Mensalidades');
+
+    // Aba Gastos
+    const gastosData = [['Data','Descrição','Categoria','Valor','Fornecedor']];
+    gastos.forEach(g => gastosData.push([g.dt||'',g.descricao||'',g.categoria||'',g.valor||0,g.fornecedor||'']));
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(gastosData), 'Gastos');
+
+    // Aba Presença (mês atual)
+    const anoMes = Utils.today().slice(0,7);
+    const presData = [['Data','Aluno','Sala','Status']];
+    presencas.filter(p=>p.data.startsWith(anoMes)).forEach(p => {
+      const mat = matMap[p.alunoId]||{};
+      presData.push([p.data||'',mat.nome||'',salaMap[mat.turma]||'',p.status||'']);
+    });
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(presData), 'Presença '+anoMes);
+
+    XLSX.writeFile(wb, 'BSM_export_'+Utils.today()+'.xlsx');
+    Toast.show('success','📊 Excel gerado com 4 abas!');
+  };
+
   return {
     render, dropCSV, loadCSV, _confirmarCSV,
     dropPDF, loadPDFs,
     migrarV32, dlModelo,
     exportJSON, restoreJSON,
-    exportLZ, restoreLZ,
-    exportarExcel,
+    exportJSONComprimido, restoreJSONComprimido,
     exportCSVAlunos, exportCSVMens, exportCSVGastos,
+    gerarQRSync, exportExcelMultiAba,
   };
 })();
 
@@ -17391,8 +17238,8 @@ const DRE = (() => {
     el.innerHTML = `
       <div class="page-header">
         <div>
-          <div class="page-title">📑 DRE — Demonstrativo de Resultado</div>
-          <div class="page-sub">Receita bruta · Deduções · Despesas por categoria · Resultado líquido</div>
+          <div class="page-title">📑 Financeiro — DRE & Projeção</div>
+          <div class="page-sub">Demonstrativo de resultado · Receita projetada · Análise mensal</div>
         </div>
         <div class="page-actions">
           <select class="form-select" id="dreMes" style="width:160px" onchange="DRE.atualizar()"></select>
@@ -17400,7 +17247,19 @@ const DRE = (() => {
           <button class="btn btn-ghost btn-sm" onclick="DRE.exportCSV()">📊 CSV</button>
         </div>
       </div>
-      <div id="dreConteudo"></div>`;
+      <!-- Abas DRE / Projeção -->
+      <div style="display:flex;gap:0;margin-bottom:var(--sp-md);border-bottom:2px solid var(--border)">
+        <button id="dreTabDRE" onclick="DRE._switchTab('dre')"
+          style="padding:8px 20px;font-weight:700;font-size:13px;border:none;background:none;cursor:pointer;border-bottom:3px solid var(--teal-dk);color:var(--teal-dk)">
+          📑 DRE Mensal
+        </button>
+        <button id="dreTabProj" onclick="DRE._switchTab('proj')"
+          style="padding:8px 20px;font-weight:600;font-size:13px;border:none;background:none;cursor:pointer;border-bottom:3px solid transparent;color:var(--ink-3)">
+          📈 Projeção de Receita
+        </button>
+      </div>
+      <div id="dreConteudo"></div>
+      <div id="projConteudo" style="display:none"></div>`;
 
     // Popular select de meses
     const sel = document.getElementById('dreMes');
@@ -17420,6 +17279,7 @@ const DRE = (() => {
     });
 
     await atualizar();
+    await _renderProjecao();
   };
 
   const _calcDRE = async (mesRef) => {
@@ -17590,7 +17450,97 @@ const DRE = (() => {
     Utils.downloadCSV(rows.join('\n'), `DRE_${mesRef}.csv`);
   };
 
-  return { render, atualizar, imprimir, exportCSV };
+  const _switchTab = (aba) => {
+    const tabDRE  = document.getElementById('dreTabDRE');
+    const tabProj = document.getElementById('dreTabProj');
+    const dreEl   = document.getElementById('dreConteudo');
+    const projEl  = document.getElementById('projConteudo');
+    if (!dreEl || !projEl) return;
+    if (aba === 'proj') {
+      if (tabDRE)  { tabDRE.style.borderBottomColor='transparent'; tabDRE.style.color='var(--ink-3)'; tabDRE.style.fontWeight='600'; }
+      if (tabProj) { tabProj.style.borderBottomColor='var(--teal-dk)'; tabProj.style.color='var(--teal-dk)'; tabProj.style.fontWeight='700'; }
+      dreEl.style.display  = 'none';
+      projEl.style.display = '';
+      _renderProjecao();
+    } else {
+      if (tabDRE)  { tabDRE.style.borderBottomColor='var(--teal-dk)'; tabDRE.style.color='var(--teal-dk)'; tabDRE.style.fontWeight='700'; }
+      if (tabProj) { tabProj.style.borderBottomColor='transparent'; tabProj.style.color='var(--ink-3)'; tabProj.style.fontWeight='600'; }
+      dreEl.style.display  = '';
+      projEl.style.display = 'none';
+    }
+  };
+
+  const _renderProjecao = async () => {
+    const el = document.getElementById('projConteudo');
+    if (!el) return;
+    el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--ink-3)">Carregando projeção...</div>';
+    const [mats, mens, cfg] = await Promise.all([DB.getAll('matriculas'), DB.getAll('mensalidades'), DB.getConfig()]);
+    const ativos    = mats.filter(function(m){return m.st==='matriculado';});
+    const qtd       = ativos.length;
+    const valMedio  = qtd ? ativos.reduce(function(s,m){return s+(m.valorMens||cfg.mensalidade||933.88);},0)/qtd : (cfg.mensalidade||933.88);
+    const hoje      = new Date();
+    const ano       = hoje.getFullYear();
+    const mesAtual  = hoje.getMonth();
+    const MESES_S   = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+    const MESES_L   = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+    var realizado = Array(12).fill(0);
+    mens.forEach(function(m) {
+      if (m.st==='pago' && m.dtPagamento) {
+        var parts = m.dtPagamento.split('-');
+        if (parseInt(parts[0])===ano) realizado[parseInt(parts[1])-1] += (m.valorPago||m.valor||0);
+      }
+    });
+    var esperado = Array(12).fill(0).map(function(_,i){
+      return i<=mesAtual ? (realizado[i]||qtd*valMedio) : qtd*valMedio;
+    });
+    var totalReal = realizado.slice(0,mesAtual+1).reduce(function(s,v){return s+v;},0);
+    var totalProj = esperado.reduce(function(s,v){return s+v;},0);
+    var recMes    = realizado.slice(0,mesAtual+1).filter(function(v){return v>0;});
+    var recMedia  = recMes.length ? recMes.reduce(function(s,v){return s+v;},0)/recMes.length : 0;
+
+    var W=460,H=130,PAD=40;
+    var maxV=Math.max.apply(null,esperado.concat(realizado).concat([1]));
+    var xStep=(W-PAD*2)/11;
+    var ptReal=realizado.map(function(v,i){return (PAD+i*xStep)+','+(H-PAD-(v/maxV)*(H-PAD*2));}).join(' ');
+    var ptProj=esperado.map(function(v,i){return (PAD+i*xStep)+','+(H-PAD-(v/maxV)*(H-PAD*2));}).join(' ');
+    var circles=realizado.map(function(v,i){var x=PAD+i*xStep;var y=H-PAD-(v/maxV)*(H-PAD*2);return v>0?'<circle cx="'+x+'" cy="'+y+'" r="3.5" fill="#1A7A4A"/>':'';}).join('');
+    var labsX=MESES_S.map(function(m,i){return '<text x="'+(PAD+i*xStep)+'" y="'+(H-PAD+14)+'" text-anchor="middle" font-size="8" fill="#888">'+m+'</text>';}).join('');
+
+    var tabelaRows=MESES_L.map(function(mes,i){
+      var real=realizado[i],proj=esperado[i],diff=real-proj,fut=i>mesAtual;
+      return '<tr style="'+(i===mesAtual?'background:var(--teal-lt)':'')+'">'
+        +'<td style="font-weight:'+(i===mesAtual?700:400)+'">'+mes+'</td>'
+        +'<td>'+(real>0?Utils.money(real):fut?'<span style="color:var(--ink-4)">—</span>':Utils.money(0))+'</td>'
+        +'<td style="color:#7C5CBF">'+Utils.money(proj)+'</td>'
+        +'<td style="font-weight:700;color:'+(diff>=0?'var(--teal-dk)':'var(--danger)')+'">'+(fut?'—':(diff>=0?'+':'')+Utils.money(diff))+'</td>'
+        +'<td>'+(fut?'<span class="badge" style="background:#F3EEFF;color:#7C5CBF">Projeção</span>':real>=proj*0.95?'<span class="badge badge-success">✅ OK</span>':'<span class="badge badge-danger">⚠️ Abaixo</span>')+'</td>'
+        +'</tr>';
+    }).join('');
+
+    var html = '';
+    html += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:var(--sp-xl)">';
+    html += '<div class="card" style="text-align:center;padding:14px"><div style="font-size:20px;margin-bottom:4px">💰</div><div style="font-size:18px;font-weight:800;color:var(--teal-dk)">'+Utils.money(totalReal)+'</div><div style="font-size:11px;color:var(--ink-3)">Receita realizada '+ano+'</div></div>';
+    html += '<div class="card" style="text-align:center;padding:14px"><div style="font-size:20px;margin-bottom:4px">🎯</div><div style="font-size:18px;font-weight:800;color:#7C5CBF">'+Utils.money(totalProj)+'</div><div style="font-size:11px;color:var(--ink-3)">Projeção anual</div></div>';
+    html += '<div class="card" style="text-align:center;padding:14px"><div style="font-size:20px;margin-bottom:4px">🎫</div><div style="font-size:18px;font-weight:800">'+Utils.money(valMedio)+'</div><div style="font-size:11px;color:var(--ink-3)">Ticket médio/aluno</div></div>';
+    html += '<div class="card" style="text-align:center;padding:14px"><div style="font-size:20px;margin-bottom:4px">📅</div><div style="font-size:18px;font-weight:800">'+Utils.money(recMedia)+'</div><div style="font-size:11px;color:var(--ink-3)">Receita média mensal</div></div>';
+    html += '</div>';
+    html += '<div class="card" style="margin-bottom:var(--sp-xl)">';
+    html += '<div class="section-title" style="margin-bottom:8px">Receita Realizada × Projeção — '+ano+'</div>';
+    html += '<svg width="100%" viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">';
+    html += '<line x1="'+PAD+'" y1="'+(H-PAD)+'" x2="'+(W-PAD)+'" y2="'+(H-PAD)+'" stroke="#ddd" stroke-width="0.5"/>';
+    html += '<polyline points="'+ptProj+'" fill="none" stroke="#7C5CBF" stroke-width="1.5" stroke-dasharray="5 3"/>';
+    html += '<polyline points="'+ptReal+'" fill="none" stroke="#1A7A4A" stroke-width="2"/>';
+    html += circles+labsX;
+    html += '<line x1="'+(PAD+mesAtual*xStep)+'" y1="'+PAD+'" x2="'+(PAD+mesAtual*xStep)+'" y2="'+(H-PAD)+'" stroke="#E8644A" stroke-width="1" stroke-dasharray="3 2" opacity="0.6"/>';
+    html += '</svg></div>';
+    html += '<div class="card"><div class="section-title" style="margin-bottom:var(--sp-md)">Detalhe por Mês</div><div style="overflow-x:auto">';
+    html += '<table class="table"><thead><tr><th>Mês</th><th>Realizado</th><th>Projetado</th><th>Diferença</th><th>Status</th></tr></thead><tbody>'+tabelaRows+'</tbody></table>';
+    html += '</div></div>';
+    el.innerHTML = html;
+  };
+
+  return { render, atualizar, imprimir, exportCSV, _switchTab, _renderProjecao };
 })();
 
 /* ── #12 BOLETO HTML ─────────────────────────────────────────── */
@@ -17853,16 +17803,14 @@ const Boleto = (() => {
 const PainelTV = (() => {
 
   // ── Estado ──────────────────────────────────────────────────
-  let _timer        = null;
-  let _slide        = 0;
-  let _running      = false;
-  let _config       = null;
-  let _dados        = {};
-  let _slidesAtivos = [0,1,2,3,4]; // #49 gestos touch — acesso fora de play()
-  let _touchX       = null;        // X inicial do toque
+  let _timer    = null;
+  let _slide    = 0;
+  let _running  = false;
+  let _config   = null;
+  let _dados    = {};
 
-  const TOTAL_SLIDES  = 6;
-  const SLIDE_LABELS  = ['👶 Presença','🍽️ Cardápio','📋 Atividade','📢 Avisos & Dicas','🎂 Aniversários','🏆 Conquistas'];
+  const TOTAL_SLIDES  = 7;
+  const SLIDE_LABELS  = ['👶 Presença','🍽️ Cardápio','📋 Atividade','📢 Avisos & Dicas','🎂 Aniversários','🏆 Conquistas','🎉 Parabéns!'];
   const CORES_AV = ['#1565C0','#7C5CBF','#1A7A4A','#E8644A','#F59E0B','#E05A8A','#12586A','#9B2335'];
 
   function _avatarCor(id) {
@@ -17928,7 +17876,7 @@ const PainelTV = (() => {
             <label class="form-label" style="margin-bottom:8px">Slides ativos</label>
             <div style="display:flex;flex-direction:column;gap:6px" id="tvSlidesCheck">
               ${SLIDE_LABELS.map((lb, i) => {
-                const ativo = (_config.painelTvSlides || [0,1,2,3,4,5]).includes(i);
+                const ativo = (_config.painelTvSlides || [0,1,2,3,4]).includes(i);
                 return `
                   <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:6px 0">
                     <input type="checkbox" id="tvSlide${i}" ${ativo ? 'checked' : ''}
@@ -18046,7 +17994,7 @@ const PainelTV = (() => {
   // ── Salvar config ─────────────────────────────────────────
   const salvarConfig = async () => {
     const cfg = (await DB.getAll('config'))[0] || { id: 'main' };
-    const slidesAtivos = [0,1,2,3,4,5].filter(i =>
+    const slidesAtivos = [0,1,2,3,4].filter(i =>
       document.getElementById(`tvSlide${i}`)?.checked
     );
     await DB.save('config', {
@@ -18068,25 +18016,32 @@ const PainelTV = (() => {
     const salaId= cfg.painelTvSala || salas[0]?.id || '';
     const sala  = salas.find(s => s.id === salaId) || salas[0] || {};
     const intervalo = (cfg.painelTvIntervalo || 25) * 1000;
-    const slidesAtivos = cfg.painelTvSlides ?? [0,1,2,3,4,5];
-    _slidesAtivos = slidesAtivos; // #49 — persiste no estado para gestos touch
+    const slidesAtivos = cfg.painelTvSlides ?? [0,1,2,3,4];
 
     // Carrega todos os dados necessários
     _dados = {
       sala,
-      mats:           (await DB.getAll('matriculas')).filter(a => a.st === 'matriculado' && a.turma === salaId),
-      presencas:      (await DB.getAll('presenca')).filter(p => p.data === Utils.today()),
-      presencasSemana:(await DB.getAll('presenca')),          // #46 conquistas — semana inteira
-      diarioSemana:   await DB.getAll('diario_bordo').catch(()=>[]), // #46 conquistas
-      planej:         (await DB.getAll('planejamentos')).filter(p => p.salaId === salaId && p.data === Utils.today()),
-      cardapio:       await DB.getAll('refeicoes').catch(()=>[]),
-      agenda:         await DB.getAll('agenda').catch(()=>[]),
-      dicas:          (await DB.getAll('dicas_regras')).filter(d => d.ativo),
-      avisos:         (await DB.getAll('avisos')),
+      mats:      (await DB.getAll('matriculas')).filter(a => a.st === 'matriculado' && a.turma === salaId),
+      presencas: (await DB.getAll('presenca')).filter(p => p.data === Utils.today()),
+      planej:    (await DB.getAll('planejamentos')).filter(p => p.salaId === salaId && p.data === Utils.today()),
+      cardapio:  await DB.getAll('refeicoes').catch(()=>[]),
+      agenda:    await DB.getAll('agenda').catch(()=>[]),
+      dicas:     (await DB.getAll('dicas_regras')).filter(d => d.ativo),
+      avisos:    (await DB.getAll('avisos')),
+      avaliacoes: await DB.getAll('dev_avaliacoes').catch(()=>[]),
+      alertas:    await DB.getAll('dev_alertas').catch(()=>[]),
     };
 
+    // Detectar aniversariantes de hoje e incluir slide especial
+    const hoje = Utils.today();
+    const anivHoje = _dados.mats.filter(m => m.nasc && m.nasc.slice(5) === hoje.slice(5));
+    let slidesBase = cfg.painelTvSlides ?? [0,1,2,3,4];
+    if (anivHoje.length && !slidesBase.includes(6)) slidesBase = [...slidesBase, 6];
+    if (!slidesBase.includes(5)) slidesBase = [...slidesBase, 5];
+    _dados.anivHoje = anivHoje;
+
     // Cria e injeta o overlay do painel
-    _criarOverlay(sala, slidesAtivos, intervalo);
+    _criarOverlay(sala, slidesBase, intervalo);
 
     // Fullscreen API
     const el = document.getElementById('tvOverlay');
@@ -18097,11 +18052,12 @@ const PainelTV = (() => {
 
     _running = true;
     _slide   = 0;
-    _irSlide(slidesAtivos[0] ?? 0, slidesAtivos);
+    window._tvSlidesAtivos = slidesBase;
+    _irSlide(slidesBase[0] ?? 0, slidesBase);
     _timer = setInterval(() => {
-      const idx = slidesAtivos.indexOf(_slide);
-      const next = slidesAtivos[(idx + 1) % slidesAtivos.length];
-      _irSlide(next, slidesAtivos);
+      const idx = slidesBase.indexOf(_slide);
+      const next = slidesBase[(idx + 1) % slidesBase.length];
+      _irSlide(next, slidesBase);
     }, intervalo);
   };
 
@@ -18138,7 +18094,7 @@ const PainelTV = (() => {
 
         <!-- Slides -->
         <div class="tv-body" id="tvSlidesBody">
-          ${[0,1,2,3,4,5].map(i => `<div class="tv-slide" id="tvSlide_${i}" style="display:none"></div>`).join('')}
+          ${[0,1,2,3,4,5,6].map(i => `<div class="tv-slide" id="tvSlide_${i}" style="display:none"></div>`).join('')}
         </div>
 
         <!-- Rodapé infantil -->
@@ -18154,57 +18110,27 @@ const PainelTV = (() => {
     // Relógio
     _atualizarRelogio();
     const rlj = setInterval(_atualizarRelogio, 1000);
-    div._rlj       = rlj;
-    div._intervalo = intervalo; // #49 — usado por _reiniciarTimer
+    div._rlj = rlj;
 
     // ESC para sair
     document.addEventListener('keydown', _onKeyDown);
 
-    // #49 — Gestos touch: swipe L/R troca slide, swipe U fecha TV
-    div.addEventListener('touchstart', _onTouchStart, { passive: true });
-    div.addEventListener('touchend',   _onTouchEnd,   { passive: true });
+    // #49 Gestos touch — swipe para avançar/voltar
+    let _txStart = 0;
+    div.addEventListener('touchstart', e => { _txStart = e.touches[0].clientX; }, { passive: true });
+    div.addEventListener('touchend', e => {
+      const diff = e.changedTouches[0].clientX - _txStart;
+      if (Math.abs(diff) < 50) return;
+      const slidesAtivos = (window._tvSlidesAtivos || [0,1,2,3,4]);
+      const idx  = slidesAtivos.indexOf(_slide);
+      const next = diff < 0
+        ? slidesAtivos[(idx + 1) % slidesAtivos.length]
+        : slidesAtivos[(idx - 1 + slidesAtivos.length) % slidesAtivos.length];
+      _irSlide(next, slidesAtivos);
+    }, { passive: true });
   };
 
   const _onKeyDown = e => { if (e.key === 'Escape') stop(); };
-
-  // #49 — Gestos touch ──────────────────────────────────────
-  const _onTouchStart = e => {
-    _touchX = e.changedTouches[0].clientX;
-  };
-
-  const _onTouchEnd = e => {
-    if (_touchX === null) return;
-    const dx = e.changedTouches[0].clientX - _touchX;
-    _touchX = null;
-    if (Math.abs(dx) < 40) return; // limiar mínimo de 40px
-
-    const lista = _slidesAtivos;
-    const idx   = lista.indexOf(_slide);
-    if (dx < 0) {
-      // Swipe ← → próximo slide
-      const next = lista[(idx + 1) % lista.length];
-      _reiniciarTimer(lista);
-      _irSlide(next, lista);
-    } else {
-      // Swipe → ← slide anterior
-      const prev = lista[(idx - 1 + lista.length) % lista.length];
-      _reiniciarTimer(lista);
-      _irSlide(prev, lista);
-    }
-  };
-
-  // Reinicia o timer automático após interação manual
-  const _reiniciarTimer = lista => {
-    if (!_running) return;
-    clearInterval(_timer);
-    const ov = document.getElementById('tvOverlay');
-    const intervalo = ov?._intervalo || 25000;
-    _timer = setInterval(() => {
-      const i    = lista.indexOf(_slide);
-      const next = lista[(i + 1) % lista.length];
-      _irSlide(next, lista);
-    }, intervalo);
-  };
 
   const _atualizarRelogio = () => {
     const agora = new Date();
@@ -18220,7 +18146,7 @@ const PainelTV = (() => {
   const _irSlide = (idx, slidesAtivos) => {
     _slide = idx;
     // Esconde todos, mostra o atual
-    [0,1,2,3,4,5].forEach(i => {
+    [0,1,2,3,4].forEach(i => {
       const el = document.getElementById(`tvSlide_${i}`);
       if (el) el.style.display = (i === idx) ? 'flex' : 'none';
     });
@@ -18241,7 +18167,8 @@ const PainelTV = (() => {
       2: _renderAtividade,
       3: _renderAvisos,
       4: _renderAniversarios,
-      5: _renderConquistas,   // #46
+      5: _renderConquistas,
+      6: _renderParabens,
     };
     if (renders[idx]) renders[idx]();
   };
@@ -18412,9 +18339,8 @@ const PainelTV = (() => {
   const _renderAniversarios = () => {
     const el = document.getElementById('tvSlide_4');
     if (!el) return;
-    const hoje     = new Date();
-    const mesAtual = hoje.getMonth() + 1;
-    const hojeNum  = hoje.getDate();
+    const mesAtual = new Date().getMonth() + 1;
+    const hojeNum  = new Date().getDate();
     const MESES_PT = ['','Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
     const aniv = (_dados.mats || [])
@@ -18422,58 +18348,6 @@ const PainelTV = (() => {
       .map(a => ({ ...a, dia: parseInt(a.nasc.slice(8,10)) }))
       .sort((x,y) => x.dia - y.dia);
 
-    const aniversariantesHoje = aniv.filter(a => a.dia === hojeNum);
-    const outrosMes = aniv.filter(a => a.dia !== hojeNum);
-
-    // ── #44 Modo parabéns: há aniversariante(s) hoje ──────
-    if (aniversariantesHoje.length) {
-      const homenageado = aniversariantesHoje[0]; // destaque para o primeiro
-      const anoNasc = parseInt(homenageado.nasc?.slice(0,4) || 0);
-      const anos = anoNasc ? hoje.getFullYear() - anoNasc : null;
-      const primeiroNome = homenageado.nome.split(' ')[0];
-
-      // Confetti: 28 peças com cores e posições variadas
-      const CORES_CONF = ['#FFD700','#FF6B9D','#00E5FF','#69F0AE','#FF8A65','#CE93D8','#fff176','#80DEEA'];
-      const confettiPieces = Array.from({length:28},(_,i) => {
-        const cor   = CORES_CONF[i % CORES_CONF.length];
-        const left  = (i * 37 + 11) % 97;
-        const dur   = 3 + (i % 5) * 0.7;
-        const delay = (i * 0.29) % 3.5;
-        const shape = i % 3 === 0 ? 'border-radius:50%' : i % 3 === 1 ? 'border-radius:2px' : 'transform-origin:center';
-        return `<div class="tv-parabens-piece" style="left:${left}%;background:${cor};--dur:${dur}s;--delay:${delay}s;${shape}"></div>`;
-      }).join('');
-
-      // Estrelinhas flutuantes
-      const EMOJIS_STAR = ['⭐','✨','🌟','💫','🎉','🎊','🎈'];
-      const stars = Array.from({length:12},(_,i) => {
-        const left  = (i * 43 + 7) % 95;
-        const top   = (i * 57 + 13) % 85;
-        const dur   = 2.5 + (i % 4) * 0.6;
-        const delay = (i * 0.4) % 2.8;
-        const em    = EMOJIS_STAR[i % EMOJIS_STAR.length];
-        return `<div class="tv-parabens-star" style="left:${left}%;top:${top}%;--dur:${dur}s;--delay:${delay}s">${em}</div>`;
-      }).join('');
-
-      // Outros aniversariantes do mês (pílulas no rodapé)
-      const outrosPills = [
-        ...aniversariantesHoje.slice(1),
-        ...outrosMes.slice(0, 6)
-      ].map(a => `<div class="tv-parabens-pill">🎂 ${Utils.esc(a.nome.split(' ')[0])} · Dia ${a.dia}</div>`).join('');
-
-      el.innerHTML = `
-        <div class="tv-parabens-wrap">
-          <div class="tv-parabens-confetti">${confettiPieces}</div>
-          <div class="tv-parabens-stars">${stars}</div>
-          <div class="tv-parabens-emoji">🎂</div>
-          <div class="tv-parabens-sub">Feliz Aniversário!</div>
-          <div class="tv-parabens-nome">${Utils.esc(primeiroNome)}</div>
-          ${anos ? `<div class="tv-parabens-anos">🎈 ${anos} ${anos === 1 ? 'aninho' : 'aninhos'} 🎈</div>` : ''}
-          ${outrosPills ? `<div class="tv-parabens-outros">${outrosPills}</div>` : ''}
-        </div>`;
-      return;
-    }
-
-    // ── Modo normal: lista do mês ──────────────────────────
     el.innerHTML = `
       <div style="display:flex;flex-direction:column;width:100%;height:100%;padding:0 28px 16px;gap:12px">
         <div class="tv-slide-title">🎂 Aniversários — ${MESES_PT[mesAtual]}</div>
@@ -18484,132 +18358,17 @@ const PainelTV = (() => {
                 <div style="color:#7C5CBF;font-weight:700">Nenhum aniversário este mês</div>
                </div>`
             : aniv.map(a => {
-                const cor = _avatarCor(a.id);
+                const isHoje = a.dia === hojeNum;
+                const cor    = _avatarCor(a.id);
                 return `
-                  <div class="tv-aniv-item">
+                  <div class="tv-aniv-item ${isHoje?'hoje':''}">
                     <div style="width:54px;height:54px;border-radius:50%;background:${cor};display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:800;color:#fff;flex-shrink:0;border:3px solid rgba(255,255,255,.5);box-shadow:0 3px 12px rgba(0,0,0,.2)">${_initials(a.nome)}</div>
-                    <div style="font-weight:800;font-size:21px;flex:1;color:#2D1B69">${Utils.esc(a.nome)}</div>
+                    <div style="font-weight:800;font-size:21px;flex:1;color:#2D1B69">${Utils.esc(a.nome)} ${isHoje?'🎉🎂':''}</div>
                     <div style="font-size:18px;color:#7C5CBF;font-weight:700;background:#F3EEFF;padding:6px 16px;border-radius:12px">Dia ${a.dia}</div>
                   </div>`;
               }).join('')
           }
         </div>
-      </div>`;
-  };
-
-  // ── #46 Conquistas da semana ──────────────────────────────
-  const _renderConquistas = () => {
-    const el = document.getElementById('tvSlide_5');
-    if (!el) return;
-
-    const hoje   = new Date();
-    // Início da semana (domingo)
-    const ini    = new Date(hoje);
-    ini.setDate(hoje.getDate() - hoje.getDay());
-    const fimSun = new Date(ini);
-    fimSun.setDate(ini.getDate() + 6);
-    const isoIni = ini.toISOString().slice(0,10);
-    const isoFim = fimSun.toISOString().slice(0,10);
-
-    const alunos        = _dados.mats || [];
-    const presAll       = _dados.presencasSemana || [];
-    const diarioAll     = _dados.diarioSemana || [];
-
-    // Dias úteis da semana (seg–sex) dentro do intervalo
-    const diasUteis = [];
-    for (let d = new Date(ini); d <= fimSun; d.setDate(d.getDate()+1)) {
-      const dw = d.getDay();
-      if (dw >= 1 && dw <= 5) diasUteis.push(d.toISOString().slice(0,10));
-    }
-    const totalDias = diasUteis.length || 1;
-
-    // ── Monta conquistas por aluno ─────────────────────────
-    const CONQUISTAS_DEF = [
-      { id:'presenca5', emoji:'🌟', label:'Presença 100%',    desc:'Todos os dias na semana',   cor:'#F59E0B' },
-      { id:'humor',     emoji:'😊', label:'Sorrindo Sempre',  desc:'Humor feliz toda a semana', cor:'#E05A8A' },
-      { id:'diario',    emoji:'📓', label:'Diário em Dia',    desc:'Registro diário completo',  cor:'#7C5CBF' },
-      { id:'almoco',    emoji:'🍽️', label:'Comeu Bem',        desc:'Alimentação registrada',    cor:'#2EAB6E' },
-    ];
-
-    // Calcula por aluno quais conquistas ganhou esta semana
-    const cards = alunos.map(a => {
-      const presSemana  = presAll.filter(p => p.alunoId === a.id && p.data >= isoIni && p.data <= isoFim && p.estado === 'presente');
-      const diarioSem   = diarioAll.filter(d => d.alunoId === a.id && d.dt >= isoIni && d.dt <= isoFim);
-      const pct         = Math.round(presSemana.length / totalDias * 100);
-
-      const ganhas = [];
-      if (presSemana.length >= totalDias)                                    ganhas.push('presenca5');
-      if (diarioSem.filter(d => d.humor === '😊').length >= totalDias - 1)  ganhas.push('humor');
-      if (diarioSem.length >= totalDias - 1)                                 ganhas.push('diario');
-      if (diarioSem.filter(d => d.mamou === 'sim').length >= totalDias - 1)  ganhas.push('almoco');
-
-      return { a, pct, ganhas };
-    }).filter(c => c.ganhas.length > 0 || c.pct > 0)
-      .sort((x,y) => y.ganhas.length - x.ganhas.length || y.pct - x.pct)
-      .slice(0, 8); // máx 8 cards na TV
-
-    // Totais da sala (barra de presença semanal)
-    const presMediaPct = alunos.length
-      ? Math.round(alunos.reduce((acc, a) => {
-          const p = presAll.filter(x => x.alunoId === a.id && x.data >= isoIni && x.data <= isoFim && x.estado === 'presente').length;
-          return acc + p / totalDias * 100;
-        }, 0) / alunos.length)
-      : 0;
-
-    const DIAS_PT = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-    const semLabel = `${DIAS_PT[ini.getDay()]} ${ini.getDate()}/${ini.getMonth()+1} – ${DIAS_PT[fimSun.getDay()]} ${fimSun.getDate()}/${fimSun.getMonth()+1}`;
-
-    el.innerHTML = `
-      <div style="display:flex;flex-direction:column;width:100%;height:100%;padding:0 28px 16px;gap:12px">
-        <div class="tv-slide-title">
-          🏆 Conquistas da Semana
-          <span class="tv-pill">${semLabel}</span>
-        </div>
-
-        <!-- Barra de presença média semanal -->
-        <div style="display:flex;align-items:center;gap:14px;background:#fff;border-radius:16px;padding:12px 20px;border:2px solid #EDE9F8">
-          <span style="font-size:24px">📊</span>
-          <div style="flex:1">
-            <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:var(--sala-cor,#7C5CBF);letter-spacing:.5px;margin-bottom:5px">Presença média da sala na semana</div>
-            <div class="tv-progress-bar">
-              <div class="tv-progress-fill" style="width:${presMediaPct}%;background:linear-gradient(90deg,var(--sala-cor,#7C5CBF),#B39DDB)"></div>
-            </div>
-          </div>
-          <div style="font-size:26px;font-weight:900;color:var(--sala-cor,#7C5CBF);min-width:52px;text-align:right">${presMediaPct}%</div>
-        </div>
-
-        <!-- Cards de conquistas por aluno -->
-        ${cards.length === 0 ? `
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:.35;gap:14px">
-            <div style="font-size:64px">🏆</div>
-            <div style="font-size:18px;font-weight:700;color:#7C5CBF">Registre presença e diário para ver conquistas</div>
-          </div>` : `
-          <div class="tv-conquistas-grid">
-            ${cards.map(({ a, pct, ganhas }) => {
-              const cor  = _avatarCor(a.id);
-              const nome = a.nome.split(' ')[0];
-              const selos = ganhas.map(gid => {
-                const def = CONQUISTAS_DEF.find(c => c.id === gid);
-                return def
-                  ? `<div class="tv-conquista-selo" style="border-color:${def.cor}" title="${def.desc}">
-                       <span style="font-size:16px">${def.emoji}</span>
-                       <span style="font-size:9px;font-weight:800;color:${def.cor};line-height:1.1">${def.label}</span>
-                     </div>`
-                  : '';
-              }).join('');
-              return `
-                <div class="tv-conquista-card">
-                  <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-                    <div style="width:44px;height:44px;border-radius:50%;background:${cor};display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;flex-shrink:0;border:2.5px solid rgba(255,255,255,.5);box-shadow:0 3px 10px rgba(0,0,0,.2)">${_initials(a.nome)}</div>
-                    <div style="flex:1;min-width:0">
-                      <div style="font-weight:800;font-size:15px;color:#2D1B69;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${Utils.esc(nome)}</div>
-                      <div style="font-size:11px;color:#8fa3b1">Presença: ${pct}% na semana</div>
-                    </div>
-                  </div>
-                  <div style="display:flex;flex-wrap:wrap;gap:5px">${selos || '<span style="font-size:11px;color:#bbb">Sem conquistas ainda</span>'}</div>
-                </div>`;
-            }).join('')}
-          </div>`}
       </div>`;
   };
 
@@ -18623,8 +18382,6 @@ const PainelTV = (() => {
     const ov = document.getElementById('tvOverlay');
     if (ov) {
       clearInterval(ov._rlj);
-      ov.removeEventListener('touchstart', _onTouchStart); // #49
-      ov.removeEventListener('touchend',   _onTouchEnd);   // #49
       ov.style.transition = 'opacity .3s';
       ov.style.opacity = '0';
       setTimeout(() => ov.remove(), 300);
@@ -18637,6 +18394,81 @@ const PainelTV = (() => {
     } catch(e) {}
 
     Toast.show('success', '📺 Painel TV encerrado');
+  };
+
+  // ── #46 CONQUISTAS DA SEMANA ─────────────────────────────
+  const _renderConquistas = () => {
+    const el = document.getElementById('tvSlide_5');
+    if (!el) return;
+    const avs      = _dados.avaliacoes || [];
+    const alertas  = _dados.alertas   || [];
+    const mats     = _dados.mats      || [];
+    const umaSemAnt= new Date(Date.now() - 7*86400000).toISOString().slice(0,10);
+    const recentes = avs.filter(function(a){ const mat=mats.find(function(m){return m.id===a.alunoId;}); return mat && a.data >= umaSemAnt; });
+    const marcos   = [];
+    recentes.forEach(function(av) {
+      const mat = mats.find(function(m){ return m.id === av.alunoId; }); if (!mat) return;
+      Object.entries(av.pontuacao || {}).forEach(function(entry) {
+        const dom = entry[0], v = entry[1];
+        if (dom === '_total' || (v && v.pct || 0) < 80) return;
+        const LABEL = { motor:'Motor', cognitivo:'Cognitivo', socio:'Socioemocional' };
+        marcos.push({ nome: mat.nome.split(' ')[0], dom: LABEL[dom]||dom, pct: v.pct });
+      });
+    });
+    const cor = _dados.sala && _dados.sala.cor || '#7C5CBF';
+    var html = '<div style="display:flex;flex-direction:column;width:100%;height:100%;padding:28px;gap:20px">';
+    html += '<div class="tv-slide-title">🏆 Conquistas da Semana</div>';
+    if (!marcos.length) {
+      html += '<div style="text-align:center;opacity:.5;margin:auto;font-size:20px">Continue estimulando! Conquistas aparecerão aqui. 💪</div>';
+    } else {
+      html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;flex:1;align-content:start">';
+      marcos.forEach(function(m) {
+        html += '<div style="background:white;border-radius:16px;padding:16px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,.08)">';
+        html += '<div style="width:52px;height:52px;border-radius:50%;background:'+cor+';display:flex;align-items:center;justify-content:center;font-size:26px">🏆</div>';
+        html += '<div><div style="font-weight:800;font-size:17px">'+Utils.esc(m.nome)+'</div>';
+        html += '<div style="font-size:13px;color:'+cor+'">'+m.dom+': '+m.pct+'% 🌟</div></div></div>';
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+    el.innerHTML = html;
+  };
+
+  // ── #44 PARABÉNS ANIMADO ─────────────────────────────────
+  const _renderParabens = () => {
+    const el = document.getElementById('tvSlide_6');
+    if (!el) return;
+    const anivs = _dados.anivHoje || [];
+    if (!anivs.length) { el.style.display = 'none'; return; }
+    const cor  = _dados.sala && _dados.sala.cor || '#F59E0B';
+    const CORES_CONF = ['#F59E0B','#EF4444','#3B82F6','#10B981','#8B5CF6','#EC4899','#F97316'];
+    var confettiHTML = '';
+    for (var ci = 0; ci < 40; ci++) {
+      var left = (Math.random()*100).toFixed(1);
+      var delay= (Math.random()*4).toFixed(2);
+      var dur  = (3+Math.random()*3).toFixed(2);
+      var corC = CORES_CONF[Math.floor(Math.random()*CORES_CONF.length)];
+      confettiHTML += '<div style="position:absolute;width:10px;height:10px;border-radius:2px;background:'+corC+';left:'+left+'%;top:-20px;animation:confettiFall '+dur+'s '+delay+'s linear infinite"></div>';
+    }
+    var cardsHTML = anivs.map(function(m) {
+      var anos = new Date().getFullYear() - parseInt((m.nasc||'2023').slice(0,4));
+      var corAv= _avatarCor(m.id);
+      return '<div style="background:white;border-radius:24px;padding:24px 32px;box-shadow:0 8px 32px rgba(0,0,0,.15);animation:partyPulse 2s ease infinite;text-align:center;max-width:360px">'
+        +'<div style="width:80px;height:80px;border-radius:50%;background:'+corAv+';display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;color:white;margin:0 auto 12px">'+_initials(m.nome)+'</div>'
+        +'<div style="font-size:28px;font-weight:800;color:#1a2533">'+Utils.esc(m.nome.split(' ')[0])+'</div>'
+        +'<div style="font-size:18px;color:'+cor+';font-weight:700;margin:4px 0">🎂 '+anos+' aninho'+(anos>1?'s':'')+'!</div>'
+        +'<div style="font-size:13px;color:#8fa3b1">'+Utils.salaLabel(m.turma)+'</div>'
+        +'</div>';
+    }).join('');
+    var html = '<style>@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}'
+      +'@keyframes partyPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}</style>'
+      +'<div style="position:relative;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;overflow:hidden;background:linear-gradient(135deg,#FFF9C4,#FFF3E0)">'
+      +confettiHTML
+      +'<div style="position:relative;z-index:1;text-align:center"><div style="font-size:52px;margin-bottom:6px">🎉</div>'
+      +'<div style="font-size:38px;font-weight:900;color:'+cor+'">Parabéns!</div></div>'
+      +'<div style="position:relative;z-index:1;display:flex;gap:20px;flex-wrap:wrap;justify-content:center">'+cardsHTML+'</div>'
+      +'</div>';
+    el.innerHTML = html;
   };
 
   return {
@@ -19912,1043 +19744,6 @@ const FilaEspera = (() => {
 })();
 
 
-/* ============================================================
-   #30 VISITANTES
-   Registro de entrada/saída, motivo, dados do visitante,
-   relatório diário e exportação CSV
-   ============================================================ */
-const Visitantes = (() => {
-
-  // ── Render principal ──────────────────────────────────────
-  const render = async () => {
-    const el = document.getElementById('page-visitantes');
-    if (!el) return;
-
-    const todos   = await DB.getAll('visitantes').catch(() => []);
-    const hoje    = Utils.today();
-    const deHoje  = todos.filter(v => v.data === hoje).sort((a,b) => b.entrada.localeCompare(a.entrada));
-    const outros  = todos.filter(v => v.data !== hoje).sort((a,b) => b.data.localeCompare(a.data) || b.entrada.localeCompare(a.entrada));
-
-    const _statusBadge = v => {
-      if (v.saida) return `<span class="badge badge-teal">✅ Saiu ${v.saida}</span>`;
-      return `<span class="badge badge-warning">🟡 No local</span>`;
-    };
-
-    const _row = v => `
-      <div class="aluno-row" style="gap:12px;align-items:flex-start">
-        <div style="width:42px;height:42px;border-radius:50%;background:var(--teal-lt);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;border:2px solid var(--border)">
-          ${_avatarEmoji(v.motivo)}
-        </div>
-        <div style="flex:1;min-width:0">
-          <div style="font-weight:700;font-size:var(--fs-sm)">${Utils.esc(v.nome)}</div>
-          <div style="font-size:var(--fs-xs);color:var(--ink-3);margin-top:2px">
-            ${Utils.esc(v.doc||'—')} · ${Utils.esc(v.empresa||'')}
-            ${v.empresa ? '' : ''}
-          </div>
-          <div style="font-size:var(--fs-xs);color:var(--ink-2);margin-top:3px">
-            <b>Motivo:</b> ${Utils.esc(_motivoLabel(v.motivo))} — ${Utils.esc(v.descricao||'—')}
-          </div>
-          <div style="font-size:var(--fs-xs);color:var(--ink-3);margin-top:2px">
-            📥 ${v.entrada}${v.saida ? ` · 📤 ${v.saida}` : ''}
-            ${v.responsavel ? ` · 👤 ${Utils.esc(v.responsavel)}` : ''}
-          </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end;flex-shrink:0">
-          ${_statusBadge(v)}
-          <div style="display:flex;gap:4px;margin-top:4px">
-            ${!v.saida ? `<button class="btn btn-ghost btn-xs" style="color:var(--success)" onclick="Visitantes.registrarSaida('${v.id}')">📤 Saída</button>` : ''}
-            <button class="btn btn-ghost btn-xs" style="color:var(--danger)" onclick="Visitantes.remover('${v.id}')">🗑️</button>
-          </div>
-        </div>
-      </div>`;
-
-    el.innerHTML = `
-      <div class="page-header">
-        <div>
-          <div class="page-title">👥 Visitantes</div>
-          <div class="page-sub">Controle de entrada e saída · ${deHoje.length} visita${deHoje.length!==1?'s':''} hoje</div>
-        </div>
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-ghost btn-sm" onclick="Visitantes.exportarCSV()">📊 Exportar</button>
-          <button class="btn btn-primary" onclick="Visitantes.novoForm()">+ Registrar Entrada</button>
-        </div>
-      </div>
-
-      <!-- Resumo hoje -->
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:var(--sp-xl)">
-        ${_statCard('📥','Entradas hoje', deHoje.length, 'teal')}
-        ${_statCard('🟡','No local agora', deHoje.filter(v=>!v.saida).length, 'warning')}
-        ${_statCard('✅','Já saíram', deHoje.filter(v=>v.saida).length, 'success')}
-      </div>
-
-      <!-- Visitas de hoje -->
-      <div class="section-title" style="margin-bottom:var(--sp-md)">📅 Hoje — ${Utils.fmtDate(hoje)}</div>
-      ${deHoje.length === 0
-        ? `<div class="empty-state" style="margin-bottom:var(--sp-2xl)">
-             <div class="empty-icon">👥</div>
-             <div class="empty-title">Nenhuma visita registrada hoje</div>
-             <div class="empty-sub">Clique em "+ Registrar Entrada" para iniciar</div>
-           </div>`
-        : `<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:var(--sp-2xl)">
-             ${deHoje.map(_row).join('')}
-           </div>`}
-
-      <!-- Histórico -->
-      ${outros.length > 0 ? `
-        <div class="section-title" style="margin-bottom:var(--sp-md)">🗓️ Histórico</div>
-        <div style="display:flex;flex-direction:column;gap:8px">
-          ${outros.slice(0,30).map(_row).join('')}
-        </div>` : ''}`;
-  };
-
-  // ── Cards de estatística ──────────────────────────────────
-  const _statCard = (ic, lb, val, cor) => `
-    <div class="card" style="padding:var(--sp-lg);text-align:center;border-top:3px solid var(--${cor})">
-      <div style="font-size:24px;margin-bottom:4px">${ic}</div>
-      <div style="font-size:28px;font-weight:800;color:var(--${cor}-dk,var(--${cor}))">${val}</div>
-      <div style="font-size:var(--fs-xs);color:var(--ink-3)">${lb}</div>
-    </div>`;
-
-  // ── Helpers ───────────────────────────────────────────────
-  const MOTIVOS = {
-    responsavel: 'Responsável de aluno',
-    fornecedor:  'Fornecedor / Entrega',
-    tecnico:     'Técnico / Serviço',
-    institucional:'Visita institucional',
-    entrevista:  'Entrevista / Matrícula',
-    outro:       'Outro',
-  };
-  const MOTIVO_EMOJIS = {
-    responsavel:'👨‍👩‍👧', fornecedor:'📦', tecnico:'🔧',
-    institucional:'🏛️', entrevista:'📋', outro:'👤',
-  };
-  const _motivoLabel = m => MOTIVOS[m] || m || '—';
-  const _avatarEmoji = m => MOTIVO_EMOJIS[m] || '👤';
-
-  // ── Formulário de entrada ─────────────────────────────────
-  const novoForm = () => {
-    const agora = new Date().toTimeString().slice(0,5);
-    Modal.open('modalPri', `
-      <div class="modal-header">
-        <div class="modal-title">📥 Registrar Entrada de Visitante</div>
-        <button class="modal-close" onclick="Modal.close('modalPri')">×</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label class="form-label">Nome completo *</label>
-          <input class="form-input" id="vNome" placeholder="Nome do visitante" autofocus>
-        </div>
-        <div class="grid-2" style="gap:var(--sp-md)">
-          <div class="form-group">
-            <label class="form-label">Documento (RG/CPF)</label>
-            <input class="form-input" id="vDoc" placeholder="000.000.000-00">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Empresa / Órgão</label>
-            <input class="form-input" id="vEmpresa" placeholder="Opcional">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Motivo da visita *</label>
-          <select class="form-select" id="vMotivo">
-            ${Object.entries(MOTIVOS).map(([k,v])=>`<option value="${k}">${MOTIVO_EMOJIS[k]} ${v}</option>`).join('')}
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Descrição / Observação</label>
-          <input class="form-input" id="vDesc" placeholder="Ex: Buscar Oliver, entregar material…">
-        </div>
-        <div class="grid-2" style="gap:var(--sp-md)">
-          <div class="form-group">
-            <label class="form-label">Horário de entrada *</label>
-            <input class="form-input" type="time" id="vEntrada" value="${agora}">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Responsável pelo atendimento</label>
-            <input class="form-input" id="vResp" placeholder="Quem recebeu">
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-ghost" onclick="Modal.close('modalPri')">Cancelar</button>
-        <button class="btn btn-primary" onclick="Visitantes.salvar()">📥 Registrar Entrada</button>
-      </div>`);
-  };
-
-  // ── Salvar entrada ────────────────────────────────────────
-  const salvar = async () => {
-    const nome    = document.getElementById('vNome')?.value.trim();
-    const entrada = document.getElementById('vEntrada')?.value;
-    if (!nome)    { Toast.show('warning','⚠️ Informe o nome do visitante'); return; }
-    if (!entrada) { Toast.show('warning','⚠️ Informe o horário de entrada'); return; }
-
-    await DB.save('visitantes', {
-      id:          Utils.uuid(),
-      data:        Utils.today(),
-      nome,
-      doc:         document.getElementById('vDoc')?.value.trim()     || '',
-      empresa:     document.getElementById('vEmpresa')?.value.trim() || '',
-      motivo:      document.getElementById('vMotivo')?.value         || 'outro',
-      descricao:   document.getElementById('vDesc')?.value.trim()    || '',
-      entrada,
-      saida:       '',
-      responsavel: document.getElementById('vResp')?.value.trim()    || '',
-      criadoEm:    new Date().toISOString(),
-    });
-
-    Modal.close('modalPri');
-    Toast.show('success', '📥 Entrada registrada!');
-    await render();
-  };
-
-  // ── Registrar saída ───────────────────────────────────────
-  const registrarSaida = async id => {
-    const v = await DB.get('visitantes', id);
-    if (!v) return;
-    const agora = new Date().toTimeString().slice(0,5);
-    await DB.save('visitantes', { ...v, saida: agora });
-    Toast.show('success', `📤 Saída registrada — ${agora}`);
-    await render();
-  };
-
-  // ── Remover ───────────────────────────────────────────────
-  const remover = async id => {
-    const ok = await Modal.confirm('Remover este registro de visitante?');
-    if (!ok) return;
-    await DB.remove('visitantes', id);
-    Toast.show('success', '🗑️ Registro removido');
-    await render();
-  };
-
-  // ── Exportar CSV ──────────────────────────────────────────
-  const exportarCSV = async () => {
-    const todos = await DB.getAll('visitantes').catch(() => []);
-    if (!todos.length) { Toast.show('warning','⚠️ Nenhum registro para exportar'); return; }
-
-    todos.sort((a,b) => b.data.localeCompare(a.data) || b.entrada.localeCompare(a.entrada));
-
-    const cab = 'Data,Nome,Documento,Empresa,Motivo,Descrição,Entrada,Saída,Atendente\n';
-    const lin = todos.map(v =>
-      [v.data, v.nome, v.doc, v.empresa, _motivoLabel(v.motivo),
-       v.descricao, v.entrada, v.saida, v.responsavel]
-        .map(c => `"${String(c||'').replace(/"/g,'""')}"`)
-        .join(',')
-    ).join('\n');
-
-    const blob = new Blob(['\uFEFF' + cab + lin], { type: 'text/csv;charset=utf-8;' });
-    const a    = document.createElement('a');
-    a.href     = URL.createObjectURL(blob);
-    a.download = `visitantes_${Utils.today()}.csv`;
-    a.click();
-    Toast.show('success', '📊 CSV exportado!');
-  };
-
-  return { render, novoForm, salvar, registrarSaida, remover, exportarCSV };
-})();
-
-
-/* ============================================================
-   #19 PORTAL DO RESPONSÁVEL
-   Acesso via PIN de 4 dígitos — visão do responsável sobre
-   presença, financeiro, avisos, diário e mensagens à escola
-   ============================================================ */
-const Portal = (() => {
-
-  let _alunoId  = null; // aluno ativo na sessão do portal
-  let _sessaoOk = false;
-
-  // ── Render: tela de seleção + PIN ────────────────────────
-  const render = async () => {
-    const el = document.getElementById('page-portal');
-    if (!el) return;
-    _alunoId  = null;
-    _sessaoOk = false;
-
-    const mats = (await DB.getAll('matriculas')).filter(m => m.st === 'matriculado');
-
-    el.innerHTML = `
-      <div class="page-header">
-        <div>
-          <div class="page-title">🏠 Portal Família</div>
-          <div class="page-sub">Selecione o aluno e informe o PIN para acessar</div>
-        </div>
-        <button class="btn btn-ghost btn-sm" onclick="Portal._abrirMsgs()">💬 Mensagens recebidas</button>
-      </div>
-
-      <div style="max-width:480px;margin:0 auto">
-        <!-- Seleção do aluno -->
-        <div class="card" style="padding:var(--sp-xl);margin-bottom:var(--sp-lg)">
-          <div class="form-group" style="margin-bottom:var(--sp-lg)">
-            <label class="form-label" style="font-size:var(--fs-sm);font-weight:700">👶 Selecione o aluno</label>
-            <select class="form-select" id="portalAluno" onchange="Portal._selecionarAluno()">
-              <option value="">— escolha —</option>
-              ${mats.map(m => `<option value="${m.id}">${Utils.esc(m.nome)} · ${Utils.salaLabel(m.turma)}</option>`).join('')}
-            </select>
-          </div>
-
-          <!-- PIN inputs — iniciam ocultos -->
-          <div id="portalPinWrap" style="display:none">
-            <label class="form-label" style="font-size:var(--fs-sm);font-weight:700;margin-bottom:var(--sp-md)">🔑 PIN do responsável (4 dígitos)</label>
-            <div style="display:flex;gap:10px;justify-content:center;margin-bottom:var(--sp-md)">
-              ${[0,1,2,3].map(i => `
-                <input id="pPin${i}" type="password" inputmode="numeric" maxlength="1"
-                  autocomplete="off"
-                  style="width:52px;height:56px;text-align:center;font-size:24px;font-weight:800;border:2px solid var(--border);border-radius:12px;background:var(--bg-card)"
-                  oninput="Portal._pinTick(${i})"
-                  onkeydown="Portal._pinKey(event,${i})">`).join('')}
-            </div>
-            <div id="portalPinErro" style="color:var(--danger);font-size:var(--fs-xs);text-align:center;min-height:18px;margin-bottom:var(--sp-md)"></div>
-            <button class="btn btn-primary" style="width:100%" id="portalEnterBtn"
-              onclick="Portal._confirmar()" disabled>
-              🔓 Acessar Portal
-            </button>
-          </div>
-        </div>
-
-        <!-- Área de configuração do PIN (para a diretora) -->
-        <details style="margin-top:var(--sp-md)">
-          <summary style="cursor:pointer;font-size:var(--fs-xs);color:var(--ink-3);padding:var(--sp-sm)">⚙️ Configurar PINs dos responsáveis</summary>
-          <div id="portalConfigPins" style="margin-top:var(--sp-md)"></div>
-        </details>
-      </div>
-
-      <!-- Painel do aluno (oculto até login) -->
-      <div id="portalPainel" style="display:none;margin-top:var(--sp-xl)"></div>`;
-
-    _renderConfigPins(mats);
-  };
-
-  // ── Selecionar aluno → mostrar PIN ───────────────────────
-  const _selecionarAluno = () => {
-    const sel = document.getElementById('portalAluno');
-    _alunoId  = sel?.value || null;
-    _sessaoOk = false;
-    document.getElementById('portalPainel').style.display = 'none';
-    const wrap = document.getElementById('portalPinWrap');
-    if (wrap) wrap.style.display = _alunoId ? 'block' : 'none';
-    [0,1,2,3].forEach(i => {
-      const el = document.getElementById(`pPin${i}`);
-      if (el) el.value = '';
-    });
-    const err = document.getElementById('portalPinErro');
-    if (err) err.textContent = '';
-    const btn = document.getElementById('portalEnterBtn');
-    if (btn) btn.disabled = true;
-    if (_alunoId) document.getElementById('pPin0')?.focus();
-  };
-
-  // ── PIN helpers ──────────────────────────────────────────
-  const _pinTick = idx => {
-    const el   = document.getElementById(`pPin${idx}`);
-    if (!el) return;
-    el.value   = el.value.replace(/\D/g, '').slice(-1);
-    const full = [0,1,2,3].every(i => document.getElementById(`pPin${i}`)?.value);
-    const btn  = document.getElementById('portalEnterBtn');
-    if (btn) btn.disabled = !full;
-    if (el.value && idx < 3) document.getElementById(`pPin${idx+1}`)?.focus();
-  };
-
-  const _pinKey = (e, idx) => {
-    if (e.key === 'Backspace' && !document.getElementById(`pPin${idx}`)?.value && idx > 0)
-      document.getElementById(`pPin${idx-1}`)?.focus();
-    if (e.key === 'Enter') _confirmar();
-  };
-
-  // ── Confirmar PIN ────────────────────────────────────────
-  const _confirmar = async () => {
-    if (!_alunoId) return;
-    const digitado = [0,1,2,3].map(i => document.getElementById(`pPin${i}`)?.value || '').join('');
-    const cfg      = (await DB.getAll('config'))[0] || {};
-    const pins     = cfg.portalPins || {};
-    const pinCorreto = pins[_alunoId] || '1234'; // padrão 1234
-
-    const errEl = document.getElementById('portalPinErro');
-    if (digitado !== pinCorreto) {
-      if (errEl) errEl.textContent = '❌ PIN incorreto. Tente novamente.';
-      [0,1,2,3].forEach(i => { const e = document.getElementById(`pPin${i}`); if(e) e.value=''; });
-      document.getElementById('pPin0')?.focus();
-      const btn = document.getElementById('portalEnterBtn');
-      if (btn) btn.disabled = true;
-      return;
-    }
-
-    if (errEl) errEl.textContent = '';
-    _sessaoOk = true;
-    await _renderPainel();
-  };
-
-  // ── Painel principal do responsável ──────────────────────
-  const _renderPainel = async () => {
-    const painel = document.getElementById('portalPainel');
-    if (!painel || !_alunoId) return;
-
-    const mat      = await DB.get('matriculas', _alunoId);
-    if (!mat) return;
-
-    const hoje     = new Date();
-    const isoHoje  = Utils.today();
-    const ini      = new Date(hoje); ini.setDate(hoje.getDate() - hoje.getDay());
-    const fim      = new Date(ini);  fim.setDate(ini.getDate() + 6);
-    const isoIni   = ini.toISOString().slice(0,10);
-    const isoFim   = fim.toISOString().slice(0,10);
-
-    const DIAS_PT  = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-    const MESES_PT = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
-
-    // Dados paralelos
-    const [presAll, mensAll, diarioAll, avisos, msgs] = await Promise.all([
-      DB.getAll('presenca').catch(()=>[]),
-      DB.getAll('mensalidades').catch(()=>[]),
-      DB.getAll('diario_bordo').catch(()=>[]),
-      DB.getAll('avisos').catch(()=>[]),
-      DB.getAll('portal_msgs').catch(()=>[]),
-    ]);
-
-    // Presenças da semana
-    const presSem = presAll.filter(p => p.alunoId === _alunoId && p.data >= isoIni && p.data <= isoFim);
-    const diasSem = [];
-    for (let d = new Date(ini); d <= fim; d.setDate(d.getDate()+1)) {
-      const dw  = d.getDay();
-      if (dw < 1 || dw > 5) continue; // só seg-sex
-      const iso = d.toISOString().slice(0,10);
-      const reg = presSem.find(p => p.data === iso);
-      diasSem.push({ iso, label: `${DIAS_PT[dw]} ${d.getDate()}/${MESES_PT[d.getMonth()]}`, estado: reg?.estado || 'sem_reg' });
-    }
-
-    const ESTADO_CFG = {
-      presente: { ic:'✅', txt:'Presente',  bg:'var(--success-lt)', cor:'var(--success-dk)' },
-      ausente:  { ic:'❌', txt:'Ausente',   bg:'var(--danger-lt)',  cor:'var(--danger)' },
-      justific: { ic:'📋', txt:'Justificado',bg:'var(--sun-lt)',    cor:'var(--sun-dk)' },
-      sem_reg:  { ic:'⬜', txt:'Sem registro', bg:'var(--bg)',      cor:'var(--ink-3)' },
-    };
-
-    // Mensalidade mais recente em aberto
-    const mensPendente = mensAll
-      .filter(m => m.alunoId === _alunoId && m.st !== 'pago')
-      .sort((a,b) => a.vencimento > b.vencimento ? 1 : -1)[0];
-
-    const mensUltPaga = mensAll
-      .filter(m => m.alunoId === _alunoId && m.st === 'pago')
-      .sort((a,b) => b.dtPago?.localeCompare(a.dtPago||'') || 0)[0];
-
-    // Diário da semana
-    const diarioSem = diarioAll
-      .filter(d => d.alunoId === _alunoId && d.dt >= isoIni && d.dt <= isoFim)
-      .sort((a,b) => b.dt.localeCompare(a.dt));
-
-    // Avisos ativos
-    const avisosAtivos = avisos
-      .filter(a => !a.lido)
-      .sort((a,b) => b.dt.localeCompare(a.dt))
-      .slice(0, 5);
-
-    // Msgs não respondidas deste aluno
-    const msgsAluno = msgs
-      .filter(m => m.alunoId === _alunoId)
-      .sort((a,b) => b.criadoEm.localeCompare(a.criadoEm))
-      .slice(0, 10);
-
-    const nomeResp   = mat.mae || mat.pai || 'Responsável';
-    const primeiroNome = nomeResp.split(' ')[0];
-
-    painel.style.display = 'block';
-    painel.innerHTML = `
-      <!-- Header do aluno -->
-      <div class="card" style="padding:var(--sp-xl);margin-bottom:var(--sp-lg);background:linear-gradient(135deg,var(--teal-lt),#f0faff);border:2px solid var(--teal-md)">
-        <div style="display:flex;align-items:center;gap:16px">
-          <div style="width:64px;height:64px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:#fff;flex-shrink:0;border:3px solid rgba(255,255,255,.6)">
-            ${mat.nome.split(' ').slice(0,2).map(p=>p[0]).join('').toUpperCase()}
-          </div>
-          <div style="flex:1">
-            <div style="font-size:var(--fs-lg);font-weight:800;color:var(--teal-dk)">${Utils.esc(mat.nome)}</div>
-            <div style="font-size:var(--fs-xs);color:var(--ink-2);margin-top:2px">${Utils.salaLabel(mat.turma)} · Resp: ${Utils.esc(nomeResp)}</div>
-            <div style="font-size:var(--fs-xs);color:var(--teal-dk);margin-top:3px;font-weight:600">👋 Olá, ${Utils.esc(primeiroNome)}!</div>
-          </div>
-          <button class="btn btn-ghost btn-sm" onclick="Portal._encerrar()" title="Sair">🔒 Sair</button>
-        </div>
-      </div>
-
-      <!-- Presença da semana -->
-      <div class="card" style="padding:var(--sp-xl);margin-bottom:var(--sp-lg)">
-        <div class="section-title" style="margin-bottom:var(--sp-md)">📅 Presença desta semana</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          ${diasSem.map(d => {
-            const cfg = ESTADO_CFG[d.estado];
-            const isHoje = d.iso === isoHoje;
-            return `<div style="flex:1;min-width:80px;background:${cfg.bg};border-radius:12px;padding:10px 8px;text-align:center;border:2px solid ${isHoje ? 'var(--teal)' : 'transparent'}">
-              <div style="font-size:20px">${cfg.ic}</div>
-              <div style="font-size:10px;font-weight:700;color:${cfg.cor};margin-top:3px">${d.label}</div>
-              <div style="font-size:9px;color:var(--ink-3)">${cfg.txt}</div>
-            </div>`;
-          }).join('')}
-        </div>
-      </div>
-
-      <!-- Financeiro -->
-      <div class="card" style="padding:var(--sp-xl);margin-bottom:var(--sp-lg)">
-        <div class="section-title" style="margin-bottom:var(--sp-md)">💰 Situação financeira</div>
-        ${mensPendente ? `
-          <div style="background:var(--danger-lt);border:1.5px solid var(--danger);border-radius:12px;padding:14px 18px;margin-bottom:var(--sp-md)">
-            <div style="font-weight:800;color:var(--danger);font-size:var(--fs-sm)">⚠️ Mensalidade em aberto</div>
-            <div style="font-size:var(--fs-xs);color:var(--ink-2);margin-top:4px">
-              Ref: ${Utils.esc(mensPendente.ref||'—')} · Vencimento: ${Utils.fmtDate(mensPendente.vencimento)} · <b>${Utils.money(mensPendente.valor)}</b>
-            </div>
-          </div>` : `
-          <div style="background:var(--success-lt);border:1.5px solid var(--success);border-radius:12px;padding:14px 18px;margin-bottom:var(--sp-md)">
-            <div style="font-weight:800;color:var(--success-dk);font-size:var(--fs-sm)">✅ Sem pendências financeiras</div>
-          </div>`}
-        ${mensUltPaga ? `
-          <div style="font-size:var(--fs-xs);color:var(--ink-3)">
-            Último pagamento: ${Utils.esc(mensUltPaga.ref||'—')} — ${Utils.money(mensUltPaga.valorPago||mensUltPaga.valor)} em ${Utils.fmtDate(mensUltPaga.dtPago)}
-          </div>` : ''}
-      </div>
-
-      <!-- Diário de bordo -->
-      <div class="card" style="padding:var(--sp-xl);margin-bottom:var(--sp-lg)">
-        <div class="section-title" style="margin-bottom:var(--sp-md)">📓 Diário de bordo — semana</div>
-        ${diarioSem.length === 0
-          ? `<div style="text-align:center;opacity:.4;padding:var(--sp-lg)">Nenhum registro esta semana</div>`
-          : `<div style="display:flex;flex-direction:column;gap:10px">
-              ${diarioSem.map(d => {
-                const data = d.dt ? Utils.fmtDate(d.dt) : '—';
-                return `<div style="background:var(--bg);border-radius:10px;padding:12px 14px;border:1px solid var(--border)">
-                  <div style="font-size:var(--fs-xs);font-weight:700;color:var(--ink-2);margin-bottom:6px">${data}</div>
-                  <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:var(--fs-xs);color:var(--ink-2)">
-                    ${d.humor ? `<span>Humor: ${d.humor}</span>` : ''}
-                    ${d.mamou ? `<span>🍼 ${d.mamou}</span>` : ''}
-                    ${d.fralda != null ? `<span>🚼 ${d.fralda}x</span>` : ''}
-                  </div>
-                  ${d.obs ? `<div style="font-size:var(--fs-xs);color:var(--ink-3);margin-top:5px;font-style:italic">${Utils.esc(d.obs)}</div>` : ''}
-                </div>`;
-              }).join('')}
-            </div>`}
-      </div>
-
-      <!-- Avisos da escola -->
-      ${avisosAtivos.length ? `
-        <div class="card" style="padding:var(--sp-xl);margin-bottom:var(--sp-lg)">
-          <div class="section-title" style="margin-bottom:var(--sp-md)">📢 Avisos da escola</div>
-          <div style="display:flex;flex-direction:column;gap:8px">
-            ${avisosAtivos.map(a => {
-              const TIPO = { info:'var(--info)', warning:'var(--warning)', danger:'var(--danger)', success:'var(--success-dk)' };
-              const cor = TIPO[a.tipo] || 'var(--ink-2)';
-              return `<div style="padding:12px 14px;border-radius:10px;background:var(--bg);border-left:4px solid ${cor}">
-                <div style="font-weight:700;font-size:var(--fs-xs);color:${cor}">${Utils.esc(a.titulo)}</div>
-                ${a.msg ? `<div style="font-size:var(--fs-xs);color:var(--ink-2);margin-top:3px">${Utils.esc(a.msg)}</div>` : ''}
-                <div style="font-size:10px;color:var(--ink-3);margin-top:4px">${Utils.fmtDate(a.dt)}</div>
-              </div>`;
-            }).join('')}
-          </div>
-        </div>` : ''}
-
-      <!-- Mensagem para a escola -->
-      <div class="card" style="padding:var(--sp-xl);margin-bottom:var(--sp-lg)">
-        <div class="section-title" style="margin-bottom:var(--sp-md)">💬 Enviar mensagem à escola</div>
-        <div class="form-group">
-          <textarea class="form-input" id="portalMsgTexto" rows="3"
-            placeholder="Digite sua mensagem, dúvida ou recado para a equipe…"
-            style="resize:vertical"></textarea>
-        </div>
-        <button class="btn btn-primary btn-sm" onclick="Portal.enviarMsg()">📨 Enviar mensagem</button>
-
-        <!-- Histórico de msgs enviadas -->
-        ${msgsAluno.length ? `
-          <div style="margin-top:var(--sp-lg);border-top:1px solid var(--border);padding-top:var(--sp-md)">
-            <div style="font-size:var(--fs-xs);font-weight:700;color:var(--ink-2);margin-bottom:var(--sp-sm)">Mensagens anteriores</div>
-            <div style="display:flex;flex-direction:column;gap:8px">
-              ${msgsAluno.map(m => `
-                <div style="background:var(--bg);border-radius:10px;padding:10px 12px;border:1px solid var(--border)">
-                  <div style="font-size:var(--fs-xs);color:var(--ink-2)">${Utils.esc(m.texto)}</div>
-                  <div style="display:flex;gap:8px;align-items:center;margin-top:4px">
-                    <span style="font-size:10px;color:var(--ink-3)">${new Date(m.criadoEm).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</span>
-                    ${m.resposta ? `<span class="badge badge-success" style="font-size:9px">Respondido</span>` : `<span class="badge badge-info" style="font-size:9px">Aguardando resposta</span>`}
-                  </div>
-                  ${m.resposta ? `<div style="font-size:var(--fs-xs);color:var(--success-dk);margin-top:5px;padding:6px 8px;background:var(--success-lt);border-radius:6px">💬 ${Utils.esc(m.resposta)}</div>` : ''}
-                </div>`).join('')}
-            </div>
-          </div>` : ''}
-      </div>`;
-  };
-
-  // ── Enviar mensagem ───────────────────────────────────────
-  const enviarMsg = async () => {
-    if (!_sessaoOk || !_alunoId) return;
-    const texto = document.getElementById('portalMsgTexto')?.value.trim();
-    if (!texto) { Toast.show('warning', '⚠️ Digite uma mensagem'); return; }
-
-    const mat = await DB.get('matriculas', _alunoId);
-    await DB.save('portal_msgs', {
-      id:        Utils.uuid(),
-      alunoId:   _alunoId,
-      nomeAluno: mat?.nome || '—',
-      nomeResp:  mat?.mae || mat?.pai || '—',
-      texto,
-      resposta:  '',
-      lido:      false,
-      criadoEm:  new Date().toISOString(),
-    });
-
-    Toast.show('success', '📨 Mensagem enviada! A equipe responderá em breve.');
-    const el = document.getElementById('portalMsgTexto');
-    if (el) el.value = '';
-    await _renderPainel();
-  };
-
-  // ── Encerrar sessão ───────────────────────────────────────
-  const _encerrar = () => {
-    _alunoId  = null;
-    _sessaoOk = false;
-    render();
-    Toast.show('success', '🔒 Sessão encerrada');
-  };
-
-  // ── Mensagens recebidas (visão da diretora) ───────────────
-  const _abrirMsgs = async () => {
-    const msgs = await DB.getAll('portal_msgs').catch(()=>[]);
-    msgs.sort((a,b) => b.criadoEm.localeCompare(a.criadoEm));
-
-    const html = `
-      <div class="modal-header">
-        <div class="modal-title">💬 Mensagens dos Responsáveis</div>
-        <button class="modal-close" onclick="Modal.close('modalSec')">×</button>
-      </div>
-      <div class="modal-body">
-        ${msgs.length === 0
-          ? `<div class="empty-state"><div class="empty-icon">💬</div><div class="empty-title">Nenhuma mensagem recebida</div></div>`
-          : msgs.map(m => `
-            <div style="border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;${m.lido?'opacity:.7':'border-left:3px solid var(--teal)'}">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-                <div style="font-weight:700;font-size:var(--fs-xs)">${Utils.esc(m.nomeAluno)} · ${Utils.esc(m.nomeResp)}</div>
-                <span style="font-size:10px;color:var(--ink-3)">${new Date(m.criadoEm).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</span>
-              </div>
-              <div style="font-size:var(--fs-xs);color:var(--ink-2);margin-bottom:8px">${Utils.esc(m.texto)}</div>
-              ${m.resposta
-                ? `<div style="font-size:var(--fs-xs);background:var(--success-lt);color:var(--success-dk);padding:8px 10px;border-radius:8px">💬 ${Utils.esc(m.resposta)}</div>`
-                : `<div style="display:flex;gap:8px">
-                    <input class="form-input" id="resp_${m.id}" placeholder="Responder…" style="font-size:var(--fs-xs)">
-                    <button class="btn btn-primary btn-xs" onclick="Portal._responder('${m.id}')">Enviar</button>
-                  </div>`}
-            </div>`).join('')}
-      </div>`;
-    Modal.open('modalSec', html);
-
-    // Marcar como lido
-    for (const m of msgs.filter(x => !x.lido)) {
-      await DB.save('portal_msgs', { ...m, lido: true });
-    }
-  };
-
-  const _responder = async id => {
-    const texto = document.getElementById(`resp_${id}`)?.value.trim();
-    if (!texto) return;
-    const m = await DB.get('portal_msgs', id);
-    if (!m) return;
-    await DB.save('portal_msgs', { ...m, resposta: texto, lido: true });
-    Toast.show('success', '💬 Resposta enviada!');
-    Modal.close('modalSec');
-  };
-
-  // ── Config de PINs (diretora) ─────────────────────────────
-  const _renderConfigPins = async mats => {
-    const el = document.getElementById('portalConfigPins');
-    if (!el) return;
-    const cfg  = (await DB.getAll('config'))[0] || {};
-    const pins = cfg.portalPins || {};
-
-    el.innerHTML = `
-      <div style="font-size:var(--fs-xs);color:var(--ink-3);margin-bottom:var(--sp-md)">
-        PIN padrão: <b>1234</b>. Configure um PIN único para cada aluno.
-      </div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        ${mats.map(m => `
-          <div style="display:flex;align-items:center;gap:10px">
-            <div style="flex:1;font-size:var(--fs-xs);font-weight:600">${Utils.esc(m.nome.split(' ')[0])}</div>
-            <input id="cfgPin_${m.id}" type="text" inputmode="numeric" maxlength="4"
-              value="${Utils.esc(pins[m.id]||'1234')}"
-              style="width:80px;text-align:center;font-size:14px;font-weight:700;border:1.5px solid var(--border);border-radius:8px;padding:4px 8px">
-          </div>`).join('')}
-        <button class="btn btn-ghost btn-sm" style="margin-top:var(--sp-sm)" onclick="Portal._salvarPins()">💾 Salvar PINs</button>
-      </div>`;
-  };
-
-  const _salvarPins = async () => {
-    const mats = (await DB.getAll('matriculas')).filter(m => m.st === 'matriculado');
-    const cfg  = (await DB.getAll('config'))[0] || { id: 'main' };
-    const pins = {};
-    mats.forEach(m => {
-      const v = document.getElementById(`cfgPin_${m.id}`)?.value.trim();
-      if (v && /^\d{4}$/.test(v)) pins[m.id] = v;
-    });
-    await DB.save('config', { ...cfg, portalPins: pins });
-    Toast.show('success', '🔑 PINs salvos!');
-  };
-
-  return { render, enviarMsg, _pinTick, _pinKey, _confirmar, _selecionarAluno, _encerrar, _abrirMsgs, _responder, _salvarPins };
-})();
-
-
-/* ============================================================
-   #34 LOG DE AUDITORIA
-   Visualização filtrada do store audit_log
-   ============================================================ */
-const Auditoria = (() => {
-
-  const STORE_LABELS = {
-    matriculas:'👶 Matrículas', mensalidades:'💰 Mensalidades',
-    gastos:'📉 Gastos', funcionarios:'👤 Funcionários',
-    usuarios:'🔐 Usuários', contas_fixas:'📋 Contas Fixas',
-    config:'⚙️ Config', portal_msgs:'💬 Portal',
-  };
-  const OP_CFG = {
-    save:   { ic:'💾', txt:'Salvo',   cor:'var(--success-dk)' },
-    remove: { ic:'🗑️', txt:'Removido', cor:'var(--danger)'    },
-  };
-
-  const render = async () => {
-    const el = document.getElementById('page-auditoria');
-    if (!el) return;
-
-    const todos = await DB.getAll('audit_log').catch(() => []);
-    todos.sort((a,b) => b.ts.localeCompare(a.ts));
-
-    // Filtros
-    const stores  = [...new Set(todos.map(l => l.store))].sort();
-    const usuarios = [...new Set(todos.map(l => l.usuario).filter(Boolean))].sort();
-
-    el.innerHTML = `
-      <div class="page-header">
-        <div>
-          <div class="page-title">🔍 Log de Auditoria</div>
-          <div class="page-sub">${todos.length} registro${todos.length!==1?'s':''} · últimas ações nos dados sensíveis</div>
-        </div>
-        <button class="btn btn-ghost btn-sm" onclick="Auditoria._limpar()">🗑️ Limpar log</button>
-      </div>
-
-      <!-- Filtros -->
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:var(--sp-lg);align-items:center">
-        <select class="form-select" id="auditFiltroStore" onchange="Auditoria._filtrar()" style="width:auto;min-width:160px">
-          <option value="">Todos os módulos</option>
-          ${stores.map(s => `<option value="${s}">${STORE_LABELS[s]||s}</option>`).join('')}
-        </select>
-        <select class="form-select" id="auditFiltroOp" onchange="Auditoria._filtrar()" style="width:auto;min-width:130px">
-          <option value="">Todas as ações</option>
-          <option value="save">💾 Salvo</option>
-          <option value="remove">🗑️ Removido</option>
-        </select>
-        <select class="form-select" id="auditFiltroUser" onchange="Auditoria._filtrar()" style="width:auto;min-width:140px">
-          <option value="">Todos os usuários</option>
-          ${usuarios.map(u => `<option value="${u}">${Utils.esc(u)}</option>`).join('')}
-        </select>
-        <input class="form-input" id="auditFiltroData" type="date" onchange="Auditoria._filtrar()"
-          style="width:auto" title="Filtrar por data">
-        <button class="btn btn-ghost btn-sm" onclick="Auditoria._exportarCSV()">📊 CSV</button>
-      </div>
-
-      <!-- Tabela -->
-      <div class="card" style="padding:0;overflow:hidden">
-        <div id="auditTabela" style="overflow-x:auto">
-          ${_tabela(todos)}
-        </div>
-      </div>`;
-  };
-
-  const _tabela = logs => {
-    if (!logs.length) return `
-      <div class="empty-state" style="padding:var(--sp-2xl)">
-        <div class="empty-icon">🔍</div>
-        <div class="empty-title">Nenhum registro encontrado</div>
-        <div class="empty-sub">As ações em dados sensíveis aparecerão aqui</div>
-      </div>`;
-
-    return `<table class="table" style="min-width:600px">
-      <thead><tr>
-        <th style="width:150px">Data/Hora</th>
-        <th>Módulo</th>
-        <th>Ação</th>
-        <th>Registro</th>
-        <th>Usuário</th>
-      </tr></thead>
-      <tbody>
-        ${logs.slice(0, 500).map(l => {
-          const op  = OP_CFG[l.op] || { ic:'?', txt:l.op, cor:'var(--ink-2)' };
-          const dt  = new Date(l.ts);
-          const dtS = `${dt.toLocaleDateString('pt-BR')} ${dt.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`;
-          return `<tr>
-            <td style="font-size:11px;color:var(--ink-3);white-space:nowrap">${dtS}</td>
-            <td><span class="badge badge-info" style="font-size:10px">${STORE_LABELS[l.store]||l.store}</span></td>
-            <td><span style="color:${op.cor};font-weight:700;font-size:12px">${op.ic} ${op.txt}</span></td>
-            <td style="font-size:var(--fs-xs);color:var(--ink-2);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${Utils.esc(l.resumo||l.docId||'')}">${Utils.esc(l.resumo||l.docId||'—')}</td>
-            <td style="font-size:var(--fs-xs)">${Utils.esc(l.usuario||'—')}</td>
-          </tr>`;
-        }).join('')}
-      </tbody>
-    </table>`;
-  };
-
-  const _filtrar = async () => {
-    const store  = document.getElementById('auditFiltroStore')?.value  || '';
-    const op     = document.getElementById('auditFiltroOp')?.value     || '';
-    const user   = document.getElementById('auditFiltroUser')?.value   || '';
-    const data   = document.getElementById('auditFiltroData')?.value   || '';
-
-    let logs = await DB.getAll('audit_log').catch(() => []);
-    logs.sort((a,b) => b.ts.localeCompare(a.ts));
-    if (store) logs = logs.filter(l => l.store  === store);
-    if (op)    logs = logs.filter(l => l.op     === op);
-    if (user)  logs = logs.filter(l => l.usuario === user);
-    if (data)  logs = logs.filter(l => l.ts.slice(0,10) === data);
-
-    const tb = document.getElementById('auditTabela');
-    if (tb) tb.innerHTML = _tabela(logs);
-  };
-
-  const _limpar = async () => {
-    const ok = await Modal.confirm('Limpar todo o log de auditoria? Esta ação não pode ser desfeita.');
-    if (!ok) return;
-    await DB.clearStore('audit_log');
-    Toast.show('success', '🗑️ Log limpo');
-    await render();
-  };
-
-  const _exportarCSV = async () => {
-    const logs = await DB.getAll('audit_log').catch(() => []);
-    if (!logs.length) { Toast.show('warning','⚠️ Log vazio'); return; }
-    logs.sort((a,b) => b.ts.localeCompare(a.ts));
-    const cab = 'Data/Hora,Módulo,Ação,Resumo,ID,Usuário\n';
-    const lin = logs.map(l => {
-      const dt = new Date(l.ts).toLocaleString('pt-BR');
-      return [dt, STORE_LABELS[l.store]||l.store, l.op, l.resumo||'', l.docId||'', l.usuario||'']
-        .map(c => `"${String(c).replace(/"/g,'""')}"`).join(',');
-    }).join('\n');
-    const blob = new Blob(['\uFEFF'+cab+lin], { type:'text/csv;charset=utf-8;' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `auditoria_${Utils.today()}.csv`;
-    a.click();
-    Toast.show('success','📊 CSV exportado!');
-  };
-
-  return { render, _filtrar, _limpar, _exportarCSV };
-})();
-
-
-/* ============================================================
-   #42 SYNC QR CODE
-   Exporta dados comprimidos como QR Code para transferência
-   entre dispositivos. Leitura via câmera com jsQR.
-   Limite prático: ~2KB de dados → stores pequenos (config,
-   matrículas resumidas, últimas presenças).
-   ============================================================ */
-const SyncQR = (() => {
-
-  // Stores que cabem num QR (dados leves)
-  const PERFIS = {
-    config:     { label:'⚙️ Configurações',  stores:['config','salas','usuarios'] },
-    alunos:     { label:'👶 Alunos (resumo)', stores:['matriculas'] },
-    presenca:   { label:'📅 Presença hoje',   stores:['presenca'] },
-    financeiro: { label:'💰 Financeiro',      stores:['mensalidades','contas_fixas'] },
-  };
-
-  // ── Abrir modal de geração ────────────────────────────────
-  const abrirGerar = () => {
-    Modal.open('modalSec', `
-      <div class="modal-header">
-        <div class="modal-title">📡 Gerar QR de Sincronização</div>
-        <button class="modal-close" onclick="Modal.close('modalSec')">×</button>
-      </div>
-      <div class="modal-body">
-        <div class="info-box teal" style="font-size:var(--fs-xs);margin-bottom:var(--sp-lg)">
-          Gera um QR Code com dados comprimidos (LZString). Escaneie no outro dispositivo para importar.
-          Ideal para transferir configurações e listas pequenas.
-        </div>
-        <div class="form-group">
-          <label class="form-label">Dados a exportar</label>
-          <div style="display:flex;flex-direction:column;gap:8px" id="qrPerfilList">
-            ${Object.entries(PERFIS).map(([k,v]) => `
-              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:8px 12px;border:1.5px solid var(--border);border-radius:10px;transition:border-color .15s"
-                     onmouseover="this.style.borderColor='var(--teal-md)'" onmouseout="this.style.borderColor='var(--border)'">
-                <input type="radio" name="qrPerfil" value="${k}" ${k==='config'?'checked':''}>
-                <span style="font-size:var(--fs-sm)">${v.label}</span>
-                <span style="font-size:10px;color:var(--ink-3);margin-left:auto">${v.stores.join(', ')}</span>
-              </label>`).join('')}
-          </div>
-        </div>
-        <div id="qrCanvasWrap" style="text-align:center;margin-top:var(--sp-lg);min-height:60px"></div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-ghost" onclick="Modal.close('modalSec')">Fechar</button>
-        <button class="btn btn-primary" onclick="SyncQR._gerar()">📡 Gerar QR</button>
-      </div>`);
-  };
-
-  // ── Gerar QR ──────────────────────────────────────────────
-  const _gerar = async () => {
-    if (typeof QRCode === 'undefined' || typeof LZString === 'undefined') {
-      Toast.show('error','Bibliotecas QR não carregadas — verifique conexão'); return;
-    }
-    const perfil = document.querySelector('input[name="qrPerfil"]:checked')?.value || 'config';
-    const stores = PERFIS[perfil]?.stores || ['config'];
-
-    const wrap = document.getElementById('qrCanvasWrap');
-    if (wrap) wrap.innerHTML = '<div style="color:var(--ink-3);font-size:var(--fs-xs)">⏳ Comprimindo dados…</div>';
-
-    // Coleta dados dos stores selecionados
-    const data = {};
-    for (const s of stores) {
-      data[s] = await DB.getAll(s).catch(() => []);
-    }
-    data._bsmVersion = 'qrsync-v1';
-    data._ts = new Date().toISOString();
-    data._perfil = perfil;
-
-    const json   = JSON.stringify(data);
-    const lz     = LZString.compressToBase64(json);
-    const payload = `BSM:${lz}`;
-
-    if (payload.length > 2953) { // limite QR v40-L
-      Toast.show('warning', `⚠️ Dados grandes demais para QR (${Math.round(payload.length/1024)}KB). Use o perfil de Configurações.`);
-      if (wrap) wrap.innerHTML = '';
-      return;
-    }
-
-    // Gera QR via canvas
-    const canvas = document.createElement('canvas');
-    canvas.id = 'syncQrCanvas';
-    try {
-      await QRCode.toCanvas(canvas, payload, {
-        width: 240, margin: 2,
-        color: { dark: '#12586a', light: '#ffffff' },
-        errorCorrectionLevel: 'M',
-      });
-      if (wrap) {
-        wrap.innerHTML = `
-          <div style="display:inline-block;padding:12px;background:#fff;border:2px solid var(--teal-md);border-radius:12px">
-          </div>
-          <div style="font-size:10px;color:var(--ink-3);margin-top:6px">
-            ${PERFIS[perfil].label} · ${Math.round(json.length/1024)}KB → ${Math.round(lz.length/1024)}KB comprimido
-          </div>
-          <div style="margin-top:8px">
-            <button class="btn btn-ghost btn-sm" onclick="SyncQR._salvarQR()">⬇️ Salvar imagem</button>
-          </div>`;
-        wrap.querySelector('div').prepend(canvas);
-      }
-      Toast.show('success', '📡 QR gerado! Escaneie no outro dispositivo.');
-    } catch(e) {
-      Toast.show('error', `Erro ao gerar QR: ${e.message}`);
-    }
-  };
-
-  // ── Salvar QR como PNG ────────────────────────────────────
-  const _salvarQR = () => {
-    const canvas = document.getElementById('syncQrCanvas');
-    if (!canvas) return;
-    const a = document.createElement('a');
-    a.href = canvas.toDataURL('image/png');
-    a.download = `bsm-sync-qr-${Utils.today()}.png`;
-    a.click();
-  };
-
-  // ── Abrir modal de leitura (câmera) ───────────────────────
-  const abrirLer = () => {
-    Modal.open('modalSec', `
-      <div class="modal-header">
-        <div class="modal-title">📷 Ler QR de Sincronização</div>
-        <button class="modal-close" onclick="SyncQR._pararCamera();Modal.close('modalSec')">×</button>
-      </div>
-      <div class="modal-body">
-        <div class="info-box teal" style="font-size:var(--fs-xs);margin-bottom:var(--sp-md)">
-          Aponte a câmera para o QR Code gerado no outro dispositivo.
-        </div>
-        <div style="text-align:center">
-          <video id="syncQrVideo" style="width:100%;max-width:320px;border-radius:12px;border:2px solid var(--teal-md)" autoplay muted playsinline></video>
-          <canvas id="syncQrScan" style="display:none"></canvas>
-        </div>
-        <div id="syncQrStatus" style="text-align:center;margin-top:var(--sp-md);font-size:var(--fs-xs);color:var(--ink-3)">Iniciando câmera…</div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-ghost" onclick="SyncQR._pararCamera();Modal.close('modalSec')">Cancelar</button>
-      </div>`);
-    _iniciarCamera();
-  };
-
-  let _stream = null;
-  let _scanInterval = null;
-
-  const _iniciarCamera = async () => {
-    try {
-      _stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode:'environment' } });
-      const video = document.getElementById('syncQrVideo');
-      if (video) { video.srcObject = _stream; video.play(); }
-      _scanInterval = setInterval(_scanFrame, 300);
-      const st = document.getElementById('syncQrStatus');
-      if (st) st.textContent = '📷 Aponte para o QR Code…';
-    } catch(e) {
-      const st = document.getElementById('syncQrStatus');
-      if (st) st.textContent = '❌ Câmera não disponível: ' + e.message;
-    }
-  };
-
-  const _scanFrame = () => {
-    const video  = document.getElementById('syncQrVideo');
-    const canvas = document.getElementById('syncQrScan');
-    if (!video || !canvas || video.readyState !== 4) return;
-    if (typeof jsQR === 'undefined') return;
-
-    canvas.width  = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(video, 0, 0);
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const code = jsQR(imageData.data, imageData.width, imageData.height);
-
-    if (code?.data?.startsWith('BSM:')) {
-      _pararCamera();
-      _importarQR(code.data.slice(4));
-    }
-  };
-
-  const _pararCamera = () => {
-    clearInterval(_scanInterval);
-    _scanInterval = null;
-    if (_stream) { _stream.getTracks().forEach(t => t.stop()); _stream = null; }
-  };
-
-  const _importarQR = async lz => {
-    const st = document.getElementById('syncQrStatus');
-    try {
-      if (st) st.textContent = '⏳ Descomprimindo…';
-      const json = LZString.decompressFromBase64(lz);
-      if (!json) throw new Error('Dados corrompidos');
-      const data = JSON.parse(json);
-      const perfil = data._perfil || '?';
-      const stores = Object.keys(data).filter(k => !k.startsWith('_'));
-
-      Modal.close('modalSec');
-      const ok = await Modal.confirm(
-        `Importar dados via QR?\n\nPerfil: ${PERFIS[perfil]?.label || perfil}\nStores: ${stores.join(', ')}\nGerado em: ${data._ts ? new Date(data._ts).toLocaleString('pt-BR') : '?'}\n\nOs dados existentes nestes stores serão SUBSTITUÍDOS.`
-      );
-      if (!ok) return;
-
-      for (const s of stores) {
-        if (!Array.isArray(data[s])) continue;
-        await DB.clearStore(s);
-        for (const item of data[s]) await DB.save(s, item);
-      }
-      Toast.show('success', `✅ QR importado! ${stores.length} store(s) atualizados.`);
-    } catch(e) {
-      Toast.show('error', `❌ Erro ao importar QR: ${e.message}`);
-    }
-  };
-
-  // ── Render na página config (botões) ─────────────────────
-  const renderBotoes = () => `
-    <button class="btn btn-ghost btn-sm" onclick="SyncQR.abrirGerar()">📡 Gerar QR de Sync</button>
-    <button class="btn btn-ghost btn-sm" onclick="SyncQR.abrirLer()">📷 Ler QR de Sync</button>`;
-
-  return { abrirGerar, abrirLer, _gerar, _salvarQR, _pararCamera, renderBotoes };
-})();
-
-
 document.addEventListener('DOMContentLoaded', async () => {
   // Inicializa banco
   await DB.init();
@@ -20977,6 +19772,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   Notif.carregar();
   setInterval(Notif.carregar, 5 * 60 * 1000);
 
+  // Onboarding — verificar se é primeira sessão
+  setTimeout(() => Onboarding.verificar(), 2000);
+
   // Badges iniciais
   await Badges.refresh();
 
@@ -20992,6 +19790,243 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   Router.register('fila',          { onEnter: () => FilaEspera.render() });
+/* ============================================================
+   #34 LOG DE AUDITORIA
+   ============================================================ */
+const Auditoria = (() => {
+  // Interceptar DB.save para registrar auditorias
+  const _origSave = null; // placeholder
+
+  const registrar = async (acao, entidade, id, dados) => {
+    try {
+      const sessao = Auth.getSessao ? Auth.getSessao() : null;
+      await DB.save('auditoria', {
+        id:        Utils.uuid(),
+        dt:        new Date().toISOString(),
+        usuario:   sessao?.nome || 'Sistema',
+        perfil:    sessao?.perfil || '—',
+        acao,      // 'criar' | 'editar' | 'excluir'
+        entidade,  // 'matriculas' | 'mensalidades' | ...
+        refId:     id || '',
+        resumo:    typeof dados === 'string' ? dados : JSON.stringify(dados||{}).slice(0,200),
+      });
+    } catch {}
+  };
+
+  const render = async () => {
+    const el = document.getElementById('page-auditoria');
+    if (!el) return;
+    const logs = await DB.getAll('auditoria').catch(()=>[]);
+    logs.sort((a,b) => b.dt.localeCompare(a.dt));
+
+    var html = '<div class="page-header"><div><div class="page-title">🔍 Log de Auditoria</div>';
+    html += '<div class="page-sub">Registro de ações dos usuários — quem editou o quê e quando</div></div>';
+    html += '<div class="page-actions"><button class="btn btn-ghost btn-sm" onclick="Auditoria.exportCSV()">📊 CSV</button>';
+    html += '<button class="btn btn-danger btn-sm" onclick="Auditoria.limpar()">🗑️ Limpar</button></div></div>';
+
+    if (!logs.length) {
+      html += '<div class="card" style="text-align:center;padding:40px"><div style="font-size:48px;margin-bottom:12px">🔍</div><div style="font-size:17px;font-weight:700">Nenhum log ainda</div><div style="font-size:13px;color:var(--ink-3);margin-top:4px">As ações dos usuários aparecerão aqui automaticamente</div></div>';
+    } else {
+      html += '<div class="card"><div style="overflow-x:auto"><table class="table"><thead><tr><th>Data/Hora</th><th>Usuário</th><th>Ação</th><th>Módulo</th><th>Detalhe</th></tr></thead><tbody>';
+      const COR = { criar: 'var(--success)', editar: 'var(--amber)', excluir: 'var(--danger)' };
+      logs.slice(0,200).forEach(function(l) {
+        var dtFmt = l.dt ? new Date(l.dt).toLocaleString('pt-BR') : '—';
+        var cor   = COR[l.acao] || 'var(--ink-3)';
+        html += '<tr><td style="font-size:11px;white-space:nowrap">'+dtFmt+'</td>';
+        html += '<td><strong>'+Utils.esc(l.usuario||'—')+'</strong><br><span style="font-size:10px;color:var(--ink-3)">'+Utils.esc(l.perfil||'—')+'</span></td>';
+        html += '<td><span style="font-weight:700;color:'+cor+'">'+Utils.esc(l.acao||'—')+'</span></td>';
+        html += '<td style="font-size:12px">'+Utils.esc(l.entidade||'—')+'</td>';
+        html += '<td style="font-size:11px;color:var(--ink-3);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+Utils.esc(l.resumo||'—')+'</td></tr>';
+      });
+      html += '</tbody></table></div></div>';
+    }
+    el.innerHTML = html;
+  };
+
+  const exportCSV = async () => {
+    const logs = await DB.getAll('auditoria').catch(()=>[]);
+    const rows = ['"Data","Usuário","Perfil","Ação","Módulo","Detalhe"'];
+    logs.sort((a,b)=>b.dt.localeCompare(a.dt)).forEach(l => {
+      rows.push('"'+(l.dt?new Date(l.dt).toLocaleString('pt-BR'):'')+'","'+(l.usuario||'')+'","'+(l.perfil||'')+'","'+(l.acao||'')+'","'+(l.entidade||'')+'","'+(l.resumo||'')+'"');
+    });
+    Utils.downloadCSV(rows.join('\n'), 'auditoria_'+Utils.today()+'.csv');
+  };
+
+  const limpar = async () => {
+    if (!await Modal.confirm('Limpar todos os logs de auditoria?',{danger:true,confirmLabel:'Limpar'})) return;
+    const logs = await DB.getAll('auditoria').catch(()=>[]);
+    await Promise.all(logs.map(l => DB.remove('auditoria', l.id).catch(()=>{})));
+    Toast.show('success','Log de auditoria limpo!');
+    await render();
+  };
+
+  return { registrar, render, exportCSV, limpar };
+})();
+
+/* ============================================================
+   #04 ONBOARDING — Wizard guiado na primeira sessão
+   ============================================================ */
+const Onboarding = (() => {
+  let _step = 0;
+
+  const verificar = async () => {
+    // Verificar se há dados — se não, mostrar onboarding
+    const mats = await DB.getAll('matriculas').catch(()=>[]);
+    const salas = await DB.getAll('salas').catch(()=>[]);
+    const done  = localStorage.getItem('bsm_onboarding_done');
+    if (!done && mats.length === 0 && salas.length === 0) {
+      setTimeout(iniciar, 1500);
+    }
+  };
+
+  const iniciar = () => {
+    _step = 0;
+    _renderStep();
+  };
+
+  const _renderStep = () => {
+    const steps = [
+      {
+        titulo: '🌙 Bem-vindo ao Berçário Sonho Meu!',
+        sub: 'Vamos configurar o sistema em 3 passos simples.',
+        icon: '🌙',
+        campos: '<div style="text-align:center;margin:20px 0"><div style="font-size:60px;margin-bottom:12px">🌙</div><div style="font-size:15px;color:var(--ink-2);line-height:1.7">Este assistente vai te ajudar a:<br><strong>1.</strong> Configurar o nome da escola<br><strong>2.</strong> Criar as salas<br><strong>3.</strong> Cadastrar o primeiro aluno</div></div>',
+        acao: null,
+        labelBtn: 'Começar →'
+      },
+      {
+        titulo: '🏫 Dados da Escola',
+        sub: 'Como se chama o berçário?',
+        icon: '🏫',
+        campos: '<div class="form-group"><label class="form-label">Nome do berçário *</label><input class="form-input" id="obNome" placeholder="Ex: Berçário Sonho Meu" value="Berçário Sonho Meu"></div>'
+               +'<div class="form-group"><label class="form-label">Cidade</label><input class="form-input" id="obCidade" placeholder="Ex: Trindade - GO"></div>'
+               +'<div class="form-group"><label class="form-label">Telefone</label><input class="form-input" id="obTel" placeholder="(62) 9 0000-0000"></div>',
+        acao: async () => {
+          const nome  = document.getElementById('obNome')?.value.trim();
+          if (!nome) { Toast.show('error','Nome obrigatório'); return false; }
+          const cfg = await DB.getConfig();
+          cfg.nomeEscola = nome;
+          cfg.cidade     = document.getElementById('obCidade')?.value.trim()||'';
+          cfg.telefone   = document.getElementById('obTel')?.value.trim()||'';
+          await DB.setConfig(cfg);
+          return true;
+        },
+        labelBtn: 'Próximo →'
+      },
+      {
+        titulo: '🚪 Criar as Salas',
+        sub: 'Quais salas/turmas o berçário tem?',
+        icon: '🚪',
+        campos: '<div style="font-size:13px;color:var(--ink-3);margin-bottom:12px">Clique em "+ Sala" para adicionar cada turma</div>'
+               +'<div id="obSalasLista" style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px"></div>'
+               +'<button class="btn btn-ghost btn-sm" onclick="Onboarding._addSalaField()">+ Sala</button>',
+        acao: async () => {
+          const campos = document.querySelectorAll('.ob-sala-input');
+          let criadas = 0;
+          for (let i = 0; i < campos.length; i++) {
+            const nome = campos[i].value.trim();
+            if (nome) {
+              await DB.save('salas', { id: Utils.uuid(), nome, capacidade: 12, ordem: i, cor: '#12586a' });
+              criadas++;
+            }
+          }
+          if (!criadas) { Toast.show('error','Crie pelo menos uma sala'); return false; }
+          const salas = await DB.getAll('salas').catch(()=>[]);
+          Utils.setSalasCache(salas);
+          return true;
+        },
+        labelBtn: 'Próximo →'
+      },
+      {
+        titulo: '👶 Primeiro Aluno (opcional)',
+        sub: 'Cadastre o primeiro aluno ou pule por agora',
+        icon: '👶',
+        campos: '<div class="form-row c2"><div class="form-group"><label class="form-label">Nome da criança</label><input class="form-input" id="obAlNome" placeholder="Nome completo"></div>'
+               +'<div class="form-group"><label class="form-label">Data de nascimento</label><input class="form-input" type="date" id="obAlNasc"></div></div>'
+               +'<div class="form-row c2"><div class="form-group"><label class="form-label">Responsável</label><input class="form-input" id="obAlResp" placeholder="Nome do responsável"></div>'
+               +'<div class="form-group"><label class="form-label">Sala</label><select class="form-select" id="obAlSala"></select></div></div>',
+        acao: async () => {
+          const nome = document.getElementById('obAlNome')?.value.trim();
+          if (nome) {
+            const salas  = await DB.getAll('salas').catch(()=>[]);
+            const salaId = document.getElementById('obAlSala')?.value || salas[0]?.id || '';
+            const resp   = document.getElementById('obAlResp')?.value.trim()||'';
+            await DB.save('matriculas', {
+              id: Utils.uuid(), nome, nasc: document.getElementById('obAlNasc')?.value||'',
+              mae: resp, turma: salaId, st: 'matriculado', dtCadastro: Utils.today()
+            });
+          }
+          return true;
+        },
+        labelBtn: 'Concluir ✓',
+        isPenultimo: false, isUltimo: true
+      },
+    ];
+
+    const step = steps[_step];
+    Modal.open('modalLg', '<div class="modal-header"><div class="modal-title">'+step.titulo+'</div></div>'
+      +'<div class="modal-body">'
+      +'<div style="font-size:13px;color:var(--ink-3);margin-bottom:16px">'+step.sub+'</div>'
+      +'<div class="ob-steps" style="display:flex;gap:4px;margin-bottom:16px">'
+      +steps.map((_,i)=>'<div style="height:4px;flex:1;border-radius:4px;background:'+(i<=_step?'var(--teal-dk)':'var(--border)')+'"></div>').join('')
+      +'</div>'
+      +step.campos
+      +'</div>'
+      +'<div class="modal-footer" style="justify-content:space-between">'
+      +(_step>0?'<button class="btn btn-ghost" onclick="Onboarding._prev()">← Voltar</button>':'<button class="btn btn-ghost" onclick="Onboarding._pular()">Pular configuração</button>')
+      +'<button class="btn btn-primary" onclick="Onboarding._next()">'+step.labelBtn+'</button>'
+      +'</div>');
+
+    // Popular seletor de salas na última etapa
+    if (_step === 3) {
+      DB.getAll('salas').then(salas => {
+        const sel = document.getElementById('obAlSala');
+        if (sel) sel.innerHTML = salas.map(s=>'<option value="'+s.id+'">'+Utils.esc(s.nome)+'</option>').join('');
+      });
+      // Adicionar 2 campos de sala iniciais
+    } else if (_step === 2) {
+      _addSalaField(); _addSalaField();
+    }
+  };
+
+  const _addSalaField = () => {
+    const lista = document.getElementById('obSalasLista');
+    if (!lista) return;
+    const div = document.createElement('div');
+    div.style.cssText = 'display:flex;gap:6px;align-items:center';
+    div.innerHTML = '<input class="form-input ob-sala-input" placeholder="Ex: Berçário, Maternal I..." style="flex:1">'
+      +'<button class="btn btn-ghost btn-xs" style="color:var(--danger)" onclick="this.parentNode.remove()">×</button>';
+    lista.appendChild(div);
+  };
+
+  const _next = async () => {
+    const steps = [null, async()=>{}, async()=>{}, async()=>{}];
+    const stepDefs = [
+      { acao: null },
+      { acao: async () => { const n=document.getElementById('obNome')?.value.trim(); if(!n){Toast.show('error','Nome obrigatório');return false;} const cfg=await DB.getConfig(); cfg.nomeEscola=n; cfg.cidade=document.getElementById('obCidade')?.value.trim()||''; cfg.telefone=document.getElementById('obTel')?.value.trim()||''; await DB.setConfig(cfg); return true; }},
+      { acao: async () => { const campos=document.querySelectorAll('.ob-sala-input'); let ok=0; for(const c of campos){const n=c.value.trim(); if(n){await DB.save('salas',{id:Utils.uuid(),nome:n,capacidade:12,ordem:ok,cor:'#12586a'});ok++;}} if(!ok){Toast.show('error','Crie pelo menos uma sala');return false;} const salas=await DB.getAll('salas').catch(()=>[]); Utils.setSalasCache(salas); return true; }},
+      { acao: async () => { const nome=document.getElementById('obAlNome')?.value.trim(); if(nome){const salas=await DB.getAll('salas').catch(()=>[]); await DB.save('matriculas',{id:Utils.uuid(),nome,nasc:document.getElementById('obAlNasc')?.value||'',mae:document.getElementById('obAlResp')?.value.trim()||'',turma:document.getElementById('obAlSala')?.value||salas[0]?.id||'',st:'matriculado',dtCadastro:Utils.today()});} localStorage.setItem('bsm_onboarding_done','1'); Modal.close('modalLg'); Toast.show('success','🎉 Configuração concluída! Bem-vindo!'); setTimeout(()=>Router.go('dashboard'),500); return true; }},
+    ];
+    const step = stepDefs[_step];
+    if (step.acao) {
+      const ok = await step.acao();
+      if (!ok) return;
+    }
+    if (_step < stepDefs.length - 1) { _step++; _renderStep(); }
+  };
+
+  const _prev = () => { if (_step > 0) { _step--; _renderStep(); } };
+
+  const _pular = () => {
+    localStorage.setItem('bsm_onboarding_done', '1');
+    Modal.close('modalLg');
+  };
+
+  return { verificar, iniciar, _next, _prev, _pular, _addSalaField };
+})();
+
+  Router.register('visitantes',    { onEnter: () => Visitantes.render() });
+  Router.register('auditoria',     { onEnter: () => Auditoria.render() });
 
   Router.register('matriculas', {
     onEnter: () => Matriculas.render()
@@ -21029,10 +20064,232 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
-  Router.register('inadimplencia', { onEnter: () => Inadimplencia.render() });
-  Router.register('gastos', {
-    onEnter: () => Gastos.render()
-  });
+/* ============================================================
+   #30 CONTROLE DE VISITANTES
+   ============================================================ */
+const Visitantes = (() => {
+  const render = async () => {
+    const el = document.getElementById('page-visitantes');
+    if (!el) return;
+    const todos  = await DB.getAll('visitantes').catch(()=>[]);
+    const hoje   = Utils.today();
+    const deHoje = todos.filter(v => v.dtEntrada.startsWith(hoje)).sort((a,b) => b.dtEntrada.localeCompare(a.dtEntrada));
+    const total  = deHoje.length;
+    const dentro = deHoje.filter(v => !v.dtSaida).length;
+
+    el.innerHTML = '';
+    var html = '';
+    html += '<div class="page-header"><div><div class="page-title">🪪 Controle de Visitantes</div>';
+    html += '<div class="page-sub">Registro de entrada e saída · Exportar lista do dia</div></div>';
+    html += '<div class="page-actions">';
+    html += '<button class="btn btn-ghost btn-sm" onclick="Visitantes.exportCSV()">📊 CSV do Dia</button>';
+    html += '<button class="btn btn-secondary" onclick="Visitantes.novoForm()">+ Registrar Entrada</button>';
+    html += '</div></div>';
+
+    // KPIs
+    html += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:var(--sp-xl)">';
+    html += '<div class="card" style="text-align:center;padding:14px"><div style="font-size:24px;margin-bottom:4px">🪪</div><div style="font-size:24px;font-weight:800;color:var(--teal-dk)">'+total+'</div><div style="font-size:11px;color:var(--ink-3)">Visitantes hoje</div></div>';
+    html += '<div class="card" style="text-align:center;padding:14px;border-color:'+(dentro?'var(--amber)':'var(--border)')+'"><div style="font-size:24px;margin-bottom:4px">🟢</div><div style="font-size:24px;font-weight:800;color:var(--amber)">'+dentro+'</div><div style="font-size:11px;color:var(--ink-3)">Ainda no berçário</div></div>';
+    html += '</div>';
+
+    if (!deHoje.length) {
+      html += '<div class="card" style="text-align:center;padding:40px"><div style="font-size:48px;margin-bottom:12px">🪪</div><div style="font-size:17px;font-weight:700;margin-bottom:8px">Nenhum visitante hoje</div><button class="btn btn-secondary" onclick="Visitantes.novoForm()">+ Registrar Primeiro Visitante</button></div>';
+    } else {
+      html += '<div class="card"><div class="section-title" style="margin-bottom:var(--sp-md)">Visitantes de Hoje — '+Utils.fmtDate(hoje)+'</div><div style="overflow-x:auto"><table class="table"><thead><tr><th>Nome</th><th>RG/Doc</th><th>Visitar</th><th>Motivo</th><th>Entrada</th><th>Saída</th><th></th></tr></thead><tbody>';
+      deHoje.forEach(function(v) {
+        var dentro = !v.dtSaida;
+        html += '<tr>';
+        html += '<td><strong>'+Utils.esc(v.nome)+'</strong></td>';
+        html += '<td style="font-size:12px">'+Utils.esc(v.doc||'—')+'</td>';
+        html += '<td style="font-size:12px">'+Utils.esc(v.visitar||'—')+'</td>';
+        html += '<td style="font-size:12px">'+Utils.esc(v.motivo||'—')+'</td>';
+        html += '<td style="font-size:12px;font-weight:700">'+Utils.esc(v.dtEntrada.slice(11,16))+'</td>';
+        html += '<td style="font-size:12px">'+(v.dtSaida?Utils.esc(v.dtSaida.slice(11,16)):'<span style="color:var(--amber);font-weight:700">No local</span>')+'</td>';
+        html += '<td style="white-space:nowrap">';
+        if (dentro) html += '<button class="btn btn-ghost btn-xs" style="color:var(--teal-dk)" onclick="Visitantes.registrarSaida(\''+v.id+'\')">📤 Saída</button>';
+        html += '</td></tr>';
+      });
+      html += '</tbody></table></div></div>';
+    }
+    el.innerHTML = html;
+  };
+
+  const novoForm = () => {
+    const hora = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    Modal.open('modalSec', '<div class="modal-header"><div class="modal-title">🪪 Registrar Visitante</div><button class="modal-close" onclick="Modal.close(\'modalSec\')">×</button></div>'
+      +'<div class="modal-body">'
+      +'<div class="form-row c2"><div class="form-group"><label class="form-label">Nome completo *</label><input class="form-input" id="vtNome" placeholder="Nome do visitante"></div>'
+      +'<div class="form-group"><label class="form-label">RG / Documento</label><input class="form-input" id="vtDoc" placeholder="Nº do documento"></div></div>'
+      +'<div class="form-row c2"><div class="form-group"><label class="form-label">Vem visitar</label><input class="form-input" id="vtVisitar" placeholder="Nome do aluno ou funcionário"></div>'
+      +'<div class="form-group"><label class="form-label">Motivo</label><input class="form-input" id="vtMotivo" placeholder="Reunião, entrega, visita..."></div></div>'
+      +'<div class="form-group"><label class="form-label">Hora de entrada</label><input class="form-input" type="time" id="vtHora" value="'+hora+'"></div>'
+      +'</div>'
+      +'<div class="modal-footer"><button class="btn btn-ghost" onclick="Modal.close(\'modalSec\')">Cancelar</button><button class="btn btn-primary" onclick="Visitantes.salvar()">📥 Registrar Entrada</button></div>');
+  };
+
+  const salvar = async () => {
+    const nome = document.getElementById('vtNome')?.value.trim();
+    if (!nome) { Toast.show('error','Nome obrigatório'); return; }
+    const hora  = document.getElementById('vtHora')?.value || new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    const hoje  = Utils.today();
+    await DB.save('visitantes', {
+      id: Utils.uuid(), nome,
+      doc:     document.getElementById('vtDoc')?.value.trim()||'',
+      visitar: document.getElementById('vtVisitar')?.value.trim()||'',
+      motivo:  document.getElementById('vtMotivo')?.value.trim()||'',
+      dtEntrada: hoje+'T'+hora+':00',
+      dtSaida: null, criadoEm: new Date().toISOString(),
+    });
+    Modal.close('modalSec');
+    Toast.show('success','✅ Entrada de '+nome+' registrada!');
+    await render();
+  };
+
+  const registrarSaida = async id => {
+    const todos = await DB.getAll('visitantes').catch(()=>[]);
+    const v = todos.find(x => x.id === id); if (!v) return;
+    const hora = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    await DB.save('visitantes', { ...v, dtSaida: Utils.today()+'T'+hora+':00' });
+    Toast.show('success','📤 Saída de '+v.nome+' registrada às '+hora);
+    await render();
+  };
+
+  const exportCSV = async () => {
+    const todos = await DB.getAll('visitantes').catch(()=>[]);
+    const hoje  = Utils.today();
+    const rows  = ['"Nome","Documento","Visitar","Motivo","Entrada","Saída"'];
+    todos.filter(v => v.dtEntrada.startsWith(hoje)).forEach(v => {
+      rows.push('"'+v.nome+'","'+(v.doc||'')+'","'+(v.visitar||'')+'","'+(v.motivo||'')+'","'+(v.dtEntrada.slice(11,16)||'')+'","'+(v.dtSaida?v.dtSaida.slice(11,16):'')+'"');
+    });
+    Utils.downloadCSV(rows.join('\n'), 'visitantes_'+hoje+'.csv');
+  };
+
+  return { render, novoForm, salvar, registrarSaida, exportCSV };
+})();
+
+/* ============================================================
+   #19 PORTAL DO RESPONSÁVEL
+   Gera HTML estático por aluno com presença, mensalidades e avaliações
+   ============================================================ */
+const PortalResp = (() => {
+  const gerar = async alunoId => {
+    const [mat, mens, presencas, fichas, avs, cfg] = await Promise.all([
+      DB.get('matriculas', alunoId),
+      DB.getAll('mensalidades'),
+      DB.getAll('presenca').catch(()=>[]),
+      DB.getAll('dev_fichas').catch(()=>[]),
+      DB.getAll('dev_avaliacoes').catch(()=>[]),
+      DB.getConfig(),
+    ]);
+    if (!mat) { Toast.show('error','Aluno não encontrado'); return; }
+
+    const nomeEsc   = cfg.nomeEscola || 'Berçário Sonho Meu';
+    const mensMat   = mens.filter(m => m.alunoId === alunoId).sort((a,b)=>b.vencimento.localeCompare(a.vencimento)).slice(0,6);
+    const presMat   = presencas.filter(p => p.alunoId === alunoId).sort((a,b)=>b.data.localeCompare(a.data)).slice(0,20);
+    const avsMat    = avs.filter(a => a.alunoId === alunoId).sort((a,b)=>b.data.localeCompare(a.data)).slice(0,3);
+    const ficha     = fichas.find(f => f.alunoId === alunoId);
+
+    // Calcular % presença do mês atual
+    const anoMes    = Utils.today().slice(0,7);
+    const presMes   = presMat.filter(p => p.data.startsWith(anoMes));
+    const pctPres   = presMes.length ? Math.round(presMes.filter(p=>p.status==='P').length/presMes.length*100) : 0;
+
+    var html = '';
+    html += '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">';
+    html += '<title>Portal — '+Utils.esc(mat.nome)+'</title>';
+    html += '<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f9fa;color:#1a2533;font-size:13px}';
+    html += '.wrap{max-width:640px;margin:0 auto;padding:20px 14px}';
+    html += '.header{background:#12586a;color:white;border-radius:16px;padding:20px;margin-bottom:16px;display:flex;align-items:center;gap:14px}';
+    html += '.av{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;flex-shrink:0}';
+    html += '.card{background:white;border-radius:12px;padding:14px 16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.08)}';
+    html += '.sec-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#8fa3b1;margin-bottom:10px}';
+    html += '.row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f0f7f9;font-size:13px}';
+    html += '.row:last-child{border-bottom:none}';
+    html += '.badge{border-radius:8px;padding:2px 8px;font-size:11px;font-weight:700}';
+    html += '.b-pago{background:#ecfdf5;color:#1A7A4A}.b-pend{background:#fffbeb;color:#d97706}.b-atras{background:#fdecea;color:#c0392b}';
+    html += '.b-p{background:#e8f5f7;color:#12586a}.b-a{background:#fdecea;color:#c0392b}.b-aj{background:#fffbeb;color:#d97706}';
+    html += '.bar{height:8px;background:#e8ecef;border-radius:8px;overflow:hidden;margin:8px 0}';
+    html += '.bar-fill{height:100%;background:#12586a;border-radius:8px}';
+    html += '.dom-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}';
+    html += '.dom-label{font-size:12px;width:100px;color:#5a6e7a}';
+    html += '.dom-bar{flex:1;height:6px;background:#e8ecef;border-radius:6px;overflow:hidden}';
+    html += '.dom-fill{height:100%;border-radius:6px}';
+    html += '.dom-pct{font-size:11px;font-weight:700;min-width:32px;text-align:right}';
+    html += '.footer{text-align:center;font-size:11px;color:#8fa3b1;margin-top:20px;padding:12px}';
+    html += '</style></head><body><div class="wrap">';
+
+    // Header
+    var initials = mat.nome.split(' ').filter(Boolean).slice(0,2).map(p=>p[0]).join('').toUpperCase();
+    html += '<div class="header">';
+    html += '<div class="av">'+initials+'</div>';
+    html += '<div><div style="font-size:20px;font-weight:800">'+Utils.esc(mat.nome)+'</div>';
+    html += '<div style="opacity:.8;margin-top:2px">'+Utils.salaLabel(mat.turma)+' · '+nomeEsc+'</div>';
+    html += '<div style="opacity:.7;font-size:11px;margin-top:2px">Atualizado em '+Utils.fmtDate(Utils.today())+'</div></div>';
+    html += '</div>';
+
+    // Presença do mês
+    html += '<div class="card"><div class="sec-title">✅ Presença — '+anoMes.replace('-','/')+'</div>';
+    html += '<div style="font-size:28px;font-weight:800;color:#12586a">'+pctPres+'%</div>';
+    html += '<div class="bar"><div class="bar-fill" style="width:'+pctPres+'%"></div></div>';
+    html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:4px;margin-top:10px;font-size:11px">';
+    presMes.slice(0,10).forEach(function(p) {
+      var cls = p.status==='P'?'b-p':p.status==='AJ'?'b-aj':'b-a';
+      var ico = p.status==='P'?'✅':p.status==='AJ'?'📝':'❌';
+      html += '<span class="badge '+cls+'">'+ico+' '+Utils.fmtDate(p.data)+'</span>';
+    });
+    html += '</div></div>';
+
+    // Mensalidades
+    html += '<div class="card"><div class="sec-title">💰 Mensalidades Recentes</div>';
+    if (!mensMat.length) {
+      html += '<div style="color:#8fa3b1;font-size:12px">Nenhuma mensalidade registrada.</div>';
+    } else {
+      mensMat.forEach(function(m) {
+        var cls = m.st==='pago'?'b-pago':m.st==='atrasado'?'b-atras':'b-pend';
+        var lbl = m.st==='pago'?'Pago':m.st==='atrasado'?'Atrasado':'Pendente';
+        html += '<div class="row"><span>'+Utils.esc(m.ref||'')+'</span>';
+        html += '<div style="display:flex;gap:8px;align-items:center"><span>'+Utils.money(m.valor)+'</span><span class="badge '+cls+'">'+lbl+'</span></div></div>';
+      });
+    }
+    html += '</div>';
+
+    // Desenvolvimento
+    if (avsMat.length) {
+      html += '<div class="card"><div class="sec-title">🌱 Desenvolvimento Infantil</div>';
+      var av = avsMat[0];
+      html += '<div style="font-size:11px;color:#8fa3b1;margin-bottom:10px">Última avaliação: '+Utils.fmtDate(av.data)+' · Faixa '+av.faixa+'m</div>';
+      var DOMS = [['motor','🏃 Motor'],['cognitivo','🧠 Cognitivo'],['socio','❤️ Socioemocional']];
+      DOMS.forEach(function(d) {
+        var dom = d[0], label = d[1];
+        var pct = av.pontuacao && av.pontuacao[dom] && av.pontuacao[dom].pct || 0;
+        var corDom = pct>=65?'#1A7A4A':pct>=40?'#F59E0B':'#E8644A';
+        html += '<div class="dom-row"><span class="dom-label">'+label+'</span>';
+        html += '<div class="dom-bar"><div class="dom-fill" style="width:'+pct+'%;background:'+corDom+'"></div></div>';
+        html += '<span class="dom-pct" style="color:'+corDom+'">'+pct+'%</span></div>';
+      });
+      html += '</div>';
+    }
+
+    html += '<div class="footer">'+nomeEsc+' · Portal do Responsável · '+Utils.fmtDate(Utils.today())+'</div>';
+    html += '</div></body></html>';
+
+    var blob = new Blob([html], {type:'text/html;charset=utf-8'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'portal_'+mat.nome.split(' ')[0].toLowerCase()+'_'+Utils.today()+'.html';
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(a.href); }, 500);
+    Toast.show('success','📲 Portal do responsável gerado!');
+  };
+
+  return { gerar };
+})();
+
+
+  Router.register('gastos',         { onEnter: () => Gastos.render() });
+  Router.register('dre',            { onEnter: () => DRE.render() });
+  Router.register('inadimplencia',  { onEnter: () => Inadimplencia.render() });
+  Router.register('contas',         { onEnter: () => Gastos.render().then(()=>setTimeout(()=>Gastos.abrirAbaContas?.(),100)) });
 
   Router.register('estoque', {
     onEnter: () => Est.render()
@@ -21056,18 +20313,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   Router.register('manutencao', {
     onEnter: () => Manut.render()
-  });
-
-  Router.register('visitantes', {
-    onEnter: () => Visitantes.render()
-  });
-
-  Router.register('portal', {
-    onEnter: () => Portal.render()
-  });
-
-  Router.register('auditoria', {
-    onEnter: () => Auditoria.render()
   });
 
   Router.register('importar', {
